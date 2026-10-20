@@ -1,0 +1,228 @@
+from __future__ import annotations
+
+from typing import Annotated
+
+import typer
+
+from ._output import console, day, due, join, print_json, success, table, warn
+from ._state import JsonOption, LibraryOption, UsageError, client
+
+
+def account(library: LibraryOption = None, as_json: JsonOption = False) -> None:
+    """Show your details, digital loans left this period, and fees."""
+    with client(library) as biblo:
+        me = biblo.account.get()
+        quotas = biblo.account.quotas()
+        fees = biblo.account.fees()
+    if as_json:
+        print_json({"account": me, "quotas": quotas, "fees": fees})
+        return
+    console.print(f"[bold]{me.name or 'Unknown name'}[/bold]")
+    if me.email:
+        console.print(f"Email: {me.email.email_address}")
+    if me.phone_number:
+        console.print(f"Phone: {me.phone_number.phone_number}")
+    if me.preferred_pickup_branch:
+        console.print(f"Pickup branch: {me.preferred_pickup_branch.name}")
+    t = table("", "E-books", "Audiobooks", title="\nDigital quota")
+    t.add_row(
+        "Loans left",
+        f"{quotas.remaining_loan_quotas.ebook} of {quotas.total_loan_quotas.ebook}",
+        f"{quotas.remaining_loan_quotas.audiobook} of {quotas.total_loan_quotas.audiobook}",
+    )
+    t.add_row(
+        "Reservations left",
+        f"{quotas.remaining_reservation_quotas.ebook} of {quotas.total_reservation_quotas.ebook}",
+        f"{quotas.remaining_reservation_quotas.audiobook} of "
+        f"{quotas.total_reservation_quotas.audiobook}",
+    )
+    console.print(t)
+    if fees:
+        t = table("Amount", "Reason", "Due", title="\nFees")
+        for fee in fees:
+            t.add_row(f"{fee.amount_in_dkk:.2f} kr", fee.reason, day(fee.due_date))
+        console.print(t)
+
+
+def loans(library: LibraryOption = None, as_json: JsonOption = False) -> None:
+    """List your loans, soonest due first."""
+    with client(library) as biblo:
+        found = sorted(biblo.loans.list(), key=lambda loan: loan.due_date)
+    if as_json:
+        print_json(found)
+        return
+    if not found:
+        console.print("No loans.")
+        return
+    t = table("Title", "By", "Format", "Due", "Loan id")
+    for loan in found:
+        r = loan.record
+        renew = "" if loan.is_renewable is not False else " [dim](not renewable)[/dim]"
+        t.add_row(
+            r.title, r.author or "", r.material_type.display, due(loan.due_date) + renew, loan.id
+        )
+    console.print(t)
+
+
+def borrow(
+    record_id: Annotated[str, typer.Argument(help="A record id from `biblo work`.")],
+    library: LibraryOption = None,
+    as_json: JsonOption = False,
+) -> None:
+    """Borrow an e-book, audiobook or podcast. Uses one of this period's loans."""
+    with client(library) as biblo:
+        loan = biblo.loans.borrow(record_id)
+    if as_json:
+        print_json(loan)
+        return
+    success(f"Borrowed {loan.record.title}, due {due(loan.due_date)}")
+
+
+def renew(
+    loan_ids: Annotated[
+        list[str] | None, typer.Argument(help="Loans to renew.", show_default=False)
+    ] = None,
+    all_loans: Annotated[bool, typer.Option("--all", help="Renew every renewable loan.")] = False,
+    library: LibraryOption = None,
+    as_json: JsonOption = False,
+) -> None:
+    """Renew loans."""
+    with client(library) as biblo:
+        if all_loans:
+            loan_ids = [loan.id for loan in biblo.loans.list() if loan.is_renewable]
+        if not loan_ids:
+            raise UsageError("Name loans to renew, or use --all")
+        renewed = biblo.loans.renew(loan_ids)
+    if as_json:
+        print_json(renewed)
+        return
+    for item in renewed:
+        loan = item.loan_details
+        if item.renewal_status and any(
+            s.lower() not in ("renewed", "success") for s in item.renewal_status
+        ):
+            warn(f"{loan.record.title}: {join(item.renewal_status)}")
+        else:
+            success(f"{loan.record.title}: due {due(loan.due_date)}")
+
+
+def reservations(library: LibraryOption = None, as_json: JsonOption = False) -> None:
+    """List your reservations."""
+    with client(library) as biblo:
+        found = biblo.reservations.list()
+    if as_json:
+        print_json(found)
+        return
+    if not found:
+        console.print("No reservations.")
+        return
+    t = table("Title", "Format", "Status", "Reservation id")
+    for r in found:
+        if r.state == "READY_FOR_PICKUP":
+            status = "[green]ready[/green]"
+            if r.claim:
+                status += f" until {day(r.claim.available_until)}"
+            elif r.physical:
+                status += f" at {r.physical.pickup_branch} until {day(r.physical.expiry_date)}"
+        elif r.physical and r.physical.number_in_queue is not None:
+            status = f"number {r.physical.number_in_queue} in queue"
+        else:
+            status = "reserved"
+        t.add_row(r.details.title, r.details.material_type.display, status, r.id)
+    console.print(t)
+
+
+def reserve(
+    record_ids: Annotated[list[str], typer.Argument(help="Record ids from `biblo work`.")],
+    branch: Annotated[
+        str | None,
+        typer.Option(help="Pickup branch for physical items (biblo branches).", show_default=False),
+    ] = None,
+    days: Annotated[
+        int | None,
+        typer.Option(
+            help="Give up after this many days (the library sets the choices).", show_default=False
+        ),
+    ] = None,
+    library: LibraryOption = None,
+    as_json: JsonOption = False,
+) -> None:
+    """Reserve records that are out, and get them when it's your turn."""
+    with client(library) as biblo:
+        made = biblo.reservations.create(record_ids, pickup_branch_id=branch, expiry_days=days)
+    if as_json:
+        print_json(made)
+        return
+    for r in made:
+        success(f"Reserved {r.details.title}")
+    if not made:
+        success("Reserved")
+
+
+def cancel(
+    reservation_ids: Annotated[list[str], typer.Argument(help="Reservation ids.")],
+    library: LibraryOption = None,
+) -> None:
+    """Cancel reservations."""
+    with client(library) as biblo:
+        biblo.reservations.cancel(reservation_ids)
+    success(f"Cancelled {len(reservation_ids)} reservation(s)")
+
+
+favorites = typer.Typer(help="Your saved works.", invoke_without_command=True)
+
+
+@favorites.callback()
+def favorites_list(ctx: typer.Context, as_json: JsonOption = False) -> None:
+    """List your saved works."""
+    if ctx.invoked_subcommand is not None:
+        return
+    with client() as biblo:
+        found = biblo.favorites.list()
+    if as_json:
+        print_json(found)
+        return
+    if not found:
+        console.print("No saved works.")
+        return
+    t = table("Title", "By", "Formats", "Id")
+    for w in found:
+        t.add_row(
+            w.title,
+            join(w.creators),
+            join(m.display for m in w.material_types),
+            f"[dim]{w.id}[/dim]",
+        )
+    console.print(t)
+
+
+@favorites.command("add")
+def favorites_add(work_id: Annotated[str, typer.Argument(help="A work id.")]) -> None:
+    """Save a work."""
+    with client() as biblo:
+        biblo.favorites.add(work_id)
+    success("Saved")
+
+
+@favorites.command("remove")
+def favorites_remove(work_id: Annotated[str, typer.Argument(help="A work id.")]) -> None:
+    """Remove a saved work."""
+    with client() as biblo:
+        biblo.favorites.remove(work_id)
+    success("Removed")
+
+
+def messages(as_json: JsonOption = False) -> None:
+    """List messages from the library."""
+    with client() as biblo:
+        found = biblo.messages.list()
+    if as_json:
+        print_json(found)
+        return
+    if not found:
+        console.print("No messages.")
+        return
+    for msg in sorted(found, key=lambda x: x.created, reverse=True):
+        marker = "" if msg.seen else "[bold blue]●[/bold blue] "
+        console.print(f"{marker}[bold]{msg.title}[/bold] [dim]{day(msg.created)}[/dim]")
+        console.print(f"  {msg.body}\n")
