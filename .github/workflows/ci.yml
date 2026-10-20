@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "17 5 * * 1" # Mondays: catch API changes even when the code doesn't change
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: "3.14.9"
+      - run: uv sync --locked
+      - run: uv run ruff format --check .
+      - run: uv run ruff check .
+      - run: uv run ty check
+      - run: uv run python scripts/generate.py --check
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13", "3.14.9", "3.15"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: uv sync --locked
+      - run: uv run pytest
+
+  # Read-only, anonymous calls to the real API, parsed strictly. A failure means the API
+  # changed: see tests/test_live.py.
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: "3.14.9"
+      - run: uv sync --locked
+      - run: uv run pytest -m live
+      - name: Has the published spec changed?
+        run: |
+          curl -sf https://api.detdigitalefolkebibliotek.dk/_openapi.json \
+            | python -c "import json,sys; print(json.dumps(json.load(sys.stdin), indent=2, ensure_ascii=False))" \
+            | diff -q spec/ddf-openapi.json - \
+            || { echo "::warning::The API's spec changed. Run: uv run python scripts/generate.py --fetch"; }
