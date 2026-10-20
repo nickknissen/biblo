@@ -1,0 +1,26 @@
+{
+  "Branch.address": {
+    "nullable": true,
+    "reason": "GET /branches answers \"address\": null for most of Vejle's branches (2026-11-20)."
+  },
+  "ElementMaterialGridAutomatic.description": {
+    "nullable": true,
+    "reason": "Content categories send null for most material grids (2026-11-20)."
+  },
+  "ElementMaterialGridAutomatic.priority_material_type": {
+    "nullable": true,
+    "reason": "Content categories send null for most material grids (2026-11-20)."
+  },
+  "ElementMaterialGridAutomatic.title": {
+    "nullable": true,
+    "reason": "Content categories send null for some material grids (2026-11-20)."
+  },
+  "ElementRecommendation.description": {
+    "nullable": true,
+    "reason": "Content categories send null (2026-11-20)."
+  },
+  "ElementVideo.title": {
+    "nullable": true,
+    "reason": "Content categories send null for some videos (2026-11-20)."
+  }
+}
