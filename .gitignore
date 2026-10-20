@@ -1,0 +1,18 @@
+__pycache__/
+*.py[cod]
+build/
+dist/
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.env
+.worktrees/
+.claude/worktrees/
+
+# The app itself: copyrighted, and only needed to re-extract the values in _constants.py.
+apk/
+*.apk
+*.xapk

@@ -1,0 +1,120 @@
+[project]
+name = "biblo"
+version = "0.1.0"
+description = "Unofficial async client and CLI for Biblo, the Danish public libraries' app."
+readme = "README.md"
+authors = [
+    { name = "Nick Nissen", email = "nickknissen@gmail.com" }
+]
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["biblo", "library", "bibliotek", "ereolen", "danish", "api", "async"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Framework :: AsyncIO",
+    "Typing :: Typed",
+    "Natural Language :: Danish",
+    "Topic :: Education",
+]
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.28.1",
+    "pydantic>=2.9",
+]
+
+[project.optional-dependencies]
+cli = ["typer>=0.27.3,<0.28", "rich>=13.7"]
+
+[project.scripts]
+biblo = "biblo.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/nickknissen/biblo"
+Repository = "https://github.com/nickknissen/biblo"
+Issues = "https://github.com/nickknissen/biblo/issues"
+
+[build-system]
+requires = ["uv_build>=0.13.5,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = [".worktrees", "*.md", "spec"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "LOG"]
+
+[tool.ruff.lint.per-file-ignores]
+# Generated: long lines are the spec's descriptions.
+"src/biblo/models/_generated.py" = ["E501"]
+# Generated from async code, where `yield from` doesn't exist.
+"src/biblo/_sync/*" = ["UP028"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = ["live: calls the real Biblo API; run with -m live"]
+addopts = "-m 'not live'"
+
+# Models are generated from the API's OpenAPI spec by scripts/generate.py; don't edit
+# src/biblo/models/_generated.py by hand. Choices favour parsing over validating: unknown
+# fields and enum values are kept, and the spec's string patterns and lengths are dropped
+# afterwards, so a change on the server doesn't break existing releases.
+[tool.datamodel-codegen]
+input = "spec/ddf-openapi.json"
+input-file-type = "openapi"
+openapi-scopes = ["schemas"]
+output = "src/biblo/models/_generated.py"
+output-model-type = "pydantic_v2.BaseModel"
+target-python-version = "3.12"
+use-annotated = true
+field-constraints = true
+snake-case-field = true
+allow-population-by-field-name = true
+use-standard-collections = true
+use-union-operator = true
+use-schema-description = true
+use-field-description = true
+use-attribute-docstrings = true
+naming-strategy = "parent-prefixed"
+collapse-root-models = true
+enum-field-as-literal = "all"
+open-enums = "all"
+extra-fields = "allow"
+output-datetime-class = "datetime"
+type-mappings = ["string+uri=string", "string+email=string", "string+uuid=string"]
+use-double-quotes = true
+disable-timestamp = true
+
+[tool.pyright]
+pythonVersion = "3.12"
+venvPath = "."
+venv = ".venv"
+include = ["src", "tests", "scripts"]
+exclude = [".venv", "spec", "apk"]
+
+[tool.ty.environment]
+python-version = "3.12"
+
+[tool.ty.src]
+include = ["src/", "tests/"]
+
+[dependency-groups]
+dev = [
+    "biblo[cli]",
+    "datamodel-code-generator>=0.99",
+    "unasync>=0.6.0",
+    "pytest>=9.0.0",
+    "pytest-asyncio>=1.3.0",
+    "ruff>=0.17.3",
+    "ty>=0.0.92",
+]
