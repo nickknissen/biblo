@@ -1,0 +1,50 @@
+{
+  "status": 200,
+  "body": {
+    "data": [
+      {
+        "id": "DK-763004",
+        "name": "Børkop Bibliotek",
+        "address": {
+          "street": "Ågade 6",
+          "postalCode": "7080",
+          "city": "Børkop"
+        },
+        "phone": "+45 76 81 34 60",
+        "email": "borkop@vejlebib.dk"
+      },
+      {
+        "id": "DK-763007",
+        "name": "Vejle Bibliotek - Spinderiet",
+        "address": {
+          "street": "Spinderigade 11G",
+          "postalCode": "7100",
+          "city": "Vejle"
+        },
+        "phone": "+45 76 81 32 00",
+        "email": "info@vejlebib.dk"
+      },
+      {
+        "id": "DK-763020",
+        "name": "Bus Andkær",
+        "address": null,
+        "phone": "+45 76 81 32 00",
+        "email": "vejlebib@vejlebib.dk"
+      },
+      {
+        "id": "FBS-630009",
+        "name": "Bus Ny Nørup",
+        "address": null,
+        "phone": "+45 76 81 32 00",
+        "email": "vejlebib@vejlebib.dk"
+      },
+      {
+        "id": "FBS-630002",
+        "name": "Bus Skovbrynet  (ved Pilen 1, Bredballe)",
+        "address": null,
+        "phone": "+45 76 81 32 00",
+        "email": "vejlebib@vejlebib.dk"
+      }
+    ]
+  }
+}

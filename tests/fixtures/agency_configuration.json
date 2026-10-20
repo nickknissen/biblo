@@ -1,0 +1,51 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "agencyId": "763000",
+      "reservations": {
+        "expiryIntervals": [
+          {
+            "label": "1 måned",
+            "value": 31
+          },
+          {
+            "label": "2 måneder",
+            "value": 60
+          },
+          {
+            "label": "3 måneder",
+            "value": 90
+          },
+          {
+            "label": "6 måneder",
+            "value": 180
+          },
+          {
+            "label": "1 år",
+            "value": 365
+          }
+        ],
+        "defaultExpiryInterval": {
+          "label": "1 år",
+          "value": 365
+        }
+      },
+      "preferences": {
+        "municipalityLogoUrl": "https://vejlebib.dk/sites/default/files/Navnetr%C3%A6k_Vejle_bibliotekerne_sort_100x220_web.png"
+      },
+      "fees": {
+        "informationUrl": "https://vejlebib.dk/info/brug-af-biblioteket/gebyrer-og-erstatninger",
+        "paymentUrl": "https://vejle.osiapp.dk/payment-app",
+        "paymentButtonLabel": "Betal din kommune"
+      },
+      "pincodeRules": {
+        "pinLength": 4,
+        "maxLength": 16
+      },
+      "features": {
+        "scanAndLoan": true
+      }
+    }
+  }
+}

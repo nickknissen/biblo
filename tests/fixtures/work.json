@@ -1,0 +1,268 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "id": "work-of:870970-basis:22252852",
+      "title": "Harry Potter og De Vises Sten",
+      "creators": [
+        "Joanne K. Rowling"
+      ],
+      "materialTypes": [
+        {
+          "display": "lydbog (online)",
+          "displayWithPronoun": "Denne lydbog (online)",
+          "category": "AUDIO_BOOKS_ONLINE"
+        },
+        {
+          "display": "e-bog",
+          "displayWithPronoun": "Denne e-bog",
+          "category": "EBOOKS"
+        }
+      ],
+      "coverUrl": "https://fbiinfo-present.dbc.dk/images/Y9XEMItsSVa75wOa1aMVSw/960px!AUTebxyNKFwsHSBVwikuYJmW7MNrXG3Q3OTo7bzS-y6aCg",
+      "abstract": "Da Harry er 11 år, får han at vide, at hans far var en berømt og respekteret troldmand, og hans mor en overordentlig dygtig heks. Harry er også selv troldmand og skal starte på Hogwarts skole for heksekunster og troldmandsskab. Han skal bl.a. medbringe tryllestav, troldmandshat og enten en kat, en ugle eller en tudse - og så starter et eventyrligt liv for Harry, der skal lære et hav af magiske tricks og desuden må tage kampen op mod den onde troldmand, der dræbte hans forældre.Temamusik komponeret af James Hannigan",
+      "details": {
+        "languages": [
+          "dansk"
+        ],
+        "genre": [
+          "romaner",
+          "fantasy",
+          "eventyrlige fortællinger"
+        ],
+        "edition": "2025",
+        "originalTitle": "Harry Potter and the philosopher's stone",
+        "publisher": "Pottermore Publishing",
+        "year": "1997",
+        "contributors": [
+          "Hanna Lützen",
+          "Jesper Christensen (f. 1948)"
+        ],
+        "audience": [
+          "9-11"
+        ],
+        "extent": "9 t., 40 min."
+      },
+      "fictionNonfiction": "skønlitteratur",
+      "subjects": [
+        "troldmænd",
+        "magi",
+        "Harry Potter",
+        "Ron Weasley",
+        "Hermione Granger",
+        "eventyrlige fortællinger",
+        "Børnebøger",
+        "fantasy",
+        "Hogwarts",
+        "fiktive steder",
+        "spændende",
+        "trist",
+        "uhyggelig",
+        "sport",
+        "venskaber",
+        "mit liv",
+        "skæve karakterer",
+        "eventyrlig",
+        "fantasy",
+        "gys",
+        "action"
+      ],
+      "related": [
+        {
+          "url": "/v1/agencies/763000/search/query?author=Joanne%20K.%20Rowling",
+          "title": "Joanne K. Rowling",
+          "type": "AUTHOR"
+        },
+        {
+          "url": "/v1/agencies/763000/series/0b75d1ae84f09c571070addcf8a2bbc2a03e2c4d4250d22aaf223be965750e7a",
+          "title": "Harry Potter",
+          "type": "SERIES"
+        },
+        {
+          "url": "/v1/agencies/763000/search/query?narrator=Jesper%20Christensen%20(f.%201948)",
+          "title": "Jesper Christensen (f. 1948)",
+          "type": "NARRATOR"
+        },
+        {
+          "url": "/v1/agencies/763000/works/work-of:870970-basis:22252852/recommendations",
+          "title": "Anbefalinger",
+          "type": "RECOMMENDATION"
+        }
+      ],
+      "series": [
+        {
+          "seriesId": "0b75d1ae84f09c571070addcf8a2bbc2a03e2c4d4250d22aaf223be965750e7a",
+          "title": "Harry Potter",
+          "description": "Den verdenskendte fantasyserie om den forældreløse Harry, der kommer på en magisk skole for at lære trolddom. Bøgerne følger ham gennem syv år, hvor han får nye venner og lærer mere om den magiske verden og om sine forældre. Men truslen fra den onde Lord Voldemort hænger hele tiden over Harry, der må igennem mange udfordringer, farer og mysterier. Serien bliver mørkere og mere alvorlig, efterhånden som Harry vokser op og nærmer sig den endelig konfrontation med Lord Voldemort",
+          "numberInSeries": "Del 1",
+          "members": [
+            {
+              "workId": "work-of:870970-basis:22252852",
+              "title": "Harry Potter og De Vises Sten",
+              "numberInSeries": "Del 1",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/Y9XEMItsSVa75wOa1aMVSw/960px!AUTebxyNKFwsHSBVwikuYJmW7MNrXG3Q3OTo7bzS-y6aCg"
+            },
+            {
+              "workId": "work-of:870970-basis:25197887",
+              "title": "Harry Potter og Hemmelighedernes Kammer",
+              "numberInSeries": "Del 2",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/20ZUFFhNSfaeQXBVeex1qg/960px!AUR_u-hQ6zuCZLT90PxNcs68Eo4wgmvctRnQDQ5-6gnVnQ"
+            },
+            {
+              "workId": "work-of:870970-basis:25197879",
+              "title": "Harry Potter og fangen fra Azkaban",
+              "numberInSeries": "Del 3",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/0U-m1SPZTWu7q1qQaF2xUA/960px!AURKtfYAaumrf7Z-O6OQ7CNTvnYRijKQGrb0VSv6edTAfw"
+            },
+            {
+              "workId": "work-of:870970-basis:25197909",
+              "title": "Harry Potter og flammernes pokal",
+              "numberInSeries": "Del 4",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/HnHOvQCES-us_hL4U6wATQ/960px!AUT9VaP1ESpfWkve46N5CwMXXMJRuccErahZO3m_BFEy7w"
+            },
+            {
+              "workId": "work-of:870970-basis:25245784",
+              "title": "Harry Potter og Fønixordenen",
+              "numberInSeries": "Del 5",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/QcwO3-2gR9WtYPVbfaRhgw/960px!AUQo0Qpm8i_TFuKO0gcFofiRphQRAYhY_wmK22TM9xBZXA"
+            },
+            {
+              "workId": "work-of:870970-basis:25807995",
+              "title": "Harry Potter og Halvblodsprinsen",
+              "numberInSeries": "Del 6",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/SrBg-f2-QuqK3dBM5bPl5g/960px!AUSIU2bKUnmQd2x0D2i6jJL_K2kXI1EOnYBzieSwZ2I1xw"
+            },
+            {
+              "workId": "work-of:870970-basis:27267912",
+              "title": "Harry Potter og Dødsregalierne",
+              "numberInSeries": "Del 7",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/6EmJAHrkSgunrmE_CCiPNw/960px!AUTpHFR8XVFSf3U2WRcAXozmKHOCjW6P_d-zuZ2tIAGaFw"
+            },
+            {
+              "workId": "work-of:870970-basis:52646251",
+              "title": "Harry Potter og det forbandede barn",
+              "numberInSeries": "Del 8",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/-Z-AeADhQwyq50zPOalaEA/960px!AUTJ54tYYx5pv5XC0kY8NsCWNuDf7hKAGD0jufdRZayv_Q"
+            }
+          ]
+        }
+      ],
+      "variations": [
+        {
+          "recordId": "870970-basis:141661116",
+          "workId": "work-of:870970-basis:22252852",
+          "title": "Harry Potter og De Vises Sten",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/Y9XEMItsSVa75wOa1aMVSw/960px!AUTebxyNKFwsHSBVwikuYJmW7MNrXG3Q3OTo7bzS-y6aCg",
+          "languages": [
+            "dansk"
+          ],
+          "edition": "2025",
+          "originalTitle": "Harry Potter and the philosopher's stone",
+          "genre": [
+            "eventyrlige fortællinger",
+            "romaner"
+          ],
+          "series": true,
+          "isbn": "9781781108109",
+          "publisher": [
+            "Pottermore Publishing"
+          ],
+          "blueTitle": false,
+          "materialType": {
+            "display": "lydbog (online)",
+            "displayWithPronoun": "Denne lydbog (online)",
+            "category": "AUDIO_BOOKS_ONLINE"
+          },
+          "year": "2025",
+          "shelfmark": {
+            "name": "Rowling"
+          },
+          "contributors": [
+            {
+              "name": "Hanna Lützen",
+              "roles": [
+                "oversætter"
+              ]
+            },
+            {
+              "name": "Jesper Christensen (f. 1948)",
+              "roles": [
+                "indlæser"
+              ]
+            }
+          ],
+          "audience": [
+            "9-11"
+          ],
+          "extent": "9 t., 40 min.",
+          "notes": [
+            "Downloades i MP3-format",
+            "Gengivelse af bogen",
+            "Bogforlæg ikke oplyst",
+            "Digitalisering af fysisk lydbog"
+          ],
+          "source": [
+            "eReolen"
+          ]
+        },
+        {
+          "recordId": "870970-basis:141629433",
+          "workId": "work-of:870970-basis:22252852",
+          "title": "Harry Potter og De Vises Sten",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/P-3GKMRrSD2B9VGeQD7lUQ/960px!AUQ8DqcsNlBODLzcRyuwAm7EiQPZoYD43hLZR9aMDX_-mQ",
+          "languages": [
+            "dansk"
+          ],
+          "edition": "2025",
+          "originalTitle": "Harry Potter and the philosopher's stone",
+          "genre": [
+            "romaner",
+            "fantasy"
+          ],
+          "series": true,
+          "isbn": "9781781103142",
+          "publisher": [
+            "Pottermore Publishing"
+          ],
+          "numberOfPages": 303,
+          "blueTitle": false,
+          "materialType": {
+            "display": "e-bog",
+            "displayWithPronoun": "Denne e-bog",
+            "category": "EBOOKS"
+          },
+          "year": "2025",
+          "shelfmark": {
+            "name": "Rowling"
+          },
+          "contributors": [
+            {
+              "name": "Hanna Lützen",
+              "roles": [
+                "oversætter"
+              ]
+            }
+          ],
+          "audience": [
+            "11-13"
+          ],
+          "extent": "303 sider",
+          "notes": [
+            "Downloades i EPUB-format",
+            "Digitalisering af trykt bog"
+          ],
+          "source": [
+            "eReolen"
+          ]
+        }
+      ]
+    },
+    "isExternal": false
+  }
+}

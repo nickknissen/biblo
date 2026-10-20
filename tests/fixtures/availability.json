@@ -1,0 +1,29 @@
+{
+  "status": 200,
+  "body": {
+    "data": [
+      {
+        "materialType": {
+          "display": "lydbog (online)",
+          "displayWithPronoun": "Denne lydbog (online)",
+          "category": "AUDIO_BOOKS_ONLINE"
+        },
+        "source": "digital",
+        "available": true,
+        "reservable": true,
+        "blueTitle": false
+      },
+      {
+        "materialType": {
+          "display": "e-bog",
+          "displayWithPronoun": "Denne e-bog",
+          "category": "EBOOKS"
+        },
+        "source": "digital",
+        "available": true,
+        "reservable": true,
+        "blueTitle": false
+      }
+    ]
+  }
+}

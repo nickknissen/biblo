@@ -1,0 +1,264 @@
+{
+  "status": 200,
+  "body": {
+    "data": [
+      {
+        "uuid": "3bcf831d-1376-44f6-8d3a-e305e4ffbc38",
+        "title": "Sommerfugledalen // en koncert inspireret af Inger Christensen ",
+        "description": "Vær med, når Stine Michel som afslutning på åbningsdagen i ENGEN fortolker Inger Christensens berømte digtsamling 'Sommerfugledalen'. Koncerten finder sted i ENGENs nye sal, som er opkaldt efter den vejlefødte forfatter. ",
+        "body": "<p>Inger Christensens 'Sommerfugledalen' er et af dansk litteraturs mest betydningsfulde digterværker. I den berømte sonetkrans væves sommerfuglenes farver og bevægelser sammen med store spørgsmål om livet, døden og forgængeligheden.</p><p>Sanger, komponist og forfatter Stine Michel har sat musik til digtsamlingens 15 sonetter og skabt en sanselig koncertoplevelse, hvor poesi og musik smelter sammen. Musikken bevæger sig mellem nordisk folkemusik, mellemøstlige klange og klassisk sangskrivertradition og giver Inger Christensens ord nye udtryk.</p><p>Det er en særlig anledning at afslutte åbningsdagen med netop Inger Christensens poesi i den nye Inger Christensen Sal. Her får en af Vejles store forfattere en central plads i ENGEN, og hendes ord danner rammen om dagens musikalske afslutning.</p><p>&nbsp;</p><h3>Om Stine Michel</h3><p>Stine Michel er sanger, komponist, forfatter og historiefortæller. I mere end 25 år har hun skabt musikalske fortællinger for både børn og voksne, ofte med udgangspunkt i store litterære værker. Hun har bl.a. fortolket Karen Blixens 'Babettes gæstebud', Antoine de Saint-Exupérys 'Den lille prins' og Selma Lagerlöfs 'Rødhalsen'. Hendes musik forener folkemusik, poesi og fortælling og har gennem årene modtaget flere priser og anerkendelser.</p><p><strong>Gratis entré - husk at bestille billet.</strong></p><p>&nbsp;</p><p><em>Koncerten er en del af åbningsprogrammet for ENGEN - Kulturhus og Bibliotek.&nbsp;</em></p>",
+        "url": "https://vejlebib.dk/engen-kulturhus-bibliotek/arrangementer/musik-film/sommerfugledalen/en-koncert-inspireret-af-inger",
+        "createdAt": "2026-10-15T09:48:45.000Z",
+        "updatedAt": "2026-11-12T06:37:10.000Z",
+        "imageUrl": "https://vejlebib.dk/sites/default/files/styles/event_api_scaled/public/2026-10/stine-michel-sommerfugledalen-foto-signfind02.jpg?itok=u4OLvycD",
+        "teaserImageUrl": "https://vejlebib.dk/sites/default/files/styles/list_teaser_4_3/public/2026-10/stine-michel-sommerfugledalen-foto-signfind02.jpg?h=8c1a9e4c&itok=CF2JEKWm",
+        "state": "Active",
+        "allDay": false,
+        "duration": {
+          "start": "2026-11-21T14:00:00.000Z",
+          "end": "2026-11-21T15:00:00.000Z"
+        },
+        "branchRefs": [
+          {
+            "id": "DK-763000"
+          }
+        ],
+        "locationType": "physical",
+        "address": {
+          "street": "Willy Sørensens Plads 1",
+          "postalCode": "7100",
+          "city": "Vejle"
+        },
+        "categories": [
+          "Musik & film"
+        ],
+        "tags": [
+          "Åbning af ENGEN",
+          "Digte",
+          "Koncert"
+        ],
+        "partners": [],
+        "ticketCategories": [
+          {
+            "uuid": "5dfc92ba-adbc-4056-a32a-777cdddb8fdd",
+            "title": "Standardbillet",
+            "price": {
+              "currency": "DKK",
+              "value": 0
+            }
+          }
+        ],
+        "ticketCapacity": 300,
+        "seriesId": "f041f5e7-29e3-4c73-88c9-9b8d30b5749b",
+        "screenNames": [],
+        "externalData": {
+          "url": "https://place2book.com/da/sw2/sales/63z3j4pnw7",
+          "adminUrl": "https://place2book.com/dpl_cms_admin_link?event_id=499367"
+        }
+      },
+      {
+        "uuid": "769da911-d3a4-4c82-b376-88cf5c0c03f6",
+        "title": "Læseleg for de mindste // med Rita og hendes soveben (3-6 år)",
+        "description": "Giv børnene en hyggelig stund med højtlæsning, sang eller leg sammen med en af bibliotekets børneformidlere. Vi åbner fortællekufferten og dykker ned i et emne.",
+        "body": "<p>Denne gang er emnet krop og bevægelse. Her kan børnene møde pigen Rita og hendes skøre ben, der hopper, danser, løber og alt muligt andet end at gå i seng, da det er sengetid. Mon hun finder sine soveben, så hun kan sove? Børnene hører historien og inviteres til at lege med.</p><p>Arrangementet er målrettet børn fra 3-6 år i dagtilbud.<br><br><em><strong>OBS! Arrangementet er aflyst pga. sygdom.</strong></em></p><p>&nbsp;</p>",
+        "url": "https://vejlebib.dk/engen-kulturhus-bibliotek/arrangementer/litteratur/laeseleg-de-mindste/med-rita-og-hendes-soveben-3",
+        "createdAt": "2026-11-03T10:13:27.000Z",
+        "updatedAt": "2026-11-18T17:53:05.000Z",
+        "imageUrl": "https://vejlebib.dk/sites/default/files/styles/event_api_scaled/public/2026-11/L%C3%A6seleg%20for%20de%20mindste%202.png?itok=_eM8w870",
+        "teaserImageUrl": "https://vejlebib.dk/sites/default/files/styles/list_teaser_4_3/public/2026-11/L%C3%A6seleg%20for%20de%20mindste%202.png?h=39a3ba5a&itok=6hGBUByV",
+        "state": "Cancelled",
+        "allDay": false,
+        "duration": {
+          "start": "2026-11-23T08:30:00.000Z",
+          "end": "2026-11-23T09:00:00.000Z"
+        },
+        "branchRefs": [
+          {
+            "id": "DK-763000"
+          }
+        ],
+        "locationType": "physical",
+        "address": {
+          "street": "Willy Sørensens Plads 1",
+          "postalCode": "7100",
+          "city": "Vejle"
+        },
+        "categories": [
+          "Litteratur"
+        ],
+        "tags": [
+          "Åbning af ENGEN",
+          "Læseleg",
+          "Børn 0-4 år",
+          "Børn 5-8 år"
+        ],
+        "partners": [],
+        "ticketCategories": [
+          {
+            "uuid": "38db263d-18da-4bca-b79a-7b6ba6ca7726",
+            "title": "Børnebillet",
+            "price": {
+              "currency": "DKK",
+              "value": 0
+            }
+          }
+        ],
+        "ticketCapacity": 10,
+        "seriesId": "564ad2fa-60c7-4178-8976-6913544a72c7",
+        "screenNames": [],
+        "externalData": {
+          "url": "https://place2book.com/da/sw2/sales/gd935z7qij",
+          "adminUrl": "https://place2book.com/dpl_cms_admin_link?event_id=500942"
+        }
+      },
+      {
+        "uuid": "b13376c9-0a53-4f34-92ab-fe5d29a3435c",
+        "title": "DR Romanklub // mandagsholdet",
+        "description": "Vær med til at vælge vinderen af DR Romanprisen 2027. Tilmeld dig en af vores DR Romanklubber, som mødes seks gange fra november til maj for at diskutere de seks nominerede romaner og stemme på deres favoritter. Denne klub mødes mandag aften, og du kan også være med.",
+        "body": "<p>På Vejle Bibliotekerne opretter vi fire DR Romanklubber med hver 10 deltagere, som mødes seks gange for at diskutere seks nye danske romaner. Sæson 2026/2027 begynder i november</p><p>De fire klubber mødes på biblioteket i Vejle (Engen Kulturhus &amp; Bibliotek). En bibliotekar er med ved første møde i romanklubberne og sætter det hele i gang, derefter er der ingen ordstyrer i romanklubberne.</p><p>Biblioteket sørger for bøger til deltagerne og et mødelokale, hvor I kan sidde og diskutere bøgerne. Deltagerne har 3-4 uger til at læse den enkelte bog.&nbsp;</p><p>Til maj, når alle seks romaner er læst og diskuteret, afgiver hver romanklub deres stemmer på de tre bedste romaner. DR samler stemmer sammen fra alle landets romanklubber og finder dermed frem til den endelige vinder af DR Romanprisen.</p><p>&nbsp;</p><h3>Mødedatoer</h3><p>Mandagsholdet mødes mandag den 23. november, 14. december, 25. januar, 22. februar, 15. marts og 12. april. Alle dage kl. 19-20.30.</p><p>&nbsp;</p><h3>Tilmelding</h3><p>Det er gratis at deltage.&nbsp;Du kan kun bestille én billet til det hold, du vil på.<br>Når du booker en billet, tilmelder du dig hele forløbet. Der er plads til 10 deltagere på holdet.</p><h3><br>Venteliste<strong>&nbsp;</strong></h3><p>Er holdet fyldt op, kan du komme på venteliste ved at sende en mail til litteraturformidler Louise Ryge Duus på <a href=\"mailto:loudu@vejle.dk\">loudu@vejle.dk</a>.&nbsp;</p><p><strong>Vi åbner for tilmelding mandag den 3. september kl. 10.00.</strong></p>",
+        "url": "https://vejlebib.dk/engen-kulturhus-bibliotek/arrangementer/litteratur/dr-romanklub/mandagsholdet",
+        "createdAt": "2026-08-19T09:48:37.000Z",
+        "updatedAt": "2026-11-11T14:25:22.000Z",
+        "imageUrl": "https://vejlebib.dk/sites/default/files/styles/event_api_scaled/public/2026-08/DR-roman-med-%C3%A5rstal.png?itok=R5zwbUEf",
+        "teaserImageUrl": "https://vejlebib.dk/sites/default/files/styles/list_teaser_4_3/public/2026-08/DR-roman-med-%C3%A5rstal.png?h=db5fcf34&itok=FLu5UNGM",
+        "state": "SoldOut",
+        "allDay": false,
+        "duration": {
+          "start": "2026-11-23T18:00:00.000Z",
+          "end": "2026-11-23T19:30:00.000Z"
+        },
+        "branchRefs": [
+          {
+            "id": "DK-763000"
+          }
+        ],
+        "locationType": "physical",
+        "address": {
+          "street": "Willy Sørensens Plads 1",
+          "postalCode": "7100",
+          "city": "Vejle"
+        },
+        "categories": [
+          "Litteratur"
+        ],
+        "tags": [
+          "DR Romanprisen"
+        ],
+        "partners": [],
+        "ticketCategories": [
+          {
+            "uuid": "fd7d4e97-feb6-46c1-9a61-b6a2ff623922",
+            "title": "Standardbillet",
+            "price": {
+              "currency": "DKK",
+              "value": 0
+            }
+          }
+        ],
+        "ticketCapacity": 10,
+        "seriesId": "d1204639-88fa-4965-aa7d-33957ce9b0d3",
+        "screenNames": [],
+        "externalData": {
+          "url": "https://place2book.com/da/sw2/sales/kuzrzcaysh",
+          "adminUrl": "https://place2book.com/dpl_cms_admin_link?event_id=492239"
+        }
+      },
+      {
+        "uuid": "6f68b55e-4b50-4d24-a923-8b231f2dc5f5",
+        "title": "UDSOLGT // Fortællekoncert med Hunden Ib",
+        "description": "For at fejre åbningen af ENGEN Kulturhus & Bibliotek inviterer vi alle kommunens dagtilbud til en uforglemmelig fortællekoncert med den fantasifulde hund Ib.",
+        "body": "<p>Hunden Ib er en nysgerrig og legesyg hund, som møder nye ting og oplevelser hver dag. Ib støder ofte på ting, han ikke forstår, og nogle gange kan hans aktiviteter og opgaver udspille sig på uventede måder. Uanset hvad livet byder ham, holder Ib altid en positiv indstilling og finder en løsning på sin egen omsorgsfulde og livsglade måde!</p><p>Til denne fortællekoncert møder vi stemmen bag Hunden Ib, Peter Nordahl, der sammen med sin faste musiker, optræder i børnehøjde med en tryllebindende forestilling med fortællinger og sange fra universet Hunden Ib. Med sig på scenen har Peter Nordahl en kæmpe bog, hvor illustrationerne danner en rød tråd i fortællingerne, så børnene kan følge med. Med sin rolige og behagelige stemme læser han op, og ind imellem historierne spiller og synger Peter Nordahl de kendte sange, som børnene kender fra TV. &nbsp;</p><p>Efter forestillingen uddeles der Pixi-bøger til alle deltagerne, som et varigt minde om en fantasifuld dag sammen med Hunden Ib og Peter Nordahl.</p><p>For børn fra ca. 2-5 år.</p><p><strong>Gratis entré.</strong></p><p><strong>OBS! Der er ikke flere ledige pladser til arrangementet.</strong></p><p>&nbsp;</p><p><em>Arrangementet er en del af åbningsprogrammet for ENGEN - Kulturhus og Bibliotek.&nbsp;</em></p>",
+        "url": "https://vejlebib.dk/engen-kulturhus-bibliotek/arrangementer/teater-og-bevaegelse/udsolgt/fortaellekoncert-med-hunden-0",
+        "createdAt": "2026-10-16T11:08:05.000Z",
+        "updatedAt": "2026-11-19T11:41:05.000Z",
+        "imageUrl": "https://vejlebib.dk/sites/default/files/styles/event_api_scaled/public/2026-10/Hunden-Ib-fort%C3%A6llerkoncert_billede_kvadratisk_01.png?itok=5y7H9wHU",
+        "teaserImageUrl": "https://vejlebib.dk/sites/default/files/styles/list_teaser_4_3/public/2026-10/Hunden-Ib-fort%C3%A6llerkoncert_billede_kvadratisk_01.png?h=2c6e77ad&itok=cycMsRRC",
+        "state": "Active",
+        "allDay": false,
+        "duration": {
+          "start": "2026-11-24T09:00:00.000Z",
+          "end": "2026-11-24T09:30:00.000Z"
+        },
+        "branchRefs": [
+          {
+            "id": "DK-763000"
+          }
+        ],
+        "locationType": "physical",
+        "address": {
+          "street": "Willy Sørensens Plads 1",
+          "postalCode": "7100",
+          "city": "Vejle"
+        },
+        "categories": [
+          "Teater og bevægelse"
+        ],
+        "tags": [
+          "Børn 0-4 år",
+          "Børn 5-8 år",
+          "Åbning af ENGEN"
+        ],
+        "partners": [],
+        "ticketCategories": [],
+        "seriesId": "3a26421b-6892-4c35-8c68-cfba46d44a36",
+        "screenNames": [],
+        "externalData": {
+          "adminUrl": "https://place2book.com/dpl_cms_admin_link?event_id=499365"
+        }
+      },
+      {
+        "uuid": "b8e36185-6bd1-43ba-abc0-6ae4c2df804a",
+        "title": "Stemmer i voks // koncertforedrag om Evald Tang Kristensen ",
+        "description": "Kom og oplev folkemindesamleren Evald Tang Kristensens gamle folkeviser blive vækket til live med musik og fortællinger af duoen Stemmer i Voks.",
+        "body": "<p>Evald Tang Kristensen (1843–1929) viede sit liv til at indsamle sange, sagn og fortællinger blandt den jyske hedes småkårsfolk. Han havde en særlig tilknytning til Vejleegnen, og hans omfattende arbejde har bevaret en vigtig del af vores lokale kulturhistorie. Derfor har han også fået et lokale opkaldt efter sig i ENGEN.</p><p>Det markerer vi med et koncertforedrag med duoen Stemmer i voks, hvor musikerne Ulla Bendixen og Martin Ottosen forener levende musik med historiske lydoptagelser og fortællinger fra den jyske hede.</p><p>Musikken bygger på mere end 100 år gamle optagelser af folkeviser, indspillet på voksvalser med en fonograf. De gamle stemmer får nyt liv i stemningsfulde fortolkninger med sang, trædeorgel, mandolin og klaver. Undervejs fortæller duoen om Evald Tang Kristensens utrættelige arbejde og de mennesker, hvis sange og historier han reddede fra glemslen.</p><p>Publikum får også mulighed for at opleve en fungerende fonograf og være med til at strikke på de fælles vandretæpper, der vokser fra koncert til koncert, inspireret af hedens gamle bindestuer.</p><p>&nbsp;</p><h3>Om Stemmer i voks</h3><p>Bag duoen Stemmer i voks står Ulla Bendixen og Martin Ottosen, der begge er centrale medlemmer af det prisvindende orkester Sorten Muld. Gennem 30 år har de arbejdet med at forny den nordiske folkemusik. I 2025 udgav de albummet Stemmer i voks, der modtog fem stjerner i GAFFA.</p><p><strong>Gratis entré - husk at bestille billet.</strong></p><p>&nbsp;</p><p><em>Koncertforedraget er en del af åbningsprogrammet for ENGEN Kulturhus og Bibliotek.</em></p>",
+        "url": "https://vejlebib.dk/engen-kulturhus-bibliotek/arrangementer/musik-film/stemmer-i-voks/koncertforedrag-om-evald-tang",
+        "createdAt": "2026-10-15T09:57:20.000Z",
+        "updatedAt": "2026-11-12T06:33:39.000Z",
+        "imageUrl": "https://vejlebib.dk/sites/default/files/styles/event_api_scaled/public/2026-10/Stemmer%20i%20voks.png?itok=-iIOomMD",
+        "teaserImageUrl": "https://vejlebib.dk/sites/default/files/styles/list_teaser_4_3/public/2026-10/Stemmer%20i%20voks.png?h=36bbe389&itok=G3QYyseS",
+        "state": "Active",
+        "allDay": false,
+        "duration": {
+          "start": "2026-11-24T18:00:00.000Z",
+          "end": "2026-11-24T20:00:00.000Z"
+        },
+        "branchRefs": [
+          {
+            "id": "DK-763000"
+          }
+        ],
+        "locationType": "physical",
+        "address": {
+          "street": "Willy Sørensens Plads 1",
+          "postalCode": "7100",
+          "city": "Vejle"
+        },
+        "categories": [
+          "Musik & film"
+        ],
+        "tags": [
+          "Åbning af ENGEN",
+          "Koncert"
+        ],
+        "partners": [],
+        "ticketCategories": [
+          {
+            "uuid": "f2a95ba3-4860-4648-9e9c-6273d7aece8b",
+            "title": "Standardbillet",
+            "price": {
+              "currency": "DKK",
+              "value": 0
+            }
+          }
+        ],
+        "ticketCapacity": 200,
+        "seriesId": "d9cd5a81-d597-480b-8608-0369adde0d1d",
+        "screenNames": [],
+        "externalData": {
+          "url": "https://place2book.com/da/sw2/sales/p6a6fqzesb",
+          "adminUrl": "https://place2book.com/dpl_cms_admin_link?event_id=499374"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,1219 @@
+{
+  "status": 200,
+  "body": {
+    "data": [
+      {
+        "id": "900450",
+        "name": "Landsbókasavnið",
+        "address": {
+          "street": "J.C. Svabos gøta 16, Postboks 61",
+          "postalCode": "110",
+          "city": "Tórshavn"
+        },
+        "phone": "+298 34 05 25",
+        "email": "lbs@landsbokasavnid.fo",
+        "urlDomain": "landsbokasavnid.fo"
+      },
+      {
+        "id": "716700",
+        "name": "HvidovreBibliotekerne",
+        "address": {
+          "street": "Hvidovrevej 280",
+          "postalCode": "2650",
+          "city": "Hvidovre"
+        },
+        "phone": "+45 36 39 20 00",
+        "email": "hvbib@hvidovre.dk",
+        "urlDomain": "www.hvidovrebib.dk"
+      },
+      {
+        "id": "718700",
+        "name": "Vallensbæk Bibliotek",
+        "address": {
+          "street": "Vallensbæk Stationstorv 40",
+          "postalCode": "2665",
+          "city": "Vallensbæk Strand"
+        },
+        "phone": "+45 47 97 47 00",
+        "email": "hbu@vallensbaek.dk",
+        "urlDomain": "kulturogborgerhus.vallensbaek.dk"
+      },
+      {
+        "id": "735000",
+        "name": "Lejre Bibliotek & Arkiv",
+        "address": {
+          "street": "Bygaden 53",
+          "postalCode": "4070",
+          "city": "Kirke Hyllinge"
+        },
+        "phone": "+45 46 46 16 46",
+        "email": "biblioteket@lejre.dk",
+        "urlDomain": "lejrebib.dk"
+      },
+      {
+        "id": "748200",
+        "name": "Langeland Bibliotek",
+        "address": {
+          "street": "Østerport 5-7",
+          "postalCode": "5900",
+          "city": "Rudkøbing"
+        },
+        "phone": "+45 63 51 63 30",
+        "email": "langeland.bibliotek@langelandkommune.dk",
+        "urlDomain": "langelandbibliotek.dk"
+      },
+      {
+        "id": "700400",
+        "name": "Dansk Centralbibliotek for Sydslesvig e.V.",
+        "address": {
+          "street": "Norderstrasse 59, 24939 Flensburg",
+          "postalCode": "6330",
+          "city": "Padborg"
+        },
+        "phone": "+49 46 18 69 70",
+        "email": "dcb@dcbib.dk",
+        "urlDomain": "www.dcbib.dk"
+      },
+      {
+        "id": "710100",
+        "name": "Københavns Biblioteker",
+        "address": {
+          "street": "Krystalgade 15",
+          "postalCode": "1172",
+          "city": "København K"
+        },
+        "phone": "+45 33 66 30 00",
+        "email": "bibliotek@kff.kk.dk",
+        "urlDomain": "bibliotek.kk.dk"
+      },
+      {
+        "id": "714700",
+        "name": "Biblioteket Frederiksberg",
+        "address": {
+          "street": "Falkonér Plads 3",
+          "postalCode": "2000",
+          "city": "Frederiksberg"
+        },
+        "phone": "+45 38 21 18 00",
+        "email": "biblioteket@frederiksberg.dk",
+        "urlDomain": "fkb.dk"
+      },
+      {
+        "id": "715100",
+        "name": "Ballerup Bibliotekerne",
+        "address": {
+          "street": "Banegårdspladsen 1",
+          "postalCode": "2750",
+          "city": "Ballerup"
+        },
+        "phone": "+45 44 77 33 33",
+        "email": "Ballerup-bibliotek@balk.dk",
+        "urlDomain": "bib.ballerup.dk"
+      },
+      {
+        "id": "715300",
+        "name": "Brøndby-Bibliotekerne",
+        "address": {
+          "street": "Nygårds Plads 31",
+          "postalCode": "2605",
+          "city": "Brøndby"
+        },
+        "phone": "+45 43 28 20 00",
+        "email": "bibliotek@brondby.dk",
+        "urlDomain": "www.brondby-bibliotekerne.dk"
+      },
+      {
+        "id": "715500",
+        "name": "Dragør Bibliotek",
+        "address": {
+          "street": "Vestgrønningen 18-20",
+          "postalCode": "2791",
+          "city": "Dragør"
+        },
+        "phone": "+45 32 89 04 90",
+        "email": "bibliotek@dragoer.dk",
+        "urlDomain": "www.drabib.dk"
+      },
+      {
+        "id": "715700",
+        "name": "Gentofte Bibliotekerne",
+        "address": {
+          "street": "Ahlmanns Alle 6",
+          "postalCode": "2900",
+          "city": "Hellerup"
+        },
+        "phone": "+45 39 98 58 00",
+        "email": "bibliotek@gentofte.dk",
+        "urlDomain": "genbib.dk"
+      },
+      {
+        "id": "715900",
+        "name": "Gladsaxe Bibliotekerne",
+        "address": {
+          "street": "Søborg Hovedgade 220",
+          "postalCode": "2860",
+          "city": "Søborg"
+        },
+        "phone": "+45 39 57 63 00",
+        "email": "bibliotek@gladsaxe.dk",
+        "urlDomain": "gladbib.dk"
+      },
+      {
+        "id": "716100",
+        "name": "Glostrup Bibliotek",
+        "address": {
+          "street": "Kildevældets Alle 5",
+          "postalCode": "2600",
+          "city": "Glostrup"
+        },
+        "phone": "+45 43 23 68 20",
+        "email": "biblioteket@glostrup.dk",
+        "urlDomain": "www.glostrupbib.dk"
+      },
+      {
+        "id": "716300",
+        "name": "Herlev Bibliotek",
+        "address": {
+          "street": "Herlev Bygade 70",
+          "postalCode": "2730",
+          "city": "Herlev"
+        },
+        "phone": "+45 44 52 57 00",
+        "email": "post@herlevbibliotek.dk",
+        "urlDomain": "www.herlevbibliotek.dk"
+      },
+      {
+        "id": "716500",
+        "name": "Albertslund Bibliotek",
+        "address": {
+          "street": "Bibliotekstorvet 2",
+          "postalCode": "2620",
+          "city": "Albertslund"
+        },
+        "phone": "+45 43 68 70 00",
+        "email": "bibliotek@albertslund.dk",
+        "urlDomain": "albertslundbibliotek.dk"
+      },
+      {
+        "id": "716900",
+        "name": "Høje-Taastrup Kommunes Biblioteker",
+        "address": {
+          "street": "Taastrup Hovedgade 86",
+          "postalCode": "2630",
+          "city": "Taastrup"
+        },
+        "phone": "+45 43 35 20 00",
+        "email": "bib@htk.dk",
+        "urlDomain": "bibliotek.htk.dk"
+      },
+      {
+        "id": "717300",
+        "name": "Lyngby-Taarbæk Bibliotekerne",
+        "address": {
+          "street": "Lyngby Hovedgade 28",
+          "postalCode": "2800",
+          "city": "Kongens Lyngby"
+        },
+        "phone": "+45 45 97 37 00",
+        "email": "info@ltk.dk",
+        "urlDomain": "www.lyngbybib.dk"
+      },
+      {
+        "id": "717500",
+        "name": "Rødovre Bibliotek",
+        "address": {
+          "street": "Rødovre Parkvej 140",
+          "postalCode": "2610",
+          "city": "Rødovre"
+        },
+        "phone": "+45 36 37 97 00",
+        "email": "biblioteket@rk.dk",
+        "urlDomain": "www.rdb.dk"
+      },
+      {
+        "id": "718300",
+        "name": "Kulturium Ishøj Bibliotek",
+        "address": {
+          "street": "Ishøj Store Torv 1",
+          "postalCode": "2635",
+          "city": "Ishøj"
+        },
+        "phone": "+45 43 57 71 71",
+        "email": "isbib@ishoj.dk",
+        "urlDomain": "www.ishojbib.dk"
+      },
+      {
+        "id": "718500",
+        "name": "Tårnby Kommunebiblioteker",
+        "address": {
+          "street": "Kamillevej 10",
+          "postalCode": "2770",
+          "city": "Kastrup"
+        },
+        "phone": "+45 32 46 05 00",
+        "email": "bibliotek@taarnby.dk",
+        "urlDomain": "taarnbybib.dk"
+      },
+      {
+        "id": "737000",
+        "name": "Næstved Bibliotek og Borgerservice",
+        "address": {
+          "street": "Kvægtorvet 4-6",
+          "postalCode": "4700",
+          "city": "Næstved"
+        },
+        "phone": "+45 55 88 55 88",
+        "email": "bibliotekerne@naestved.dk",
+        "urlDomain": "www.naesbib.dk"
+      },
+      {
+        "id": "737600",
+        "name": "Guldborgsund-bibliotekerne",
+        "address": {
+          "street": "Kongensgade 43",
+          "postalCode": "4800",
+          "city": "Nykøbing F"
+        },
+        "phone": "+45 54 73 16 62",
+        "email": "bibvok@guldborgsund.dk",
+        "urlDomain": "guldbib.dk"
+      },
+      {
+        "id": "739000",
+        "name": "Vordingborg Bibliotekerne",
+        "address": {
+          "street": "Sydhavnsvej 6",
+          "postalCode": "4760",
+          "city": "Vordingborg"
+        },
+        "phone": "+45 55 36 38 00",
+        "email": "bibliotekerne@vordingborg.dk",
+        "urlDomain": "www.vordingborgbibliotekerne.dk"
+      },
+      {
+        "id": "740000",
+        "name": "Bornholms Folkebiblioteker",
+        "address": {
+          "street": "Pingels Alle 1",
+          "postalCode": "3700",
+          "city": "Rønne"
+        },
+        "phone": "+45 56 92 68 00",
+        "email": "roennebibliotek@brk.dk",
+        "urlDomain": "bibliotek.brk.dk"
+      },
+      {
+        "id": "741000",
+        "name": "Middelfart Bibliotek",
+        "address": {
+          "street": "KulturØen, Havnegade 6",
+          "postalCode": "5500",
+          "city": "Middelfart"
+        },
+        "phone": "+45 88 88 52 10",
+        "email": "bibliotek@middelfart.dk",
+        "urlDomain": "www.middelfartbibliotek.dk"
+      },
+      {
+        "id": "742000",
+        "name": "AssensBibliotekerne",
+        "address": {
+          "street": "Willemoes Plads 3",
+          "postalCode": "5610",
+          "city": "Assens"
+        },
+        "phone": "+45 64 74 79 21",
+        "email": "assensbib@assens.dk",
+        "urlDomain": "www.assensbib.dk"
+      },
+      {
+        "id": "743000",
+        "name": "Faaborg-Midtfyn Bibliotekerne",
+        "address": {
+          "street": "Herregårdscentret",
+          "postalCode": "5600",
+          "city": "Faaborg"
+        },
+        "phone": "+45 72 53 81 00",
+        "email": "bibliotek@fmk.dk",
+        "urlDomain": "fmbib.dk"
+      },
+      {
+        "id": "744000",
+        "name": "Kerteminde Bibliotekerne",
+        "address": {
+          "street": "Lindøalleen 47",
+          "postalCode": "5330",
+          "city": "Munkebo"
+        },
+        "phone": "+45 65 15 11 10",
+        "email": "bibliotek@kerteminde.dk",
+        "urlDomain": "kertemindebibliotekerne.dk"
+      },
+      {
+        "id": "734000",
+        "name": "Sorø Bibliotek",
+        "address": {
+          "street": "Storgade 7",
+          "postalCode": "4180",
+          "city": "Sorø"
+        },
+        "phone": "+45 57 87 70 00",
+        "email": "biblioteket@soroe.dk",
+        "urlDomain": "www.soroebib.dk"
+      },
+      {
+        "id": "736000",
+        "name": "LollandBibliotekerne",
+        "address": {
+          "street": "Søvej 8",
+          "postalCode": "4900",
+          "city": "Nakskov"
+        },
+        "phone": "+45 54 67 75 00",
+        "email": "bib@lolland.dk",
+        "urlDomain": "lollandbib.dk"
+      },
+      {
+        "id": "748000",
+        "name": "Bibliotek og Borgerservice Nordfyns Kommune",
+        "address": {
+          "street": "Søndergade 2",
+          "postalCode": "5450",
+          "city": "Otterup"
+        },
+        "phone": "+45 64 82 86 80",
+        "email": "nfb@nordfynskommune.dk",
+        "urlDomain": "www.nordfynsbib.dk"
+      },
+      {
+        "id": "749200",
+        "name": "Ærø Folkebibliotek",
+        "address": {
+          "street": "Søndergade 16B",
+          "postalCode": "5970",
+          "city": "Ærøskøbing"
+        },
+        "phone": "+45 62 52 14 42",
+        "email": "bibliotek@arrebib.dk",
+        "urlDomain": "www.arrebib.dk"
+      },
+      {
+        "id": "751000",
+        "name": "Haderslev Bibliotekerne",
+        "address": {
+          "street": "Bispebroen 3",
+          "postalCode": "6100",
+          "city": "Haderslev"
+        },
+        "phone": "+45 74 34 77 77",
+        "email": "haderslevbib@haderslev.dk",
+        "urlDomain": "haderslevbibliotekerne.dk"
+      },
+      {
+        "id": "753000",
+        "name": "Billund Bibliotekerne",
+        "address": {
+          "street": "Tinghusgade 15",
+          "postalCode": "7200",
+          "city": "Grindsted"
+        },
+        "phone": "+45 79 72 70 17",
+        "email": "bibliotek@billund.dk",
+        "urlDomain": "billundbib.dk"
+      },
+      {
+        "id": "754000",
+        "name": "Biblioteket Sønderborg",
+        "address": {
+          "street": "Nørre Havnegade 15",
+          "postalCode": "6400",
+          "city": "Sønderborg"
+        },
+        "phone": "+45 88 72 42 00",
+        "email": "biblioteket@sonderborg.dk",
+        "urlDomain": "biblioteket.sonderborg.dk"
+      },
+      {
+        "id": "755000",
+        "name": "Tønder Kommunes Biblioteker",
+        "address": {
+          "street": "Richtsensgade 10",
+          "postalCode": "6270",
+          "city": "Tønder"
+        },
+        "phone": "+45 74 92 98 40",
+        "email": "biblioteket@toender.dk",
+        "urlDomain": "tbib.dk"
+      },
+      {
+        "id": "756100",
+        "name": "Esbjerg Kommunes Biblioteker",
+        "address": {
+          "street": "Nørregade 19, Postbox 69",
+          "postalCode": "6701",
+          "city": "Esbjerg"
+        },
+        "phone": "+45 75 16 20 00",
+        "email": "biblio@esbjerg.dk",
+        "urlDomain": "www.esbjergbibliotek.dk"
+      },
+      {
+        "id": "757300",
+        "name": "Varde Bibliotek",
+        "address": {
+          "street": "Rådhusstræde 2",
+          "postalCode": "6800",
+          "city": "Varde"
+        },
+        "phone": "+45 75 22 10 88",
+        "email": "biblioteket@vardebib.dk",
+        "urlDomain": "www.vardebib.dk"
+      },
+      {
+        "id": "757500",
+        "name": "Vejen Kommunes Biblioteker",
+        "address": {
+          "street": "Vestergade 2",
+          "postalCode": "6600",
+          "city": "Vejen"
+        },
+        "phone": "+45 79 96 52 50",
+        "email": "vejbib@vejenkom.dk",
+        "urlDomain": "vejbib.dk"
+      },
+      {
+        "id": "758000",
+        "name": "Kulturhuse & Biblioteker Aabenraa",
+        "address": {
+          "street": "Haderslevvej 3",
+          "postalCode": "6200",
+          "city": "Aabenraa"
+        },
+        "phone": "+45 73 76 80 80",
+        "email": "aabenraabib@aabenraa.dk",
+        "urlDomain": "www.aabenraabib.dk"
+      },
+      {
+        "id": "760700",
+        "name": "Fredericia Bibliotek",
+        "address": {
+          "street": "Prinsessegade 27",
+          "postalCode": "7000",
+          "city": "Fredericia"
+        },
+        "phone": "+45 72 10 68 00",
+        "email": "biblioteket@fredericia.dk",
+        "urlDomain": "fredericiabib.dk"
+      },
+      {
+        "id": "761500",
+        "name": "Horsens Kommunes Biblioteker",
+        "address": {
+          "street": "Tobaksgården 12",
+          "postalCode": "8700",
+          "city": "Horsens"
+        },
+        "phone": "+45 76 29 24 00",
+        "email": "bibliotek@horsens.dk",
+        "urlDomain": "horsensbibliotek.dk"
+      },
+      {
+        "id": "762100",
+        "name": "Koldingbibliotekerne",
+        "address": {
+          "street": "Slotssøvejen 4",
+          "postalCode": "6000",
+          "city": "Kolding"
+        },
+        "phone": "+45 79 79 77 00",
+        "email": "bibliotek@kolding.dk",
+        "urlDomain": "koldingbib.dk"
+      },
+      {
+        "id": "763000",
+        "name": "Vejle Bibliotekerne",
+        "address": {
+          "street": "Willy Sørensens Plads 1",
+          "postalCode": "7100",
+          "city": "Vejle"
+        },
+        "phone": "+45 76 81 32 00",
+        "email": "vejlebib@vejlebib.dk",
+        "urlDomain": "vejlebib.dk"
+      },
+      {
+        "id": "765700",
+        "name": "Herning Bibliotekerne",
+        "address": {
+          "street": "Østergade 8",
+          "postalCode": "7400",
+          "city": "Herning"
+        },
+        "phone": "+45 96 28 88 00",
+        "email": "biblioteket@herning.dk",
+        "urlDomain": "www.herningbib.dk"
+      },
+      {
+        "id": "766100",
+        "name": "Holstebro Bibliotek",
+        "address": {
+          "street": "Kirkestræde 13",
+          "postalCode": "7500",
+          "city": "Holstebro"
+        },
+        "phone": "+45 96 11 68 00",
+        "email": "holstebro.bibliotek@holstebro.dk",
+        "urlDomain": "www.holstebrobibliotek.dk"
+      },
+      {
+        "id": "766500",
+        "name": "Lemvig Bibliotek",
+        "address": {
+          "street": "Skolegade 3",
+          "postalCode": "7620",
+          "city": "Lemvig"
+        },
+        "phone": "+45 96 63 15 00",
+        "email": "bibliotek@lemvig.dk",
+        "urlDomain": "www.lemvigbibliotek.dk"
+      },
+      {
+        "id": "767100",
+        "name": "Struer Bibliotek",
+        "address": {
+          "street": "Smedegade 1",
+          "postalCode": "7600",
+          "city": "Struer"
+        },
+        "phone": "+45 96 84 85 00",
+        "email": "bibliotek@struer.dk",
+        "urlDomain": "www.struerbibliotek.dk"
+      },
+      {
+        "id": "770600",
+        "name": "Syddjurs Bibliotek",
+        "address": {
+          "street": "Skolevej 12",
+          "postalCode": "8410",
+          "city": "Rønde"
+        },
+        "phone": "+45 87 53 57 10",
+        "email": "syddjursbibliotek@syddjurs.dk",
+        "urlDomain": "syddjursbibliotek.dk"
+      },
+      {
+        "id": "770700",
+        "name": "Norddjurs Biblioteker",
+        "address": {
+          "street": "N. P. Josiassensvej 17",
+          "postalCode": "8500",
+          "city": "Grenaa"
+        },
+        "phone": "+45 89 59 10 40",
+        "email": "grenaa.bib@norddjurs.dk",
+        "urlDomain": "norddjursbib.dk"
+      },
+      {
+        "id": "771000",
+        "name": "Favrskov Bibliotekerne",
+        "address": {
+          "street": "Skovvej 18",
+          "postalCode": "8382",
+          "city": "Hinnerup"
+        },
+        "phone": "+45 89 64 14 55",
+        "email": "favrskovbibliotekerne@favrskov.dk",
+        "urlDomain": "favrskovbib.dk"
+      },
+      {
+        "id": "772700",
+        "name": "Odder Bibliotek",
+        "address": {
+          "street": "Mejerivej 14",
+          "postalCode": "8300",
+          "city": "Odder"
+        },
+        "phone": "+45 87 80 35 50",
+        "email": "bibliotek@odder.dk",
+        "urlDomain": "www.bibliotek.odder.dk"
+      },
+      {
+        "id": "773000",
+        "name": "Randers Bibliotek",
+        "address": {
+          "street": "Stemannsgade 2",
+          "postalCode": "8900",
+          "city": "Randers C"
+        },
+        "phone": "+45 87 10 68 00",
+        "email": "hovedbiblioteket@randersbib.dk",
+        "urlDomain": "www.randersbib.dk"
+      },
+      {
+        "id": "774000",
+        "name": "Silkeborg Bibliotekerne",
+        "address": {
+          "street": "Hostrupsgade 41 A",
+          "postalCode": "8600",
+          "city": "Silkeborg"
+        },
+        "phone": "+45 87 22 19 00",
+        "email": "silkeborgbibliotek@silkeborgbib.dk",
+        "urlDomain": "silkeborgbib.dk"
+      },
+      {
+        "id": "774100",
+        "name": "Samsø Bibliotek",
+        "address": {
+          "street": "Marsk Stigs Vej 5A",
+          "postalCode": "8305",
+          "city": "Samsø"
+        },
+        "phone": "+45 87 92 23 55",
+        "email": "bibliotek@samsoe.dk",
+        "urlDomain": "bibliotek.samsoe.dk"
+      },
+      {
+        "id": "774600",
+        "name": "Skanderborg Bibliotek",
+        "address": {
+          "street": "Parkvej 10B",
+          "postalCode": "8660",
+          "city": "Skanderborg"
+        },
+        "phone": "+45 87 94 29 60",
+        "email": "biblioteket@skanderborg.dk",
+        "urlDomain": "www.bibliotek.skanderborg.dk"
+      },
+      {
+        "id": "775100",
+        "name": "Aarhus Kommunes Biblioteker",
+        "address": {
+          "street": "Hack Kampmanns Plads 2",
+          "postalCode": "8000",
+          "city": "Aarhus C"
+        },
+        "phone": "+45 89 40 92 00",
+        "email": "borgerserviceogbiblioteker@aarhus.dk",
+        "urlDomain": "www.aakb.dk"
+      },
+      {
+        "id": "775600",
+        "name": "Ikast-Brande Bibliotek",
+        "address": {
+          "street": "Grønnegade 25",
+          "postalCode": "7430",
+          "city": "Ikast"
+        },
+        "phone": "+45 99 60 51 20",
+        "email": "ikastbibliotek@ikast-brande.dk",
+        "urlDomain": "www.ikast-brandebibliotek.dk"
+      },
+      {
+        "id": "776000",
+        "name": "Ringkøbing-Skjern Bibliotekerne",
+        "address": {
+          "street": "Ved Fjorden 6",
+          "postalCode": "6950",
+          "city": "Ringkøbing"
+        },
+        "phone": "+45 99 74 26 00",
+        "email": "ringbib@rksk.dk",
+        "urlDomain": "riskbib.dk"
+      },
+      {
+        "id": "776600",
+        "name": "Hedensted Bibliotekerne",
+        "address": {
+          "street": "Østerbrogade 26",
+          "postalCode": "8722",
+          "city": "Hedensted"
+        },
+        "phone": "+45 79 74 13 70",
+        "email": "hedenstedbib@hedensted.dk",
+        "urlDomain": "hedenstedbib.dk"
+      },
+      {
+        "id": "777300",
+        "name": "Morsø Folkebibliotek",
+        "address": {
+          "street": "Støberiet, Holgersgade 7",
+          "postalCode": "7900",
+          "city": "Nykøbing M"
+        },
+        "phone": "+45 99 70 60 00",
+        "email": "bibliotek@morsoe.dk",
+        "urlDomain": "www.bibliotekmorsoe.dk"
+      },
+      {
+        "id": "777900",
+        "name": "Skive Bibliotek",
+        "address": {
+          "street": "Østergade 25",
+          "postalCode": "7800",
+          "city": "Skive"
+        },
+        "phone": "+45 99 15 70 00",
+        "email": "skivebibliotek@skivekommune.dk",
+        "urlDomain": "www.skivebibliotek.dk"
+      },
+      {
+        "id": "778700",
+        "name": "Biblioteket i Thy",
+        "address": {
+          "street": "Tingstrupvej 19",
+          "postalCode": "7700",
+          "city": "Thisted"
+        },
+        "phone": "+45 99 17 28 00",
+        "email": "bibliotek@thisted.dk",
+        "urlDomain": "bib.kulturrummet.dk"
+      },
+      {
+        "id": "779100",
+        "name": "Viborg Bibliotekerne",
+        "address": {
+          "street": "Vesterbrogade 15, Postbox 514",
+          "postalCode": "8800",
+          "city": "Viborg"
+        },
+        "phone": "+45 87 87 34 34",
+        "email": "viborgbibliotekerne@viborg.dk",
+        "urlDomain": "viborgbib.dk"
+      },
+      {
+        "id": "781000",
+        "name": "Brønderslev Bibliotek",
+        "address": {
+          "street": "P.N. Jensens Plads 5",
+          "postalCode": "9700",
+          "city": "Brønderslev"
+        },
+        "phone": "+45 99 45 47 47",
+        "email": "bibliotek@99454545.dk",
+        "urlDomain": "www.bronderslevbib.dk"
+      },
+      {
+        "id": "781300",
+        "name": "Bibliotek & Borgerservice Frederikshavn Kommune",
+        "address": {
+          "street": "Parallelvej 16",
+          "postalCode": "9900",
+          "city": "Frederikshavn"
+        },
+        "phone": "+45 98 45 62 42",
+        "email": "bibl@frederikshavn.dk",
+        "urlDomain": "bibl.frederikshavn.dk"
+      },
+      {
+        "id": "782000",
+        "name": "Vesthimmerlands Biblioteker",
+        "address": {
+          "street": "Søndergade 24",
+          "postalCode": "9600",
+          "city": "Aars"
+        },
+        "phone": "+45 99 66 85 10",
+        "email": "bibliotek@vesthimmerland.dk",
+        "urlDomain": "www.vhbib.dk"
+      },
+      {
+        "id": "782500",
+        "name": "Læsø Bibliotek",
+        "address": {
+          "street": "Byrum Hovedgade 58",
+          "postalCode": "9940",
+          "city": "Læsø"
+        },
+        "phone": "+45 24 65 63 06",
+        "email": "bibliotek@laesoe.dk",
+        "urlDomain": "biblioteket.laesoe.dk"
+      },
+      {
+        "id": "784000",
+        "name": "Rebild Bibliotekerne",
+        "address": {
+          "street": "Grangårdsvej 13",
+          "postalCode": "9530",
+          "city": "Støvring"
+        },
+        "phone": "+45 99 88 77 40",
+        "email": "bibliotek@rebild.dk",
+        "urlDomain": "www.rebildbib.dk"
+      },
+      {
+        "id": "784600",
+        "name": "Mariagerfjord Bibliotekerne",
+        "address": {
+          "street": "Adelgade 28-30",
+          "postalCode": "9500",
+          "city": "Hobro"
+        },
+        "phone": "+45 97 11 52 00",
+        "email": "hobrobibliotek@mariagerfjord.dk",
+        "urlDomain": "mfbib.dk"
+      },
+      {
+        "id": "784900",
+        "name": "Jammerbugt Bibliotekerne",
+        "address": {
+          "street": "Rotfeldsvej 11",
+          "postalCode": "9460",
+          "city": "Brovst"
+        },
+        "phone": "+45 72 57 85 00",
+        "email": "hovedbibliotek@jammerbugt.dk",
+        "urlDomain": "www.jammerbugtbibliotekerne.dk"
+      },
+      {
+        "id": "785100",
+        "name": "Aalborg Bibliotekerne",
+        "address": {
+          "street": "Rendsburggade 2, Postbox 839",
+          "postalCode": "9100",
+          "city": "Aalborg"
+        },
+        "phone": "+45 99 31 44 00",
+        "email": "bibliotek@aalborg.dk",
+        "urlDomain": "www.aalborgbibliotekerne.dk"
+      },
+      {
+        "id": "786000",
+        "name": "Hjørring Bibliotekerne",
+        "address": {
+          "street": "Østergade 30",
+          "postalCode": "9800",
+          "city": "Hjørring"
+        },
+        "phone": "+45 72 33 48 00",
+        "email": "bibliotekerne@hjoerring.dk",
+        "urlDomain": "hjbib.dk"
+      },
+      {
+        "id": "911116",
+        "name": "Býarbókasavnið",
+        "address": {
+          "street": "Niels Finsens gøta 7",
+          "postalCode": "100",
+          "city": "Tórshavn"
+        },
+        "phone": "+298 30 20 30",
+        "email": "bbs@bbs.fo",
+        "urlDomain": "www.bbs.fo"
+      },
+      {
+        "id": "911130",
+        "name": "Nunatta Atuagaateqarfia/Det grønlandske Landsbibliotek",
+        "address": {
+          "street": "Imaneq 26, Postbox 1011",
+          "postalCode": "3900",
+          "city": "Nuuk"
+        },
+        "phone": "+299 32 11 56",
+        "email": "nalib@katak.gl",
+        "urlDomain": "www.katak.gl"
+      },
+      {
+        "id": "730600",
+        "name": "Odsherred Bibliotek, Borgerservice og Kulturhus",
+        "address": {
+          "street": "Vesterbro Torv 4",
+          "postalCode": "4500",
+          "city": "Nykøbing Sj"
+        },
+        "phone": "+45 59 66 50 00",
+        "email": "biblioteket@odsherred.dk",
+        "urlDomain": "odsbib.dk"
+      },
+      {
+        "id": "719000",
+        "name": "Furesø Bibliotek & Borgerservice",
+        "address": {
+          "street": "Bymidten 48",
+          "postalCode": "3500",
+          "city": "Værløse"
+        },
+        "phone": "+45 72 16 40 40",
+        "email": "bibliotek@furesoe.dk",
+        "urlDomain": "furbib.dk"
+      },
+      {
+        "id": "720100",
+        "name": "Allerød Biblioteker",
+        "address": {
+          "street": "Skovensvej 4",
+          "postalCode": "3450",
+          "city": "Allerød"
+        },
+        "phone": "+45 48 12 60 00",
+        "email": "bibliotek@alleroed.dk",
+        "urlDomain": "www.bibliotek.alleroed.dk"
+      },
+      {
+        "id": "721000",
+        "name": "Fredensborg Bibliotekerne",
+        "address": {
+          "street": "Jernbanegade 3",
+          "postalCode": "3480",
+          "city": "Fredensborg"
+        },
+        "phone": "+45 72 56 22 00",
+        "email": "bibliotekerne@fredensborg.dk",
+        "urlDomain": "www.fredensborgbibliotekerne.dk"
+      },
+      {
+        "id": "721700",
+        "name": "Helsingør Kommunes Biblioteker",
+        "address": {
+          "street": "Biblioteket Kulturværftet, Allegade 2",
+          "postalCode": "3000",
+          "city": "Helsingør"
+        },
+        "phone": "+45 49 28 36 20",
+        "email": "biblioteket@helsingor.dk",
+        "urlDomain": "helsbib.dk"
+      },
+      {
+        "id": "721900",
+        "name": "Hillerød Bibliotekerne",
+        "address": {
+          "street": "Christiansgade 1, Postboks 252",
+          "postalCode": "3400",
+          "city": "Hillerød"
+        },
+        "phone": "+45 72 32 58 00",
+        "email": "bibliotek@hillerod.dk",
+        "urlDomain": "hilbib.dk"
+      },
+      {
+        "id": "722300",
+        "name": "Hørsholm Bibliotek",
+        "address": {
+          "street": "Bibliotekstorvet 1",
+          "postalCode": "2970",
+          "city": "Hørsholm"
+        },
+        "phone": "+45 48 49 00 50",
+        "email": "horsbib@horsholm.dk",
+        "urlDomain": "biblioteket.horsholm.dk"
+      },
+      {
+        "id": "723000",
+        "name": "Rudersdal Bibliotekerne",
+        "address": {
+          "street": "Stationsvej 38",
+          "postalCode": "3460",
+          "city": "Birkerød"
+        },
+        "phone": "+45 46 11 57 00",
+        "email": "bibliotek@rudersdal.dk",
+        "urlDomain": "rudbib.dk"
+      },
+      {
+        "id": "724000",
+        "name": "Egedal Bibliotekerne",
+        "address": {
+          "street": "Flodvej 68, Smørumnedre",
+          "postalCode": "2765",
+          "city": "Smørum"
+        },
+        "phone": "+45 72 59 77 00",
+        "email": "egedalbibliotekerne@egekom.dk",
+        "urlDomain": "egedalbibliotekerne.dk"
+      },
+      {
+        "id": "725000",
+        "name": "Frederikssund Bibliotekerne",
+        "address": {
+          "street": "Jernbanegade 24",
+          "postalCode": "3600",
+          "city": "Frederikssund"
+        },
+        "phone": "+45 47 35 30 00",
+        "email": "bibliotekerne@frederikssund.dk",
+        "urlDomain": "www.bibliotekerne.frederikssund.dk"
+      },
+      {
+        "id": "725300",
+        "name": "Greve Bibliotek",
+        "address": {
+          "street": "Portalen 2",
+          "postalCode": "2670",
+          "city": "Greve"
+        },
+        "phone": "+45 43 95 80 00",
+        "email": "greve@grevebib.dk",
+        "urlDomain": "www.grevebibliotek.dk"
+      },
+      {
+        "id": "725900",
+        "name": "Køge Bibliotekerne",
+        "address": {
+          "street": "Kirkestræde 18",
+          "postalCode": "4600",
+          "city": "Køge"
+        },
+        "phone": "+45 56 67 28 00",
+        "email": "koegebib@koege.dk",
+        "urlDomain": "www.koegebib.dk"
+      },
+      {
+        "id": "726000",
+        "name": "Halsnæs Bibliotekerne",
+        "address": {
+          "street": "Torvet 41",
+          "postalCode": "3300",
+          "city": "Frederiksværk"
+        },
+        "phone": "+45 47 78 41 00",
+        "email": "bibliotek@halsnaes.dk",
+        "urlDomain": "bibliotekerne.halsnaes.dk"
+      },
+      {
+        "id": "726500",
+        "name": "Roskilde Bibliotekerne",
+        "address": {
+          "street": "Dronning Margrethes Vej 14",
+          "postalCode": "4000",
+          "city": "Roskilde"
+        },
+        "phone": "+45 46 31 50 00",
+        "email": "bibliotek@roskilde.dk",
+        "urlDomain": "www.roskildebib.dk"
+      },
+      {
+        "id": "726900",
+        "name": "Solrød Bibliotek og Kulturhus",
+        "address": {
+          "street": "Solrød Center 4",
+          "postalCode": "2680",
+          "city": "Solrød Strand"
+        },
+        "phone": "+45 56 18 28 00",
+        "email": "solbib@solrod.dk",
+        "urlDomain": "solbib.dk"
+      },
+      {
+        "id": "727000",
+        "name": "Gribskov Biblioteker",
+        "address": {
+          "street": "Skolegade 43",
+          "postalCode": "3200",
+          "city": "Helsinge"
+        },
+        "phone": "+45 72 49 60 06",
+        "email": "biblioteket@gribskov.dk",
+        "urlDomain": "www.gribskovbib.dk"
+      },
+      {
+        "id": "731600",
+        "name": "Holbæk Bibliotekerne",
+        "address": {
+          "street": "Nygade 9-13",
+          "postalCode": "4300",
+          "city": "Holbæk"
+        },
+        "phone": "+45 72 36 36 06",
+        "email": "holbib@holb.dk",
+        "urlDomain": "bibliotek.holbaek.dk"
+      },
+      {
+        "id": "732000",
+        "name": "Faxe Kommunes Biblioteker & Borgerservice",
+        "address": {
+          "street": "Jernbanegade 62",
+          "postalCode": "4690",
+          "city": "Haslev"
+        },
+        "phone": "+45 56 20 28 00",
+        "email": "bibliotek@faxekommune.dk",
+        "urlDomain": "www.faxebibliotek.dk"
+      },
+      {
+        "id": "732600",
+        "name": "Kalundborg Biblioteker",
+        "address": {
+          "street": "Klostertorvet 2, Postbox 159",
+          "postalCode": "4400",
+          "city": "Kalundborg"
+        },
+        "phone": "+45 59 53 55 60",
+        "email": "klbbibliotek@kalundborg.dk",
+        "urlDomain": "www.kalundborgbib.dk"
+      },
+      {
+        "id": "732900",
+        "name": "Ringsted Bibliotek & Borgerservice",
+        "address": {
+          "street": "Tværallé 1-3",
+          "postalCode": "4100",
+          "city": "Ringsted"
+        },
+        "phone": "+45 57 62 70 01",
+        "email": "biblioteket@ringsted.dk",
+        "urlDomain": "ringstedbib.dk"
+      },
+      {
+        "id": "733000",
+        "name": "Slagelse Biblioteker og Borgerservice",
+        "address": {
+          "street": "Stenstuegade 3",
+          "postalCode": "4200",
+          "city": "Slagelse"
+        },
+        "phone": "+45 58 57 57 57",
+        "email": "bibliotek@slagelse.dk",
+        "urlDomain": "www.slagelsebib.dk"
+      },
+      {
+        "id": "733600",
+        "name": "Stevns Bibliotekerne",
+        "address": {
+          "street": "Kirketorvet 2",
+          "postalCode": "4660",
+          "city": "Store Heddinge"
+        },
+        "phone": "+45 56 50 30 70",
+        "email": "bibliotek@stevns.dk",
+        "urlDomain": "www.stevnsbib.dk"
+      },
+      {
+        "id": "745000",
+        "name": "Nyborg Bibliotek",
+        "address": {
+          "street": "Torvet 11",
+          "postalCode": "5800",
+          "city": "Nyborg"
+        },
+        "phone": "+45 63 33 70 75",
+        "email": "bibliotek@nyborg.dk",
+        "urlDomain": "www.nyborgbibliotek.dk"
+      },
+      {
+        "id": "746100",
+        "name": "Odense Bibliotekerne",
+        "address": {
+          "street": "By- og Kulturforvaltningen. Borgernes Hus, Østre Stationsvej 15",
+          "postalCode": "5000",
+          "city": "Odense C"
+        },
+        "phone": "+45 66 13 13 72",
+        "email": "adm-bib@odense.dk",
+        "urlDomain": "www.odensebib.dk"
+      },
+      {
+        "id": "747900",
+        "name": "Svendborg Bibliotek",
+        "address": {
+          "street": "Svinget 1",
+          "postalCode": "5700",
+          "city": "Svendborg"
+        },
+        "phone": "+45 62 23 50 00",
+        "email": "bibliotek@svendborg.dk",
+        "urlDomain": "svendborgbibliotek.dk"
+      }
+    ]
+  }
+}

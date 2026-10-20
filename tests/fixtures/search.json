@@ -1,0 +1,150 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "hitcount": 162,
+      "works": [
+        {
+          "id": "work-of:870970-basis:22252852",
+          "title": "Harry Potter og De Vises Sten",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/Y9XEMItsSVa75wOa1aMVSw/960px!AUTebxyNKFwsHSBVwikuYJmW7MNrXG3Q3OTo7bzS-y6aCg",
+          "workYear": "1997",
+          "publisher": "Pottermore Publishing",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [
+            {
+              "title": "Harry Potter",
+              "numberInSeries": "Del 1"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:25197887",
+          "title": "Harry Potter og Hemmelighedernes Kammer",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/20ZUFFhNSfaeQXBVeex1qg/960px!AUR_u-hQ6zuCZLT90PxNcs68Eo4wgmvctRnQDQ5-6gnVnQ",
+          "workYear": "1998",
+          "publisher": "Pottermore Publishing",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [
+            {
+              "title": "Harry Potter",
+              "numberInSeries": "Del 2"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:25197879",
+          "title": "Harry Potter og fangen fra Azkaban",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/0U-m1SPZTWu7q1qQaF2xUA/960px!AURKtfYAaumrf7Z-O6OQ7CNTvnYRijKQGrb0VSv6edTAfw",
+          "workYear": "1999",
+          "publisher": "Pottermore Publishing",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [
+            {
+              "title": "Harry Potter",
+              "numberInSeries": "Del 3"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:52646251",
+          "title": "Harry Potter og det forbandede barn",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/-Z-AeADhQwyq50zPOalaEA/960px!AUTJ54tYYx5pv5XC0kY8NsCWNuDf7hKAGD0jufdRZayv_Q",
+          "workYear": "2016",
+          "publisher": "Pottermore Publishing",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            }
+          ],
+          "series": [
+            {
+              "title": "Harry Potter",
+              "numberInSeries": "Del 8"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:25197909",
+          "title": "Harry Potter og flammernes pokal",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/HnHOvQCES-us_hL4U6wATQ/960px!AUT9VaP1ESpfWkve46N5CwMXXMJRuccErahZO3m_BFEy7w",
+          "workYear": "2000",
+          "publisher": "Pottermore Publishing",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [
+            {
+              "title": "Harry Potter",
+              "numberInSeries": "Del 4"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        }
+      ]
+    }
+  }
+}

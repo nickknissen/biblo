@@ -1,0 +1,45 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "statusList": [
+        {
+          "branchId": "DK-763001",
+          "name": "Give Bibliotek",
+          "opens": "2026-11-20T05:00:00.000Z",
+          "closes": "2026-11-20T19:00:00.000Z"
+        },
+        {
+          "branchId": "DK-763002",
+          "name": "Jelling Bibliotek",
+          "opens": "2026-11-20T06:00:00.000Z",
+          "closes": "2026-11-20T21:00:00.000Z"
+        },
+        {
+          "branchId": "DK-763004",
+          "name": "Børkop Bibliotek",
+          "opens": "2026-11-20T05:00:00.000Z",
+          "closes": "2026-11-20T22:00:00.000Z"
+        },
+        {
+          "branchId": "DK-763003",
+          "name": "Egtved Bibliotek",
+          "opens": "2026-11-20T05:00:00.000Z",
+          "closes": "2026-11-20T22:00:00.000Z"
+        },
+        {
+          "branchId": "DK-763007",
+          "name": "Vejle Bibliotek - Spinderiet",
+          "opens": "2026-11-20T07:00:00.000Z",
+          "closes": "2026-11-20T15:00:00.000Z"
+        },
+        {
+          "branchId": "FBS-630019",
+          "name": "Nørremarken Bibliotek",
+          "opens": "2026-11-20T07:30:00.000Z",
+          "closes": "2026-11-20T16:30:00.000Z"
+        }
+      ]
+    }
+  }
+}

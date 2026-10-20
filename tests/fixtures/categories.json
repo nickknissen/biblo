@@ -1,0 +1,287 @@
+{
+  "status": 200,
+  "body": {
+    "data": [
+      {
+        "id": "facf02d3-5a65-4739-bad1-a8ad5130ec1e",
+        "title": "Jul",
+        "icon": "https://delingstjenesten.dk/sites/default/files/2026-08/Fagb%C3%B8ger.jpg",
+        "elements": [
+          {
+            "type": "AppContentElementNavSpotsManual",
+            "id": "22792142-ec36-4349-8d75-7477bdd465f6",
+            "linkedPages": [
+              "990dcd4a-dd17-4274-aa9b-6b1765eed316"
+            ]
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "cfbb2985-5542-4697-afcf-616751402abd",
+            "description": null,
+            "priorityMaterialType": null,
+            "title": "Børnenes kalenderbøger",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/facf02d3-5a65-4739-bad1-a8ad5130ec1e/elements/cfbb2985-5542-4697-afcf-616751402abd",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "f4a47422-3b16-4a23-8025-98c6a414f40b",
+            "description": null,
+            "priorityMaterialType": null,
+            "title": "Nye og gamle juleklassikere",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/facf02d3-5a65-4739-bad1-a8ad5130ec1e/elements/f4a47422-3b16-4a23-8025-98c6a414f40b",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementNavSpotsManual",
+            "id": "69a751a9-4437-48ed-9305-b47c5eb93139",
+            "linkedPages": [
+              "e6f9c27f-f923-4ec6-a6c8-564cac8f39fb"
+            ]
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "97f320b1-b588-43f8-8c68-6622f6e83300",
+            "description": null,
+            "priorityMaterialType": null,
+            "title": "Juleklip og pynt",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/facf02d3-5a65-4739-bad1-a8ad5130ec1e/elements/97f320b1-b588-43f8-8c68-6622f6e83300",
+              "type": "CONTENT_ELEMENT"
+            }
+          }
+        ]
+      },
+      {
+        "id": "373ca901-699b-463d-a187-de289cc7a021",
+        "title": "Bøger til efteråret",
+        "icon": "https://delingstjenesten.dk/sites/default/files/2026-08/S%C3%A6son.jpg",
+        "elements": [
+          {
+            "type": "AppContentElementNavSpotsManual",
+            "id": "17033eb1-bf03-4737-b0e0-3f7b00a590a1",
+            "linkedPages": [
+              "a6421c87-874e-4778-892c-9d4e7d7c56fe"
+            ]
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "55af6dd6-bc8e-4636-b086-a02227170450",
+            "description": null,
+            "priorityMaterialType": null,
+            "title": "Efterårslæsning, du altid kan låne",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/373ca901-699b-463d-a187-de289cc7a021/elements/55af6dd6-bc8e-4636-b086-a02227170450",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementNavSpotsManual",
+            "id": "f916d54b-7489-4a97-9183-ab9165d15c9f",
+            "linkedPages": [
+              "2561a1b3-ed34-4565-affd-ccc6acd66448"
+            ]
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "5ae23e4f-6b8e-44d0-9ff3-652c7b335934",
+            "description": null,
+            "priorityMaterialType": null,
+            "title": "Begynd på serien",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/373ca901-699b-463d-a187-de289cc7a021/elements/5ae23e4f-6b8e-44d0-9ff3-652c7b335934",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementNavSpotsManual",
+            "id": "b4715481-e2e8-4fc9-b43e-611dc9ef8af5",
+            "linkedPages": [
+              "b7e5f97c-472a-425c-ab80-317ac9d4f8cc"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "36782a3a-27b7-450d-a806-0e9007f737d8",
+        "title": "Lydbøger",
+        "icon": "https://delingstjenesten.dk/sites/default/files/2026-08/Lydb%C3%B8ger.jpg",
+        "elements": [
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "c2f60179-13bb-4699-a3b7-f7831145140c",
+            "description": null,
+            "priorityMaterialType": "lydbog (online)",
+            "title": "Nyheder",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/36782a3a-27b7-450d-a806-0e9007f737d8/elements/c2f60179-13bb-4699-a3b7-f7831145140c",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "ed2cbbfc-9481-4615-a418-a664b7449a47",
+            "description": null,
+            "priorityMaterialType": "lydbog (online)",
+            "title": "Lytterne anbefaler",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/36782a3a-27b7-450d-a806-0e9007f737d8/elements/ed2cbbfc-9481-4615-a418-a664b7449a47",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "4c6484d6-670d-4cd1-bea9-33273adbad87",
+            "description": null,
+            "priorityMaterialType": "lydbog (online)",
+            "title": "Nye lydbøger, du altid kan låne",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/36782a3a-27b7-450d-a806-0e9007f737d8/elements/4c6484d6-670d-4cd1-bea9-33273adbad87",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementRecommendation",
+            "id": "16f845e2-19f8-46bc-a0b7-3324182705b1",
+            "imagePositionRight": false,
+            "description": null,
+            "title": "Se på DR: Fri fra druk",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/36782a3a-27b7-450d-a806-0e9007f737d8/elements/16f845e2-19f8-46bc-a0b7-3324182705b1",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "eacebe5d-b436-4892-a268-47565cf87fd9",
+            "description": null,
+            "priorityMaterialType": "lydbog (online)",
+            "title": "Lydbøger, der er blevet til film og TV-serier ",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/36782a3a-27b7-450d-a806-0e9007f737d8/elements/eacebe5d-b436-4892-a268-47565cf87fd9",
+              "type": "CONTENT_ELEMENT"
+            }
+          }
+        ]
+      },
+      {
+        "id": "068ec435-48e7-457a-8c83-d174463f7eaa",
+        "title": "Bøger, du altid kan låne",
+        "icon": "https://delingstjenesten.dk/sites/default/files/2026-08/B%C3%B8ger%2C%20du%20altid%20kan%20l%C3%A5ne.jpg",
+        "elements": [
+          {
+            "type": "AppContentElementText",
+            "id": "a29bf98d-2c48-45c7-a5ec-614512fe43a6",
+            "body": "<p>Vær opmærksom på, at det ikke altid er både e-bogen og lydbogen, der kan lånes uden for din normale kvote, selvom bøgerne på denne side præsenteres som hele værker frem for enkeltmaterialer.</p>"
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "0cad23a3-09ee-4b01-af03-1d797409187d",
+            "description": null,
+            "priorityMaterialType": null,
+            "title": "Nyheder",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/068ec435-48e7-457a-8c83-d174463f7eaa/elements/0cad23a3-09ee-4b01-af03-1d797409187d",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "97bce153-e1fa-48e2-8539-395d1eba9717",
+            "description": null,
+            "priorityMaterialType": null,
+            "title": "Efterårslæsning, du altid kan låne",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/068ec435-48e7-457a-8c83-d174463f7eaa/elements/97bce153-e1fa-48e2-8539-395d1eba9717",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementRecommendation",
+            "id": "c01c3861-6e5a-44f1-92a6-16342dac5184",
+            "imagePositionRight": false,
+            "description": null,
+            "title": "Bogen bag Netflix-serien",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/068ec435-48e7-457a-8c83-d174463f7eaa/elements/c01c3861-6e5a-44f1-92a6-16342dac5184",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "f2d132cb-d79b-470b-ae9d-f3d47c7e1be6",
+            "description": null,
+            "priorityMaterialType": null,
+            "title": "Psykologiske thrillers",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/068ec435-48e7-457a-8c83-d174463f7eaa/elements/f2d132cb-d79b-470b-ae9d-f3d47c7e1be6",
+              "type": "CONTENT_ELEMENT"
+            }
+          }
+        ]
+      },
+      {
+        "id": "dc905070-8bd7-4bfb-80b5-d15c02fe73bb",
+        "title": "Børn",
+        "icon": "https://delingstjenesten.dk/sites/default/files/2026-08/B%C3%B8rn.jpg",
+        "elements": [
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "17105318-5fd8-41f1-aa07-3d18fbc0d0c5",
+            "description": null,
+            "priorityMaterialType": null,
+            "title": "Nyheder",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/dc905070-8bd7-4bfb-80b5-d15c02fe73bb/elements/17105318-5fd8-41f1-aa07-3d18fbc0d0c5",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementNavSpotsManual",
+            "id": "8b9a07a0-76fd-4ebc-b273-5c1fe112cfa0",
+            "linkedPages": [
+              "22578f20-ee57-4b9a-a383-7175bd7f3542"
+            ]
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "8672b123-2d62-4d54-9031-ad0d54cafd85",
+            "description": null,
+            "priorityMaterialType": null,
+            "title": "Populære titler og klassikere",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/dc905070-8bd7-4bfb-80b5-d15c02fe73bb/elements/8672b123-2d62-4d54-9031-ad0d54cafd85",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementVideo",
+            "id": "a8351555-b942-4450-bcd5-0affaeca79af",
+            "title": null,
+            "thumbnailUrl": "https://delingstjenesten.dk/sites/default/files/videotool_thumbnails/557_2026081914482934792547168780.jpg",
+            "orientation": "HORIZONTAL",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/dc905070-8bd7-4bfb-80b5-d15c02fe73bb/elements/a8351555-b942-4450-bcd5-0affaeca79af",
+              "type": "CONTENT_ELEMENT"
+            }
+          },
+          {
+            "type": "AppContentElementMaterialGridAutomatic",
+            "id": "e952429e-0ba8-4813-90d2-11ccc507afef",
+            "description": null,
+            "priorityMaterialType": null,
+            "title": "Godnathistorier",
+            "link": {
+              "url": "/v1/agencies/763000/content/categories/dc905070-8bd7-4bfb-80b5-d15c02fe73bb/elements/e952429e-0ba8-4813-90d2-11ccc507afef",
+              "type": "CONTENT_ELEMENT"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

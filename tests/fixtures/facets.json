@@ -1,0 +1,259 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "facets": [
+        {
+          "id": "accessTypes",
+          "name": "Fysisk / Digital",
+          "values": [
+            {
+              "key": "ONLINE",
+              "term": "Digital"
+            }
+          ]
+        },
+        {
+          "id": "age",
+          "name": "Alder",
+          "values": [
+            {
+              "key": "for 12 år",
+              "term": "for 12 år"
+            },
+            {
+              "key": "for 13 år",
+              "term": "for 13 år"
+            },
+            {
+              "key": "for 11 år",
+              "term": "for 11 år"
+            }
+          ]
+        },
+        {
+          "id": "canAlwaysBeLoaned",
+          "name": "Kan altid lånes",
+          "values": [
+            {
+              "key": "true",
+              "term": "true"
+            }
+          ]
+        },
+        {
+          "id": "childrenOrAdults",
+          "name": "For børn / voksne",
+          "values": [
+            {
+              "key": "til børn",
+              "term": "til børn"
+            },
+            {
+              "key": "til voksne",
+              "term": "til voksne"
+            }
+          ]
+        },
+        {
+          "id": "creators",
+          "name": "Forfatter / ophav",
+          "values": [
+            {
+              "key": "amalie dahlerup hermansen",
+              "term": "amalie dahlerup hermansen"
+            },
+            {
+              "key": "nanna bille bornelsen",
+              "term": "nanna bille bornelsen"
+            },
+            {
+              "key": "nanna bille cornelsen",
+              "term": "nanna bille cornelsen"
+            }
+          ]
+        },
+        {
+          "id": "dk5",
+          "name": "Emnetal",
+          "values": [
+            {
+              "key": "12",
+              "term": "12"
+            },
+            {
+              "key": "99.4",
+              "term": "99.4"
+            },
+            {
+              "key": "81.3",
+              "term": "81.3"
+            }
+          ]
+        },
+        {
+          "id": "fictionalCharacters",
+          "name": "Fiktive personer",
+          "values": [
+            {
+              "key": "Harry Potter",
+              "term": "Harry Potter"
+            },
+            {
+              "key": "Hermione Granger",
+              "term": "Hermione Granger"
+            },
+            {
+              "key": "Ron Weasley",
+              "term": "Ron Weasley"
+            }
+          ]
+        },
+        {
+          "id": "fictionNonfiction",
+          "name": "Fiktion / Nonfiktion",
+          "values": [
+            {
+              "key": "NONFICTION",
+              "term": "Faglitteratur"
+            },
+            {
+              "key": "NOT_SPECIFIED",
+              "term": "Ikke angivet"
+            },
+            {
+              "key": "FICTION",
+              "term": "Skønlitteratur"
+            }
+          ]
+        },
+        {
+          "id": "generalAudience",
+          "name": "Målgruppe",
+          "values": [
+            {
+              "key": "MG/Middle grades (4th-8th)",
+              "term": "MG/Middle grades (4th-8th)"
+            },
+            {
+              "key": "Text Difficulty 4 - Text Difficulty 5",
+              "term": "Text Difficulty 4 - Text Difficulty 5"
+            },
+            {
+              "key": "880. Lexile",
+              "term": "880. Lexile"
+            }
+          ]
+        },
+        {
+          "id": "genreAndForm",
+          "name": "Genre / form",
+          "values": [
+            {
+              "key": "podcasts",
+              "term": "podcasts"
+            },
+            {
+              "key": "fantasy",
+              "term": "fantasy"
+            },
+            {
+              "key": "romaner",
+              "term": "romaner"
+            }
+          ]
+        },
+        {
+          "id": "mainLanguages",
+          "name": "Sprog",
+          "values": [
+            {
+              "key": "dan",
+              "term": "Dansk"
+            },
+            {
+              "key": "eng",
+              "term": "Engelsk"
+            },
+            {
+              "key": "fao",
+              "term": "Færøsk"
+            }
+          ]
+        },
+        {
+          "id": "materialTypesGeneral",
+          "name": "Materialetype",
+          "values": [
+            {
+              "key": "podcasts",
+              "term": "podcasts"
+            },
+            {
+              "key": "e-bøger",
+              "term": "e-bøger"
+            },
+            {
+              "key": "lydbøger",
+              "term": "lydbøger"
+            }
+          ]
+        },
+        {
+          "id": "materialTypesSpecific",
+          "name": "Format",
+          "values": [
+            {
+              "key": "podcast",
+              "term": "podcast"
+            },
+            {
+              "key": "e-bog",
+              "term": "e-bog"
+            },
+            {
+              "key": "lydbog (online)",
+              "term": "lydbog (online)"
+            }
+          ]
+        },
+        {
+          "id": "subjects",
+          "name": "Emner",
+          "values": [
+            {
+              "key": "fantasy",
+              "term": "fantasy"
+            },
+            {
+              "key": "magi",
+              "term": "magi"
+            },
+            {
+              "key": "troldmænd",
+              "term": "troldmænd"
+            }
+          ]
+        },
+        {
+          "id": "year",
+          "name": "Udgivelsesår",
+          "values": [
+            {
+              "key": "2000",
+              "term": "2000"
+            },
+            {
+              "key": "2001",
+              "term": "2001"
+            },
+            {
+              "key": "2003",
+              "term": "2003"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

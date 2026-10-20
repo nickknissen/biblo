@@ -1,0 +1,59 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "recordId": "870970-basis:141629433",
+      "workId": "work-of:870970-basis:22252852",
+      "title": "Harry Potter og De Vises Sten",
+      "creators": [
+        "Joanne K. Rowling"
+      ],
+      "coverUrl": "https://fbiinfo-present.dbc.dk/images/P-3GKMRrSD2B9VGeQD7lUQ/960px!AUQ8DqcsNlBODLzcRyuwAm7EiQPZoYD43hLZR9aMDX_-mQ",
+      "languages": [
+        "dansk"
+      ],
+      "edition": "2025",
+      "originalTitle": "Harry Potter and the philosopher's stone",
+      "genre": [
+        "romaner",
+        "fantasy"
+      ],
+      "series": true,
+      "isbn": "9781781103142",
+      "publisher": [
+        "Pottermore Publishing"
+      ],
+      "numberOfPages": 303,
+      "blueTitle": false,
+      "materialType": {
+        "display": "e-bog",
+        "displayWithPronoun": "Denne e-bog",
+        "category": "EBOOKS"
+      },
+      "year": "2025",
+      "shelfmark": {
+        "name": "Rowling"
+      },
+      "contributors": [
+        {
+          "name": "Hanna Lützen",
+          "roles": [
+            "oversætter"
+          ]
+        }
+      ],
+      "audience": [
+        "11-13"
+      ],
+      "extent": "303 sider",
+      "notes": [
+        "Downloades i EPUB-format",
+        "Digitalisering af trykt bog"
+      ],
+      "source": [
+        "eReolen"
+      ]
+    },
+    "isExternal": false
+  }
+}

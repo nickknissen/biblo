@@ -1,0 +1,32 @@
+{
+  "status": 200,
+  "body": {
+    "data": [
+      {
+        "url": "/v1/agencies/763000/search/works?q=Harry%20Potter&type=subject",
+        "title": "Harry Potter (emne)",
+        "type": "SEARCH_SUGGESTION"
+      },
+      {
+        "url": "/v1/agencies/763000/search/works?q=Harry%20Potter%20og%20De%20Vises%20Sten&type=title",
+        "title": "Harry Potter og De Vises Sten (titel)",
+        "type": "SEARCH_SUGGESTION"
+      },
+      {
+        "url": "/v1/agencies/763000/search/works?q=Harry%20Potter%20og%20Hemmelighedernes%20Kammer&type=title",
+        "title": "Harry Potter og Hemmelighedernes Kammer (titel)",
+        "type": "SEARCH_SUGGESTION"
+      },
+      {
+        "url": "/v1/agencies/763000/search/works?q=Harry%20Potter%20og%20flammernes%20pokal&type=title",
+        "title": "Harry Potter og flammernes pokal (titel)",
+        "type": "SEARCH_SUGGESTION"
+      },
+      {
+        "url": "/v1/agencies/763000/search/works?q=Harry%20Potter%20og%20fangen%20fra%20Azkaban&type=title",
+        "title": "Harry Potter og fangen fra Azkaban (titel)",
+        "type": "SEARCH_SUGGESTION"
+      }
+    ]
+  }
+}
