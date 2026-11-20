@@ -155,7 +155,9 @@ class Biblo:
         try:
             code = password_login_code(self._http, user_id, pincode, library)
         except httpx.TransportError as err:
-            raise BibloConnectionError(f"login.bib.dk could not be reached: {err}") from err
+            raise BibloConnectionError(
+                f"login.bib.dk could not be reached: {_base.transport_reason(err)}"
+            ) from err
         session.library_id = library
         self.login_with_code(code)
 
@@ -308,4 +310,5 @@ class Biblo:
         try:
             return self._http.request(method, f"{self._base_url}{path}", headers=headers, **kwargs)
         except httpx.TransportError as err:
-            raise BibloConnectionError(f"The Biblo API could not be reached: {err}") from err
+            reason = _base.transport_reason(err)
+            raise BibloConnectionError(f"The Biblo API could not be reached: {reason}") from err

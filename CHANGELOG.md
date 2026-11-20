@@ -26,6 +26,10 @@ All notable changes to this project. The format follows
 
 ### Fixed
 
+- `BibloConnectionError` always names what went wrong. A timeout used to give
+  `The Biblo API could not be reached: ` with nothing after it; now it ends in `ReadTimeout`,
+  and other errors in their type and text (e.g. `ConnectError: ...`). The same goes for
+  login.bib.dk (#9).
 - `FileTokenStorage.save` no longer leaves a `.tmp` file behind when the session can't be
   written as JSON.
 
