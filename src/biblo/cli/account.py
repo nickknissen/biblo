@@ -4,8 +4,8 @@ from typing import Annotated
 
 import typer
 
-from ..exceptions import BadRequestError, NotLoggedInError
-from ._output import console, day, due, err, join, print_json, success, table, warn
+from ..exceptions import BadRequestError, BibloError
+from ._output import console, day, due, join, print_json, success, table, warn
 from ._state import JsonOption, LibraryOption, UsageError, client, resolve_branch
 
 account = typer.Typer(
@@ -71,8 +71,6 @@ def account_set(
     if pickup_branch is None:
         raise UsageError("Nothing to change: pass --pickup-branch")
     with client() as biblo:
-        if not biblo.is_logged_in():
-            raise NotLoggedInError("Not logged in")
         branch = resolve_branch(biblo, pickup_branch)
         me = biblo.account.update(preferred_pickup_branch_id=branch.id)
     if as_json:
@@ -195,14 +193,14 @@ def reserve(
         try:
             made = biblo.reservations.create(record_ids, pickup_branch_id=branch, expiry_days=days)
         except BadRequestError as e:
+            # The API's refusal of a physical reservation without a branch is assumed to be a
+            # 400 ("No material types found for records" in #3); unconfirmed until #3 is fixed.
             if branch is not None:
                 raise
-            err.print(f"[red]{e}[/red]")
-            err.print(
-                "A physical item needs a pickup branch: pass --branch, or set one with "
-                "[bold]biblo account set --pickup-branch[/bold]."
-            )
-            raise typer.Exit(1) from e
+            raise BibloError(
+                f"{e}\nA physical item needs a pickup branch: pass --branch, or set one with "
+                "biblo account set --pickup-branch"
+            ) from e
     if as_json:
         print_json(made)
         return

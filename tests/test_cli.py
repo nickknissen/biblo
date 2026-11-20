@@ -137,9 +137,13 @@ def test_set_pickup_branch_by_part_of_its_name(run: Run, fake: FakeBiblo, logged
     assert "Pickup branch: Børkop Bibliotek" in out
 
 
-def test_set_pickup_branch_by_id_prints_the_account_as_json(run: Run, logged_in: None) -> None:
-    code, out, err = run("account", "set", "--pickup-branch", "DK-763007", "--json")
+def test_set_pickup_branch_by_id_prints_the_account_as_json(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    code, out, err = run("account", "set", "--pickup-branch", "dk-763007", "--json")
     assert code == 0, err
+    [patch] = [r for r in fake.api_requests("/account") if r.method == "PATCH"]
+    assert json.loads(patch.content) == {"preferredPickupBranchId": "DK-763007"}
     assert json.loads(out)["preferred_pickup_branch"] == {
         "id": "DK-763007",
         "name": "Vejle Bibliotek - Spinderiet",

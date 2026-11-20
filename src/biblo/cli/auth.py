@@ -10,7 +10,7 @@ import typer
 
 from .._sync import Biblo
 from ..exceptions import NotLoggedInError
-from ._output import console, err, print_json, success
+from ._output import console, err, print_json, success, warn
 from ._state import JsonOption, LibraryOption, UsageError, client, session_path
 
 app = typer.Typer(help="Log in, log out and check the session.", no_args_is_help=True)
@@ -57,9 +57,9 @@ def login(
     who = f" as {account.name}" if account.name else ""
     success(f"Logged in to {name} ({library_id}){who}")
     if account.preferred_pickup_branch is None:
-        err.print(
-            "  No pickup branch for physical reservations yet; set one with "
-            "[bold]biblo account set --pickup-branch[/bold] <name>"
+        warn(
+            "No pickup branch for physical reservations yet; set one with "
+            "[bold]biblo account set --pickup-branch[/bold] NAME"
         )
 
 
