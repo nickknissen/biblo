@@ -299,10 +299,12 @@ def _check_body(request: httpx.Request) -> str | None:
 
 
 def _mismatch(value: Any, schema: dict[str, Any], where: str) -> str | None:
+    if value is None and schema.get("nullable"):
+        return None
     if "$ref" in schema:
         return _mismatch(value, SPEC["components"]["schemas"][schema["$ref"].split("/")[-1]], where)
     if value is None:
-        return None if schema.get("nullable") else f"{where} is null"
+        return f"{where} is null"
     for part in schema.get("allOf", []):
         if (problem := _mismatch(value, part, where)) is not None:
             return problem

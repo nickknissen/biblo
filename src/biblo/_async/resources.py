@@ -413,14 +413,16 @@ class AsyncReservations(AsyncResource):
         periodical, as strings like `"01"`, `"01"` and `"2026"`. The year is what identifies
         the issue (the Mit Biblo app sends the others only along with it); give each you know.
         """
-        periodical = m.ReservePeriodicalRequest(
-            volume=periodical_volume, number=periodical_number, year=periodical_year
-        )
+        issue = (periodical_volume, periodical_number, periodical_year)
         request = m.ReserveRequest(
             recordIds=[m.RecordId(i) for i in ids(record_ids)],
             pickupBranchId=pickup_branch_id,
             expiryInterval=expiry_days,
-            periodical=periodical if periodical.model_dump(exclude_none=True) else None,
+            periodical=m.ReservePeriodicalRequest(
+                volume=periodical_volume, number=periodical_number, year=periodical_year
+            )
+            if any(part is not None for part in issue)
+            else None,
         )
         body = request.model_dump(mode="json", by_alias=True, exclude_none=True)
         result = await self._client._call(
