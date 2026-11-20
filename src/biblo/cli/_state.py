@@ -10,6 +10,7 @@ import typer
 
 from .._sync import Biblo, FileTokenStorage
 from ..exceptions import BibloError
+from ..models import Branch
 
 APP_NAME = "biblo"
 CONFIG_DIR_ENV = "BIBLO_CONFIG_DIR"
@@ -60,3 +61,18 @@ def resolve_library(library: str | None) -> str | None:
         raise UsageError(f"No library matches {library!r}. List them with: biblo libraries")
     names = "\n".join(f"  {a.id}  {a.name}" for a in matches[:15])
     raise UsageError(f"{library!r} matches several libraries; use an id:\n{names}")
+
+
+def resolve_branch(biblo: Biblo, branch: str) -> Branch:
+    """A branch of the login library, from its id or (part of) its name."""
+    branches = biblo.libraries.branches(library_id=biblo.login_library_id())
+    wanted = branch.casefold()
+    by_id = [b for b in branches if b.id.casefold() == wanted]
+    exact = [b for b in branches if b.name.casefold() == wanted]
+    matches = [b for b in branches if wanted in b.name.casefold()]
+    if len(found := by_id or exact or matches) == 1:
+        return found[0]
+    if not found:
+        raise UsageError(f"No branch matches {branch!r}. List them with: biblo branches")
+    names = "\n".join(f"  {b.id}  {b.name}" for b in found)
+    raise UsageError(f"{branch!r} matches several branches; use an id:\n{names}")

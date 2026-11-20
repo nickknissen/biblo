@@ -48,7 +48,8 @@ default.
 | `biblo work WORK_ID` | description, availability and the records (editions) to borrow |
 | `biblo borrow RECORD_ID` | borrow an e-book, audiobook or podcast |
 | `biblo loans` / `biblo renew [--all]` | your loans |
-| `biblo reservations` / `reserve` / `cancel` | reservations |
+| `biblo reservations` / `reserve` / `cancel` | reservations; `reserve` picks up at your account's branch unless `--branch` says otherwise |
+| `biblo account set --pickup-branch NAME` | your pickup branch, shared with the apps and the library's website |
 | `biblo favorites [add\|remove]` | your saved works |
 | `biblo account` / `messages` | details, digital quota left, fees, messages |
 | `biblo branches` / `hours` / `events` | the physical library |

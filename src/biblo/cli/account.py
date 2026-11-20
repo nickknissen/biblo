@@ -4,12 +4,23 @@ from typing import Annotated
 
 import typer
 
-from ._output import console, day, due, join, print_json, success, table, warn
-from ._state import JsonOption, LibraryOption, UsageError, client
+from ..exceptions import BadRequestError, NotLoggedInError
+from ._output import console, day, due, err, join, print_json, success, table, warn
+from ._state import JsonOption, LibraryOption, UsageError, client, resolve_branch
+
+account = typer.Typer(
+    help="Show your details, digital loans left this period, and fees.",
+    invoke_without_command=True,
+)
 
 
-def account(library: LibraryOption = None, as_json: JsonOption = False) -> None:
+@account.callback()
+def account_show(
+    ctx: typer.Context, library: LibraryOption = None, as_json: JsonOption = False
+) -> None:
     """Show your details, digital loans left this period, and fees."""
+    if ctx.invoked_subcommand is not None:
+        return
     with client(library) as biblo:
         me = biblo.account.get()
         quotas = biblo.account.quotas()
@@ -42,6 +53,32 @@ def account(library: LibraryOption = None, as_json: JsonOption = False) -> None:
         for fee in fees:
             t.add_row(f"{fee.amount_in_dkk:.2f} kr", fee.reason, day(fee.due_date))
         console.print(t)
+
+
+@account.command("set")
+def account_set(
+    pickup_branch: Annotated[
+        str | None,
+        typer.Option(
+            help="Where physical reservations are picked up: a branch id or part of its name "
+            "(biblo branches). `biblo reserve` uses it when --branch is left out.",
+            show_default=False,
+        ),
+    ] = None,
+    as_json: JsonOption = False,
+) -> None:
+    """Change settings on your account, the same ones the apps and the library's website use."""
+    if pickup_branch is None:
+        raise UsageError("Nothing to change: pass --pickup-branch")
+    with client() as biblo:
+        if not biblo.is_logged_in():
+            raise NotLoggedInError("Not logged in")
+        branch = resolve_branch(biblo, pickup_branch)
+        me = biblo.account.update(preferred_pickup_branch_id=branch.id)
+    if as_json:
+        print_json(me)
+        return
+    success(f"Pickup branch: {branch.name}")
 
 
 def loans(library: LibraryOption = None, as_json: JsonOption = False) -> None:
@@ -136,7 +173,11 @@ def reserve(
     record_ids: Annotated[list[str], typer.Argument(help="Record ids from `biblo work`.")],
     branch: Annotated[
         str | None,
-        typer.Option(help="Pickup branch for physical items (biblo branches).", show_default=False),
+        typer.Option(
+            help="Pickup branch id for physical items (biblo branches). "
+            "Default: your account's, set with `biblo account set --pickup-branch`.",
+            show_default=False,
+        ),
     ] = None,
     days: Annotated[
         int | None,
@@ -149,7 +190,19 @@ def reserve(
 ) -> None:
     """Reserve records that are out, and get them when it's your turn."""
     with client(library) as biblo:
-        made = biblo.reservations.create(record_ids, pickup_branch_id=branch, expiry_days=days)
+        if branch is None and (preferred := biblo.account.get().preferred_pickup_branch):
+            branch = preferred.id
+        try:
+            made = biblo.reservations.create(record_ids, pickup_branch_id=branch, expiry_days=days)
+        except BadRequestError as e:
+            if branch is not None:
+                raise
+            err.print(f"[red]{e}[/red]")
+            err.print(
+                "A physical item needs a pickup branch: pass --branch, or set one with "
+                "[bold]biblo account set --pickup-branch[/bold]."
+            )
+            raise typer.Exit(1) from e
     if as_json:
         print_json(made)
         return

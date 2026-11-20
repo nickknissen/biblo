@@ -56,6 +56,11 @@ def login(
         account = biblo.account.get()
     who = f" as {account.name}" if account.name else ""
     success(f"Logged in to {name} ({library_id}){who}")
+    if account.preferred_pickup_branch is None:
+        err.print(
+            "  No pickup branch for physical reservations yet; set one with "
+            "[bold]biblo account set --pickup-branch[/bold] <name>"
+        )
 
 
 def _pincode(from_stdin: bool) -> str:
