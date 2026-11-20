@@ -38,6 +38,13 @@ Users never see these as errors: `Lenient` keeps the raw value and logs at DEBUG
 - `uv run pytest -m live`: read-only anonymous calls to the real API.
 - Never borrow, reserve or change anything on a real account from tests or scripts.
 
+## Changelog and releases
+
+Add user-visible changes to `## [Unreleased]` in CHANGELOG.md in the same change. Only
+release when the maintainer asks: `uv run python scripts/release.py X.Y.Z` (try `--dry-run`)
+turns that section into the version's, bumps, commits, pushes and creates the GitHub
+release; publishing it uploads to PyPI (.github/workflows/publish.yml).
+
 ## Design rules
 
 - Library calls take `library_id=`; account calls default to the session's login library,

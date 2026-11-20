@@ -2,17 +2,21 @@
 
     uv run python scripts/release.py 0.2.0
 
-Publishing the GitHub release runs .github/workflows/publish.yml, which tests, builds and
-uploads to PyPI with trusted publishing.
+Describe the changes under `## [Unreleased]` in CHANGELOG.md first: that section becomes the
+version's section and the GitHub release notes. Publishing the GitHub release runs
+.github/workflows/publish.yml, which tests, builds and uploads to PyPI with trusted
+publishing.
 """
 
 import argparse
 import re
 import subprocess
 import sys
+from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+CHANGELOG = ROOT / "CHANGELOG.md"
 VERSION = re.compile(r"\d+\.\d+\.\d+")
 
 
@@ -44,17 +48,38 @@ def release(version: str, *, dry_run: bool) -> None:
     if run("git", "status", "--porcelain"):
         raise ReleaseError("Commit or stash your changes first")
     run("git", "pull", "--ff-only")
+    changelog, notes = release_changelog(CHANGELOG.read_text(encoding="utf-8"), version)
     if dry_run:
-        print(f"Would release {current} -> {version}")
+        print(f"Would release {current} -> {version} with these notes:\n\n{notes}")
         return
 
-    if version != current:
-        run("uv", "version", version)  # updates pyproject.toml and uv.lock
-        run("git", "add", "pyproject.toml", "uv.lock")
-        run("git", "commit", "-m", f"Release v{version}")
-        run("git", "push", "origin", "main")
-    run("gh", "release", "create", f"v{version}", "--title", f"v{version}", "--generate-notes")
+    CHANGELOG.write_text(changelog, encoding="utf-8")
+    run("uv", "version", version)  # updates pyproject.toml and uv.lock
+    run("git", "add", "pyproject.toml", "uv.lock", "CHANGELOG.md")
+    run("git", "commit", "-m", f"Release v{version}")
+    run("git", "push", "origin", "main")
+    run("gh", "release", "create", f"v{version}", "--title", f"v{version}", "--notes", notes)
     print(f"Released v{version}. Follow the upload with: gh run watch")
+
+
+def release_changelog(text: str, version: str) -> tuple[str, str]:
+    """CHANGELOG.md with the Unreleased section turned into `version`, and that section."""
+    match = re.search(r"^## \[Unreleased\]\n(.*?)(?=^## \[)", text, re.M | re.S)
+    if match is None or not match.group(1).strip():
+        raise ReleaseError("Describe the release under '## [Unreleased]' in CHANGELOG.md first")
+    notes = match.group(1).strip()
+    heading = f"## [Unreleased]\n\n## [{version}] - {date.today().isoformat()}\n\n{notes}\n\n"
+    text = text[: match.start()] + heading + text[match.end() :]
+    previous = re.search(r"^\[Unreleased\]: .*/compare/(v[\d.]+)\.\.\.HEAD$", text, re.M)
+    if previous is None:
+        raise ReleaseError("CHANGELOG.md has no [Unreleased] compare link at the bottom")
+    repo = previous.group(0).split("/compare/")[0].removeprefix("[Unreleased]: ")
+    text = text.replace(
+        previous.group(0),
+        f"[Unreleased]: {repo}/compare/v{version}...HEAD\n"
+        f"[{version}]: {repo}/compare/{previous.group(1)}...v{version}",
+    )
+    return text, notes
 
 
 def main() -> int:

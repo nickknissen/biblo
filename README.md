@@ -153,8 +153,9 @@ The models (`src/biblo/models/_generated.py`), the app-type table and the whole 
 `uv run python scripts/generate.py`. See
 [AGENTS.md](https://github.com/nickknissen/biblo/blob/main/AGENTS.md) for the details.
 
-Releasing: `uv run python scripts/release.py X.Y.Z` bumps the version, commits, pushes and
-creates the GitHub release; publishing the release uploads it to PyPI.
+Releasing: describe the changes under `## [Unreleased]` in [CHANGELOG.md](CHANGELOG.md),
+then `uv run python scripts/release.py X.Y.Z` bumps the version, commits, pushes and creates
+the GitHub release with those notes; publishing the release uploads it to PyPI.
 
 ## License
 
