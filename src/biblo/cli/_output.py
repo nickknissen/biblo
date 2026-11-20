@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import sys
 from collections.abc import Iterable
-from datetime import UTC, date, datetime
+from datetime import date, datetime
 from typing import Any
 
 from pydantic_core import to_jsonable_python
@@ -42,19 +42,18 @@ def join(values: Iterable[str | None], sep: str = ", ") -> str:
     return sep.join(v for v in values if v)
 
 
+def _local_date(value: date | datetime) -> date:
+    return value.astimezone().date() if isinstance(value, datetime) else value
+
+
 def day(value: date | datetime | None) -> str:
-    if value is None:
-        return ""
-    if isinstance(value, datetime):
-        value = value.astimezone().date()
-    return value.isoformat()
+    return "" if value is None else _local_date(value).isoformat()
 
 
 def due(value: datetime | date) -> str:
     """'2026-12-01 (in 11 days)', red when overdue, yellow within three days."""
-    today = datetime.now(UTC).astimezone().date()
-    target = value.astimezone().date() if isinstance(value, datetime) else value
-    days = (target - today).days
+    target = _local_date(value)
+    days = (target - date.today()).days
     if days < 0:
         return f"[red]{target} ({-days} days overdue)[/red]"
     text = {0: "today", 1: "tomorrow"}.get(days, f"in {days} days")

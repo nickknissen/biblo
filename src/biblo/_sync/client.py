@@ -119,7 +119,16 @@ class Biblo:
 
     def library_id(self) -> str | None:
         """The library catalogue calls default to: the client's, else the logged-in user's."""
-        return self._library_id or (self._loaded()).library_id
+        return self._default_library(self._loaded(), account=False)
+
+    def _default_library(self, session: Session, *, account: bool) -> str | None:
+        """The client's library or the login library, whichever applies first.
+
+        Account calls prefer the login library: the user's account lives there.
+        """
+        if account:
+            return session.library_id or self._library_id
+        return self._library_id or session.library_id
 
     def login_library_id(self) -> str | None:
         """The library the user logged in at; account calls default to it."""
@@ -130,7 +139,6 @@ class Biblo:
 
     def tokens(self) -> Tokens | None:
         """The current tokens, refreshed if they are about to expire."""
-        self._loaded()
         return self._fresh_tokens()
 
     # --------------------------------------------------------------------- auth
@@ -141,7 +149,7 @@ class Biblo:
         Raises InvalidCredentialsError if login.bib.dk refuses them.
         """
         session = self._loaded()
-        library = library_id or self._library_id or session.library_id
+        library = library_id or self._default_library(session, account=False)
         if not library:
             raise NoLibraryError("Logging in needs a library_id (see libraries.find())")
         try:
@@ -270,9 +278,7 @@ class Biblo:
             raise NotLoggedInError(f"{method} {template} needs a logged-in user")
         path_values = dict(path_params or {})
         if "{agencyId}" in template:
-            # The user's account lives at the library they logged in at.
-            default = (session.library_id or self._library_id) if auth else None
-            library = library_id or default or self._library_id or session.library_id
+            library = library_id or self._default_library(session, account=auth)
             if not library:
                 raise NoLibraryError("No library given (see libraries.find())")
             path_values["agencyId"] = library

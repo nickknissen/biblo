@@ -14,11 +14,10 @@ from ..exceptions import (
     InvalidCredentialsError,
     NoLibraryError,
     NotLoggedInError,
-    ResponseValidationError,
 )
 from . import account, api, auth, catalog, libraries
 from ._output import err
-from ._state import UsageError
+from ._state import EXIT_ERROR, EXIT_INTERRUPTED, EXIT_NOT_LOGGED_IN, EXIT_USAGE, UsageError
 
 app = typer.Typer(
     name="biblo",
@@ -27,10 +26,6 @@ app = typer.Typer(
     rich_markup_mode="rich",
     pretty_exceptions_enable=False,
 )
-
-EXIT_ERROR = 1
-EXIT_USAGE = 2
-EXIT_NOT_LOGGED_IN = 4  # like gh
 
 
 def _version(value: bool) -> None:
@@ -99,11 +94,8 @@ def main(argv: list[str] | None = None) -> None:
     except BibloConnectionError as e:
         err.print(f"[red]{e}[/red]\nCheck your connection and try again.")
         sys.exit(EXIT_ERROR)
-    except ResponseValidationError as e:
-        err.print(f"[red]{e}[/red]")
-        sys.exit(EXIT_ERROR)
     except BibloError as e:
         err.print(f"[red]{e}[/red]")
         sys.exit(EXIT_ERROR)
     except KeyboardInterrupt:
-        sys.exit(130)
+        sys.exit(EXIT_INTERRUPTED)

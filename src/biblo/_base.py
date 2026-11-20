@@ -5,6 +5,7 @@ from __future__ import annotations
 import html
 import re
 import uuid
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from functools import cache
@@ -58,6 +59,25 @@ class Tokens:
             expires_at=datetime.now(UTC) + timedelta(seconds=int(data["expires_in"])),
         )
 
+    @classmethod
+    def from_dict(cls, data: Any) -> Tokens | None:
+        """Tokens saved by `to_dict`, or None if `data` isn't such a dict."""
+        try:
+            return cls(
+                access_token=data["access_token"],
+                refresh_token=data["refresh_token"],
+                expires_at=datetime.fromisoformat(data["expires_at"]),
+            )
+        except (KeyError, TypeError, ValueError):
+            return None
+
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "access_token": self.access_token,
+            "refresh_token": self.refresh_token,
+            "expires_at": self.expires_at.isoformat(),
+        }
+
     @property
     def expires_soon(self) -> bool:
         margin = timedelta(seconds=TOKEN_RENEWAL_MARGIN_SECONDS)
@@ -67,47 +87,39 @@ class Tokens:
         return f"Tokens(expires_at={self.expires_at.isoformat()})"
 
 
+def _new_installation_id() -> str:
+    return str(uuid.uuid4())
+
+
 @dataclass
 class Session:
     """What a TokenStorage keeps between runs."""
 
     library_id: str | None = None
-    installation_id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    installation_id: str = field(default_factory=_new_installation_id)
     tokens: Tokens | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        tokens = None
-        if self.tokens is not None:
-            tokens = {
-                "access_token": self.tokens.access_token,
-                "refresh_token": self.tokens.refresh_token,
-                "expires_at": self.tokens.expires_at.isoformat(),
-            }
         return {
             "version": SESSION_VERSION,
             "library_id": self.library_id,
             "installation_id": self.installation_id,
-            "tokens": tokens,
+            "tokens": self.tokens.to_dict() if self.tokens else None,
         }
 
     @classmethod
     def from_dict(cls, data: dict[str, Any] | None) -> Session | None:
+        """A session saved by `to_dict`; None if there is none or it has an old version."""
         if not data or data.get("version") != SESSION_VERSION:
             return None
-        session = cls(library_id=data.get("library_id"))
-        if isinstance(data.get("installation_id"), str):
-            session.installation_id = data["installation_id"]
-        tokens = data.get("tokens")
-        if isinstance(tokens, dict):
-            try:
-                session.tokens = Tokens(
-                    access_token=tokens["access_token"],
-                    refresh_token=tokens["refresh_token"],
-                    expires_at=datetime.fromisoformat(tokens["expires_at"]),
-                )
-            except (KeyError, TypeError, ValueError):
-                session.tokens = None
-        return session
+        installation_id = data.get("installation_id")
+        if not isinstance(installation_id, str):
+            installation_id = _new_installation_id()
+        return cls(
+            library_id=data.get("library_id"),
+            installation_id=installation_id,
+            tokens=Tokens.from_dict(data.get("tokens")),
+        )
 
 
 # ------------------------------------------------------------------------- requests
@@ -126,10 +138,13 @@ def app_type(method: str, path: str) -> str:
 
 @cache
 def _override_patterns() -> list[tuple[re.Pattern[str], str]]:
-    return [
-        (re.compile(re.escape(f"{method} ") + re.sub(r"\\\{\w+\\\}", "[^/]+", re.escape(path))), v)
-        for (method, path), v in APP_TYPE_OVERRIDES.items()
-    ]
+    """Each override's `METHOD /path/{param}` as a regex where `{param}` is one segment."""
+
+    def pattern(method: str, path: str) -> re.Pattern[str]:
+        literal_parts = re.split(r"\{\w+\}", f"{method} {path}")
+        return re.compile("[^/]+".join(map(re.escape, literal_parts)))
+
+    return [(pattern(*key), value) for key, value in APP_TYPE_OVERRIDES.items()]
 
 
 def api_user_agent(product: str | None = None) -> str:
@@ -166,7 +181,8 @@ def query(params: dict[str, Any] | None) -> dict[str, Any]:
     return {k: v for k, v in (params or {}).items() if v is not None and v != []}
 
 
-def ids(value: str | Any) -> list[str]:
+def ids(value: str | Iterable[str]) -> list[str]:
+    """One id or several, as a list: `"a"` -> `["a"]`."""
     return [value] if isinstance(value, str) else list(value)
 
 

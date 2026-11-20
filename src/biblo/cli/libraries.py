@@ -53,11 +53,9 @@ def hours(
     as_json: JsonOption = False,
 ) -> None:
     """Show a branch's opening hours."""
-    start = date.today()
+    start, end = _next_days(days)
     with client(library) as biblo:
-        found = biblo.libraries.branch_opening_hours(
-            branch, start=start.isoformat(), end=(start + timedelta(days=days)).isoformat()
-        )
+        found = biblo.libraries.branch_opening_hours(branch, start=start, end=end)
     if as_json:
         print_json(found)
         return
@@ -77,11 +75,9 @@ def events(
     as_json: JsonOption = False,
 ) -> None:
     """List upcoming events at the library."""
-    start = date.today()
+    start, end = _next_days(days)
     with client(library) as biblo:
-        found = biblo.libraries.events(
-            branch, start=start.isoformat(), end=(start + timedelta(days=days)).isoformat()
-        )
+        found = biblo.libraries.events(branch, start=start, end=end)
         names = {} if as_json else {b.id: b.name for b in biblo.libraries.branches()}
     if as_json:
         print_json(found)
@@ -93,3 +89,9 @@ def events(
             f"{e.duration.start.astimezone():%a %d %b %H:%M}", e.title, where, f"[dim]{e.url}[/dim]"
         )
     console.print(t)
+
+
+def _next_days(days: int) -> tuple[str, str]:
+    """Today and the day `days` from now, as the API's YYYY-MM-DD."""
+    today = date.today()
+    return today.isoformat(), (today + timedelta(days=days)).isoformat()
