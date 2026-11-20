@@ -21,6 +21,7 @@ from ._constants import (
     APP_VERSION,
     CLIENT_ID,
     LOGIN_BASE_URL,
+    PROJECT_URL,
     REDIRECT_URI,
     SESSION_VERSION,
     TOKEN_RENEWAL_MARGIN_SECONDS,
@@ -36,8 +37,6 @@ try:
     VERSION = version("biblo")
 except PackageNotFoundError:  # running from a source tree without installing
     VERSION = "0.0.0"
-
-PROJECT_URL = "https://github.com/nickknissen/biblo"
 
 # ------------------------------------------------------------------------- session
 
@@ -133,7 +132,7 @@ def _override_patterns() -> list[tuple[re.Pattern[str], str]]:
     ]
 
 
-def user_agent(product: str | None = None) -> str:
+def api_user_agent(product: str | None = None) -> str:
     """`biblo-python/<version> (+<url>)`, after the caller's own `product` token if given.
 
     The app headers are copied from Biblo; this is how the API's owners can tell our

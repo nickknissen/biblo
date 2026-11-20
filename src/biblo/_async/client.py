@@ -73,7 +73,7 @@ class AsyncBiblo:
         self._owns_http = http_client is None
         self._http = http_client or httpx.AsyncClient(timeout=timeout)
         self._base_url = base_url.rstrip("/")
-        self._user_agent = _base.user_agent(user_agent)
+        self._user_agent = _base.api_user_agent(user_agent)
         self._session: Session | None = None
         self._refresh_lock = asyncio.Lock()
 

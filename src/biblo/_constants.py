@@ -27,6 +27,9 @@ TOKEN_RENEWAL_MARGIN_SECONDS = 60
 """Refresh the access token this long before it expires."""
 LOGIN_MAX_REDIRECTS = 15
 SESSION_VERSION = 1
+PROJECT_URL = "https://github.com/nickknissen/biblo"
+"""Not from the app: this library's home, named in its User-Agent and error messages."""
+
 BROWSER_USER_AGENT = (
     "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) "
     "Chrome/130.0 Mobile Safari/537.36"
