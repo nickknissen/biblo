@@ -6,6 +6,16 @@ All notable changes to this project. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `biblo account set --pickup-branch` sets the account's preferred pickup branch, from a branch
+  id or part of its name. The setting is saved on the account, so the apps and the library's
+  website use it too (#4).
+- `biblo reserve` without `--branch` picks up at the account's preferred branch. If it has none
+  and the library refuses the reservation, the error says how to give a branch (#4).
+- `biblo auth login` points to `biblo account set --pickup-branch` when the account has no
+  pickup branch (#4).
+
 ## [0.1.0] - 2026-11-20
 
 The first release: an unofficial Python client and command line for Biblo, the Danish public

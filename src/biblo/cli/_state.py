@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Protocol
 
 import typer
 
 from .._sync import Biblo, FileTokenStorage
-from ..exceptions import BibloError
+from ..exceptions import BibloError, NotLoggedInError
+from ..models import Branch
 
 APP_NAME = "biblo"
 CONFIG_DIR_ENV = "BIBLO_CONFIG_DIR"
@@ -53,10 +54,33 @@ def resolve_library(library: str | None) -> str | None:
         return library
     with Biblo() as anon:
         matches = anon.libraries.find(library)
-    exact = [a for a in matches if a.name.casefold() == library.casefold()]
+    return _pick(library, matches, "library", "libraries").id
+
+
+def resolve_branch(biblo: Biblo, branch: str) -> Branch:
+    """A branch of the login library, from its id or (part of) its name."""
+    if not biblo.is_logged_in():
+        raise NotLoggedInError("Not logged in")
+    branches = biblo.libraries.branches(library_id=biblo.login_library_id())
+    wanted = branch.casefold()
+    if by_id := [b for b in branches if b.id.casefold() == wanted]:
+        return by_id[0]
+    return _pick(branch, [b for b in branches if wanted in b.name.casefold()], "branch", "branches")
+
+
+class _Named(Protocol):
+    @property
+    def id(self) -> str: ...
+    @property
+    def name(self) -> str: ...
+
+
+def _pick[T: _Named](query: str, matches: list[T], kind: str, kinds: str) -> T:
+    """The one match for `query`: the only one, or the only exact name match."""
+    exact = [m for m in matches if m.name.casefold() == query.casefold()]
     if len(exact) == 1 or len(matches) == 1:
-        return (exact or matches)[0].id
+        return (exact or matches)[0]
     if not matches:
-        raise UsageError(f"No library matches {library!r}. List them with: biblo libraries")
-    names = "\n".join(f"  {a.id}  {a.name}" for a in matches[:15])
-    raise UsageError(f"{library!r} matches several libraries; use an id:\n{names}")
+        raise UsageError(f"No {kind} matches {query!r}. List them with: biblo {kinds}")
+    names = "\n".join(f"  {m.id}  {m.name}" for m in matches[:15])
+    raise UsageError(f"{query!r} matches several {kinds}; use an id:\n{names}")

@@ -85,6 +85,7 @@ class FakeBiblo:
     revoked: set[str] = field(default_factory=set)
     overrides: dict[tuple[str, str], Handler] = field(default_factory=dict)
     loans: list[dict[str, Any]] = field(default_factory=lambda: [LOAN])
+    account: dict[str, Any] = field(default_factory=lambda: dict(ACCOUNT))
 
     @property
     def access_token(self) -> str:
@@ -197,7 +198,13 @@ class FakeBiblo:
         path, method = request.url.path, request.method
         base = f"/v1/agencies/{LIBRARY}/account"
         if (method, path) == ("GET", base):
-            return httpx.Response(200, json={"data": ACCOUNT})
+            return httpx.Response(200, json={"data": self.account})
+        if (method, path) == ("PATCH", base):
+            body = json.loads(request.content)
+            if (branch_id := body.get("preferredPickupBranchId")) is not None:
+                [branch] = [b for b in fixture("branches")["data"] if b["id"] == branch_id]
+                self.account["preferredPickupBranch"] = {"id": branch_id, "name": branch["name"]}
+            return httpx.Response(200, json={"data": self.account})
         if (method, path) == ("GET", f"{base}/quotas"):
             return httpx.Response(200, json={"data": QUOTAS})
         if (method, path) == ("GET", f"{base}/fees"):

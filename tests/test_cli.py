@@ -119,6 +119,130 @@ def test_api_command_fills_in_the_library(run: Run) -> None:
     assert json.loads(out)["hitcount"] == 12
 
 
+@pytest.fixture
+def logged_in(run: Run, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("BIBLO_PIN", PIN)
+    code, _, err = run("auth", "login", "-l", LIBRARY, "--user", USER)
+    assert code == 0, err
+
+
+def test_set_pickup_branch_by_part_of_its_name(run: Run, fake: FakeBiblo, logged_in: None) -> None:
+    code, _, err = run("account", "set", "--pickup-branch", "børkop")
+    assert code == 0, err
+    assert "Børkop Bibliotek" in err
+    [patch] = [r for r in fake.api_requests("/account") if r.method == "PATCH"]
+    assert json.loads(patch.content) == {"preferredPickupBranchId": "DK-763004"}
+
+    code, out, _ = run("account")
+    assert "Pickup branch: Børkop Bibliotek" in out
+
+
+def test_set_pickup_branch_by_id_prints_the_account_as_json(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    code, out, err = run("account", "set", "--pickup-branch", "dk-763007", "--json")
+    assert code == 0, err
+    [patch] = [r for r in fake.api_requests("/account") if r.method == "PATCH"]
+    assert json.loads(patch.content) == {"preferredPickupBranchId": "DK-763007"}
+    assert json.loads(out)["preferred_pickup_branch"] == {
+        "id": "DK-763007",
+        "name": "Vejle Bibliotek - Spinderiet",
+    }
+
+
+def test_unknown_pickup_branch_is_a_usage_error(run: Run, logged_in: None) -> None:
+    code, _, err = run("account", "set", "--pickup-branch", "atlantis")
+    assert code == 2
+    assert "biblo branches" in err
+
+
+def test_ambiguous_pickup_branch_lists_the_candidates(run: Run, logged_in: None) -> None:
+    code, _, err = run("account", "set", "--pickup-branch", "bus")
+    assert code == 2
+    assert "DK-763020" in err
+    assert "FBS-630009" in err
+
+
+def test_set_pickup_branch_needs_login(run: Run) -> None:
+    code, _, err = run("account", "set", "--pickup-branch", "børkop")
+    assert code == 4
+    assert "biblo auth login" in err
+
+
+def test_account_without_a_subcommand_still_shows_it(run: Run, logged_in: None) -> None:
+    code, out, _ = run("account")
+    assert code == 0
+    assert "Test Testesen" in out
+    assert "Digital quota" in out
+    assert "Pickup branch" not in out
+
+    code, out, _ = run("account", "--json")
+    assert set(json.loads(out)) == {"account", "quotas", "fees"}
+
+
+def reserved_with(fake: FakeBiblo) -> dict[str, Any]:
+    [post] = [r for r in fake.api_requests("/account/reservations") if r.method == "POST"]
+    return json.loads(post.content)
+
+
+def test_reserve_picks_up_at_the_preferred_branch(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    fake.account["preferredPickupBranch"] = {"id": "DK-763004", "name": "Børkop Bibliotek"}
+    code, _, err = run("reserve", "870970-basis:141661116")
+    assert code == 0, err
+    assert reserved_with(fake)["pickupBranchId"] == "DK-763004"
+
+
+def test_reserve_branch_option_wins_over_the_preferred_branch(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    fake.account["preferredPickupBranch"] = {"id": "DK-763004", "name": "Børkop Bibliotek"}
+    code, _, err = run("reserve", "870970-basis:141661116", "--branch", "DK-763007")
+    assert code == 0, err
+    assert reserved_with(fake)["pickupBranchId"] == "DK-763007"
+
+
+def test_reserve_without_any_branch_sends_none(run: Run, fake: FakeBiblo, logged_in: None) -> None:
+    code, _, err = run("reserve", "870970-basis:141661116")
+    assert code == 0, err
+    assert "pickupBranchId" not in reserved_with(fake)
+
+
+def test_rejected_reservation_without_a_branch_says_how_to_give_one(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    fake.overrides[("POST", f"/v1/agencies/{LIBRARY}/account/reservations")] = lambda _: (
+        httpx.Response(
+            400,
+            json={
+                "id": 4000,
+                "type": "BAD_REQUEST",
+                "message": "No material types found for records",
+            },
+        )
+    )
+    code, _, err = run("reserve", "870970-basis:141661116")
+    assert code == 1
+    assert "No material types found for records" in err
+    assert "--branch" in err
+    assert "biblo account set --pickup-branch" in err
+
+
+def test_login_hints_at_setting_a_pickup_branch_only_when_there_is_none(
+    run: Run, fake: FakeBiblo, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("BIBLO_PIN", PIN)
+    code, _, err = run("auth", "login", "-l", LIBRARY, "--user", USER)
+    assert code == 0, err
+    assert "biblo account set --pickup-branch" in err
+
+    fake.account["preferredPickupBranch"] = {"id": "DK-763004", "name": "Børkop Bibliotek"}
+    code, _, err = run("auth", "login", "-l", LIBRARY, "--user", USER)
+    assert code == 0, err
+    assert "--pickup-branch" not in err
+
+
 def test_version(run: Run) -> None:
     code, out, _ = run("--version")
     assert code == 0
