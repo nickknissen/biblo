@@ -22,6 +22,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from ._constants import PROJECT_URL
+
 
 class BibloError(Exception):
     """Base class for every error raised by biblo."""
@@ -61,7 +63,7 @@ class ResponseValidationError(BibloError):
         self.detail = detail
         super().__init__(
             f"{method} {path} answered with data biblo can't read. Please report this at "
-            f"https://github.com/nickknissen/biblo/issues:\n{detail}"
+            f"{PROJECT_URL}/issues:\n{detail}"
         )
 
 

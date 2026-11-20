@@ -10,10 +10,9 @@ podcasts (Det Digitale Folkebibliotek).
 `AsyncBiblo` is the same client for asyncio.
 """
 
-from importlib.metadata import PackageNotFoundError, version
-
 from . import models, types
 from ._async import AsyncBiblo, AsyncFileTokenStorage, AsyncMemoryTokenStorage, AsyncTokenStorage
+from ._base import VERSION as __version__
 from ._base import Tokens, authorize_url, code_from_redirect
 from ._sync import Biblo, FileTokenStorage, MemoryTokenStorage, TokenStorage
 from .exceptions import (
@@ -34,11 +33,6 @@ from .exceptions import (
     ResponseValidationError,
     ServerError,
 )
-
-try:
-    __version__ = version("biblo")
-except PackageNotFoundError:  # running from a source tree without installing
-    __version__ = "0.0.0"
 
 __all__ = [
     "APIError",

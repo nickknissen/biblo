@@ -124,6 +124,12 @@ refreshed before they expire and once more if the API answers 401.
 (the client then leaves closing it to you) and a `AsyncTokenStorage` backed by the
 framework's storage.
 
+**User-Agent.** API requests say who is calling:
+`biblo-python/<version> (+https://github.com/nickknissen/biblo)`. Name your application with
+`user_agent="myapp/1.2"`, which goes in front. This replaces any `User-Agent` set on your
+`http_client` for API requests. The login at login.bib.dk is a web form, so it keeps a
+mobile browser's `User-Agent`.
+
 **Errors** all derive from `biblo.BibloError`: `InvalidCredentialsError` for a refused
 login, `NotLoggedInError` when a session is missing or can no longer be refreshed,
 `BibloConnectionError`, and `APIError` subclasses by status (`NotFoundError`,

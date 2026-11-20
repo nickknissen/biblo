@@ -2,9 +2,17 @@
 
 from __future__ import annotations
 
+import httpx
 import pytest
 
-from biblo import AsyncBiblo, AsyncMemoryTokenStorage, NoLibraryError, NotLoggedInError
+from biblo import (
+    AsyncBiblo,
+    AsyncMemoryTokenStorage,
+    Biblo,
+    NoLibraryError,
+    NotLoggedInError,
+    __version__,
+)
 from biblo._base import app_type
 from biblo._constants import API_KEY, APP_VERSION
 from tests.fake import LIBRARY, FakeBiblo
@@ -18,6 +26,45 @@ async def test_every_request_carries_the_app_headers(biblo: AsyncBiblo, fake: Fa
     assert request.headers["x-app-type"] == "biblo"
     assert request.headers["x-installation-id"]
     assert "authorization" not in request.headers
+
+
+async def test_api_requests_name_the_library_in_the_user_agent(
+    biblo: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    await biblo.libraries.list()
+    assert fake.api_requests()[-1].headers["user-agent"] == (
+        f"biblo-python/{__version__} (+https://github.com/nickknissen/biblo)"
+    )
+
+
+async def test_an_application_names_itself_before_the_library(fake: FakeBiblo) -> None:
+    async with (
+        httpx.AsyncClient(transport=httpx.MockTransport(fake.handle)) as http,
+        AsyncBiblo(LIBRARY, http_client=http, user_agent="myapp/1.0") as biblo,
+    ):
+        await biblo.libraries.list()
+    assert fake.api_requests()[-1].headers["user-agent"] == (
+        f"myapp/1.0 biblo-python/{__version__} (+https://github.com/nickknissen/biblo)"
+    )
+
+
+def test_the_sync_client_names_the_application_too(fake: FakeBiblo) -> None:
+    with (
+        httpx.Client(transport=httpx.MockTransport(fake.handle)) as http,
+        Biblo(LIBRARY, http_client=http, user_agent="myapp/1.0") as biblo,
+    ):
+        biblo.libraries.list()
+    assert fake.api_requests()[-1].headers["user-agent"].startswith("myapp/1.0 biblo-python/")
+
+
+async def test_the_user_agent_of_a_shared_http_client_is_replaced(fake: FakeBiblo) -> None:
+    transport = httpx.MockTransport(fake.handle)
+    async with (
+        httpx.AsyncClient(transport=transport, headers={"User-Agent": "HomeAssistant"}) as http,
+        AsyncBiblo(LIBRARY, http_client=http) as biblo,
+    ):
+        await biblo.libraries.list()
+    assert fake.api_requests()[-1].headers["user-agent"].startswith("biblo-python/")
 
 
 async def test_installation_id_is_kept_in_the_session(

@@ -8,6 +8,7 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from functools import cache
+from importlib.metadata import PackageNotFoundError, version
 from typing import Any
 from urllib.parse import parse_qs, quote, urlencode, urlparse
 
@@ -20,6 +21,7 @@ from ._constants import (
     APP_VERSION,
     CLIENT_ID,
     LOGIN_BASE_URL,
+    PROJECT_URL,
     REDIRECT_URI,
     SESSION_VERSION,
     TOKEN_RENEWAL_MARGIN_SECONDS,
@@ -30,6 +32,11 @@ from .exceptions import (
     ResponseValidationError,
     api_error,
 )
+
+try:
+    VERSION = version("biblo")
+except PackageNotFoundError:  # running from a source tree without installing
+    VERSION = "0.0.0"
 
 # ------------------------------------------------------------------------- session
 
@@ -125,10 +132,20 @@ def _override_patterns() -> list[tuple[re.Pattern[str], str]]:
     ]
 
 
+def api_user_agent(product: str | None = None) -> str:
+    """`biblo-python/<version> (+<url>)`, after the caller's own `product` token if given.
+
+    The app headers are copied from Biblo; this is how the API's owners can tell our
+    traffic apart from the app's and find the project."""
+    ours = f"biblo-python/{VERSION} (+{PROJECT_URL})"
+    return f"{product} {ours}" if product else ours
+
+
 def headers(
-    method: str, template: str, installation_id: str, tokens: Tokens | None
+    method: str, template: str, installation_id: str, tokens: Tokens | None, user_agent: str
 ) -> dict[str, str]:
     result = {
+        "User-Agent": user_agent,
         "x-app": f"Android/{APP_VERSION}",
         "x-app-type": app_type(method, template),
         "x-installation-id": installation_id,
