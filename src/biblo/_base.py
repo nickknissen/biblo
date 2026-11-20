@@ -133,7 +133,11 @@ def app_type(method: str, path: str, wanted: str | None = None) -> str:
     accepted = _accepted_app_types(method, path)
     if wanted is None:
         return DEFAULT_APP_TYPE if accepted is None or DEFAULT_APP_TYPE in accepted else accepted[0]
-    if accepted is not None and wanted not in accepted:
+    if accepted is None:
+        raise AppTypeNotAcceptedError(
+            f"Can't send x-app-type {wanted!r} to {method} {path}: the spec doesn't list it"
+        )
+    if wanted not in accepted:
         raise AppTypeNotAcceptedError(
             f"{method} {path} doesn't accept x-app-type {wanted!r}, only {', '.join(accepted)}"
         )
@@ -177,12 +181,13 @@ def headers(
     installation_id: str,
     tokens: Tokens | None,
     user_agent: str,
-    wanted_app_type: str | None = None,
+    chosen_app_type: str | None = None,
 ) -> dict[str, str]:
+    """`chosen_app_type` is one `app_type()` already returned; without it, the default."""
     result = {
         "User-Agent": user_agent,
         "x-app": f"Android/{APP_VERSION}",
-        "x-app-type": app_type(method, template, wanted_app_type),
+        "x-app-type": chosen_app_type or app_type(method, template),
         "x-installation-id": installation_id,
         "x-api-key": API_KEY,
     }

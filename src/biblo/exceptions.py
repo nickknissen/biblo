@@ -5,7 +5,6 @@ BibloError
 │   ├── InvalidCredentialsError     wrong card number/CPR or pincode
 │   └── LoginFlowError              login.bib.dk answered unexpectedly
 ├── NoLibraryError              no library given (also a ValueError)
-├── AppTypeNotAcceptedError     an app type the endpoint refuses (also a ValueError)
 ├── NotLoggedInError            an account call without a (still valid) session
 ├── BibloConnectionError        the API or login.bib.dk could not be reached
 ├── ResponseValidationError     the API sent data that doesn't match its spec
@@ -48,7 +47,8 @@ class NoLibraryError(BibloError, ValueError):
 
 
 class AppTypeNotAcceptedError(BibloError, ValueError):
-    """A call asked for an `x-app-type` the endpoint doesn't accept; nothing was sent."""
+    """A call asked for an `x-app-type` the endpoint doesn't accept; nothing was sent.
+    Internal for now: only the library itself picks an app type (#1 will let callers)."""
 
 
 class NotLoggedInError(BibloError):
@@ -97,8 +97,8 @@ class BadRequestError(APIError):
 
 
 class PickupBranchRequiredError(BadRequestError):
-    """400 "No material types found for records": what the API answers when a physical
-    record is reserved without a pickup branch."""
+    """400 "No material types found for records" from a reservation without a pickup
+    branch: what the API answers when the record is physical. `message` is the API's."""
 
     def __init__(self, status_code: int, body: Any, method: str, url: str) -> None:
         super().__init__(status_code, body, method, url)
@@ -144,7 +144,4 @@ _BY_STATUS: dict[int, type[APIError]] = {
 
 def api_error(status_code: int, body: Any, method: str, url: str) -> APIError:
     cls = _BY_STATUS.get(status_code) or (ServerError if status_code >= 500 else APIError)
-    message = body.get("message") if isinstance(body, dict) else None
-    if cls is BadRequestError and str(message).startswith("No material types found"):
-        cls = PickupBranchRequiredError
     return cls(status_code, body, method, url)

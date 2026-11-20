@@ -119,6 +119,7 @@ def test_a_call_can_ask_for_an_app_type_the_endpoint_accepts(
         ("GET", "/v1/agencies/763000/account/quotas", "mybiblo"),
         ("GET", "/v1/user/messages", "biblogo"),
         ("GET", "/v1/agencies/{agencyId}/branches", "biblo"),
+        ("GET", "/v1/not-in-the-spec", "mybiblo"),
     ],
 )
 def test_an_app_type_the_endpoint_refuses_raises_before_sending(

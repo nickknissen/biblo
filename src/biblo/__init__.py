@@ -17,7 +17,6 @@ from ._base import Tokens, authorize_url, code_from_redirect
 from ._sync import Biblo, FileTokenStorage, MemoryTokenStorage, TokenStorage
 from .exceptions import (
     APIError,
-    AppTypeNotAcceptedError,
     AuthenticationError,
     BadRequestError,
     BibloConnectionError,
@@ -38,7 +37,6 @@ from .exceptions import (
 
 __all__ = [
     "APIError",
-    "AppTypeNotAcceptedError",
     "AsyncBiblo",
     "AsyncFileTokenStorage",
     "AsyncMemoryTokenStorage",

@@ -67,16 +67,17 @@ RESERVATION = {
     },
 }
 PRINTED_BOOK = {"display": "bog", "displayWithPronoun": "Denne bog", "category": "BOOKS"}
-PHYSICAL_RECORD = "870970-basis:140093173"
+# A made-up printed book: fixtures carry no real account's ids (#3).
+PHYSICAL_RECORD = "870970-basis:99999901"
 # Physical items, as `x-app-type: mybiblo` lists them (shape recorded 2026-11-20, #3).
 PHYSICAL_RESERVATION = {
     "id": "p-1",
     "reservationDate": "2026-11-15T10:00:00.000Z",
     "state": "RESERVED",
-    "physical": {"expiryDate": "2027-05-15", "pickupBranch": "DK-763004", "numberInQueue": 2},
+    "physical": {"expiryDate": "2027-05-15", "pickupBranch": "DK-763004", "numberInQueue": 3},
     "details": {
         "recordId": PHYSICAL_RECORD,
-        "workId": "work-of:870970-basis:140093173",
+        "workId": "work-of:870970-basis:99999901",
         "title": "En trykt bog",
         "coverUrl": None,
         "author": "En Forfatter",
@@ -92,7 +93,7 @@ PHYSICAL_LOAN = {
     "isRenewable": True,
     "record": {
         "recordId": PHYSICAL_RECORD,
-        "workId": "work-of:870970-basis:140093173",
+        "workId": "work-of:870970-basis:99999901",
         "title": "En trykt bog",
         "author": "En Forfatter",
         "publishYear": "2024",

@@ -139,7 +139,7 @@ def test_reservations_and_loans_show_physical_items(run: Run, logged_in: None) -
     assert code == 0, err
     assert "Harry Potter" in out
     assert "En trykt bog" in out
-    assert "number 2 in queue" in out
+    assert "number 3 in queue" in out
 
     code, out, err = run("reservations", "--json")
     assert code == 0, err
