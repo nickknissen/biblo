@@ -9,6 +9,7 @@ from biblo import (
     AsyncBiblo,
     AsyncMemoryTokenStorage,
     Biblo,
+    BibloConnectionError,
     NoLibraryError,
     NotLoggedInError,
     __version__,
@@ -149,3 +150,26 @@ async def test_account_calls_use_the_login_library_not_the_clients_default(
     logged_in._library_id = "710100"  # e.g. browsing Copenhagen's catalogue
     await logged_in.loans.list()
     assert fake.api_requests("/account/loans")[-1].url.path.startswith(f"/v1/agencies/{LIBRARY}/")
+
+
+@pytest.mark.parametrize(
+    ("error", "reason"),
+    [
+        (httpx.ReadTimeout(""), "ReadTimeout"),  # stringifies to ""
+        (httpx.ConnectError("boom"), "ConnectError: boom"),
+    ],
+)
+async def test_an_unreachable_api_names_the_transport_error(
+    error: httpx.TransportError, reason: str
+) -> None:
+    def unreachable(request: httpx.Request) -> httpx.Response:
+        raise error
+
+    async with (
+        httpx.AsyncClient(transport=httpx.MockTransport(unreachable)) as http,
+        AsyncBiblo(LIBRARY, http_client=http) as biblo,
+    ):
+        with pytest.raises(BibloConnectionError) as caught:
+            await biblo.libraries.list()
+    assert str(caught.value) == f"The Biblo API could not be reached: {reason}"
+    assert caught.value.__cause__ is error

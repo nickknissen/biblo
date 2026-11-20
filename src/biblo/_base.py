@@ -186,6 +186,12 @@ def ids(value: str | Iterable[str]) -> list[str]:
     return [value] if isinstance(value, str) else list(value)
 
 
+def transport_reason(err: httpx.TransportError) -> str:
+    """`ConnectError: <text>`, or just `ReadTimeout` for the errors whose text is empty."""
+    name = type(err).__name__
+    return f"{name}: {err}" if str(err) else name
+
+
 def payload(response: httpx.Response) -> Any:
     """The JSON body without its `{"data": ...}` envelope; raises APIError for errors."""
     if response.is_error:

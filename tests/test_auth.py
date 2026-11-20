@@ -10,6 +10,7 @@ import pytest
 from biblo import (
     AsyncBiblo,
     AsyncMemoryTokenStorage,
+    BibloConnectionError,
     InvalidCredentialsError,
     LoginFlowError,
     NotLoggedInError,
@@ -91,6 +92,31 @@ async def test_browser_login_with_the_redirect_url(biblo: AsyncBiblo) -> None:
 )
 def test_code_from_redirect(given: str, code: str) -> None:
     assert code_from_redirect(given) == code
+
+
+@pytest.mark.parametrize(
+    ("error", "reason"),
+    [
+        (httpx.ReadTimeout(""), "ReadTimeout"),  # stringifies to ""
+        (httpx.ConnectError("boom"), "ConnectError: boom"),
+    ],
+)
+async def test_an_unreachable_login_bib_dk_names_the_transport_error(
+    fake: FakeBiblo, error: httpx.TransportError, reason: str
+) -> None:
+    def unreachable(request: httpx.Request) -> httpx.Response:
+        if request.url.host == "login.bib.dk":
+            raise error
+        return fake.handle(request)
+
+    async with (
+        httpx.AsyncClient(transport=httpx.MockTransport(unreachable)) as http,
+        AsyncBiblo(LIBRARY, http_client=http) as biblo,
+    ):
+        with pytest.raises(BibloConnectionError) as caught:
+            await biblo.login(USER, PIN)
+    assert str(caught.value) == f"login.bib.dk could not be reached: {reason}"
+    assert caught.value.__cause__ is error
 
 
 def test_code_from_an_error_redirect() -> None:
