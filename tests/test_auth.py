@@ -35,6 +35,13 @@ async def test_login_with_card_number_and_pincode(
     assert fake.api_requests("/account")[-1].headers["authorization"] == "Bearer access-1"
 
 
+async def test_login_bib_dk_sees_a_mobile_browser(biblo: AsyncBiblo, fake: FakeBiblo) -> None:
+    await biblo.login(USER, PIN)
+    agents = {r.headers["user-agent"] for r in fake.requests if r.url.host == "login.bib.dk"}
+    assert len(agents) == 1
+    assert agents.pop().startswith("Mozilla/5.0 (Linux; Android")
+
+
 async def test_login_leaves_no_login_bib_dk_cookies_in_a_shared_client(fake: FakeBiblo) -> None:
     def with_cookie(request: httpx.Request) -> httpx.Response:
         response = fake.handle(request)

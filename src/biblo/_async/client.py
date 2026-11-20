@@ -53,7 +53,9 @@ class AsyncBiblo:
     are saved as they happen.
 
     Pass `http_client` to share an `httpx.AsyncClient`, e.g. Home Assistant's; the client
-    then leaves closing it to you.
+    then leaves closing it to you. API requests replace its `User-Agent` with
+    `biblo-python/<version> (+<project url>)`, preceded by `user_agent` (e.g. "myapp/1.2")
+    if given, so the API's owners can tell who is calling.
     """
 
     def __init__(
@@ -64,12 +66,14 @@ class AsyncBiblo:
         http_client: httpx.AsyncClient | None = None,
         base_url: str = API_BASE_URL,
         timeout: float = DEFAULT_TIMEOUT_SECONDS,
+        user_agent: str | None = None,
     ) -> None:
         self._library_id = library_id
         self._storage = storage
         self._owns_http = http_client is None
         self._http = http_client or httpx.AsyncClient(timeout=timeout)
         self._base_url = base_url.rstrip("/")
+        self._user_agent = _base.user_agent(user_agent)
         self._session: Session | None = None
         self._refresh_lock = asyncio.Lock()
 
@@ -295,7 +299,7 @@ class AsyncBiblo:
         tokens: Tokens | None,
         **kwargs: Any,
     ) -> httpx.Response:
-        headers = _base.headers(method, template, session.installation_id, tokens)
+        headers = _base.headers(method, template, session.installation_id, tokens, self._user_agent)
         try:
             return await self._http.request(
                 method, f"{self._base_url}{path}", headers=headers, **kwargs

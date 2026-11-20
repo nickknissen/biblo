@@ -8,11 +8,14 @@ from typing import Annotated, Protocol
 
 import typer
 
+from .._base import VERSION
 from .._sync import Biblo, FileTokenStorage
 from ..exceptions import BibloError, NotLoggedInError
 from ..models import Branch
 
 APP_NAME = "biblo"
+USER_AGENT = f"biblo-cli/{VERSION}"
+"""Put before the library's own User-Agent on every API request the CLI makes."""
 CONFIG_DIR_ENV = "BIBLO_CONFIG_DIR"
 LIBRARY_ENV = "BIBLO_LIBRARY"
 
@@ -45,14 +48,16 @@ def session_path() -> Path:
 
 def client(library: str | None = None) -> Biblo:
     """A client with the saved session, defaulting to `library` (an id or a name)."""
-    return Biblo(resolve_library(library), storage=FileTokenStorage(session_path()))
+    return Biblo(
+        resolve_library(library), storage=FileTokenStorage(session_path()), user_agent=USER_AGENT
+    )
 
 
 def resolve_library(library: str | None) -> str | None:
     """A library id from an id or (part of) a name or city."""
     if library is None or library.isdigit():
         return library
-    with Biblo() as anon:
+    with Biblo(user_agent=USER_AGENT) as anon:
         matches = anon.libraries.find(library)
     return _pick(library, matches, "library", "libraries").id
 

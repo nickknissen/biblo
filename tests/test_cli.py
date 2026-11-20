@@ -8,7 +8,7 @@ from typing import Any
 import httpx
 import pytest
 
-from biblo import Biblo
+from biblo import Biblo, __version__
 from biblo.cli import _state, main
 from tests.fake import LIBRARY, PIN, USER, FakeBiblo
 
@@ -63,6 +63,14 @@ def test_search_table_and_json(run: Run) -> None:
 def test_library_by_name(run: Run) -> None:
     code, out, err = run("search", "potter", "-l", "vejle", "-n", "1")
     assert code == 0, err
+
+
+def test_the_cli_names_itself_on_every_api_request(run: Run, fake: FakeBiblo) -> None:
+    code, _, err = run("search", "potter", "-l", "vejle", "-n", "1")
+    assert code == 0, err
+    agents = [r.headers["user-agent"] for r in fake.api_requests()]
+    assert len(agents) >= 2  # resolving the library by name, then the search
+    assert all(a.startswith(f"biblo-cli/{__version__} biblo-python/") for a in agents)
 
 
 def test_ambiguous_library_name_is_a_usage_error(run: Run) -> None:

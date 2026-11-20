@@ -16,6 +16,14 @@ All notable changes to this project. The format follows
 - `biblo auth login` points to `biblo account set --pickup-branch` when the account has no
   pickup branch (#4).
 
+### Changed
+
+- API requests send `User-Agent: biblo-python/<version> (+https://github.com/nickknissen/biblo)`
+  instead of httpx's default. `Biblo(user_agent="myapp/1.2")` and `AsyncBiblo(...)` put your
+  application's name in front, and the CLI sends `biblo-cli/<version>` first. A `User-Agent`
+  on your own `http_client` is replaced on API requests; the login at login.bib.dk still
+  looks like a mobile browser (#5).
+
 ## [0.1.0] - 2026-11-20
 
 The first release: an unofficial Python client and command line for Biblo, the Danish public
