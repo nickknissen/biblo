@@ -10,7 +10,7 @@ Generates:
                                    patterns, lengths and bounds removed: they describe what the
                                    server sends today, and enforcing them would turn a harmless
                                    server change into a crash for every installed release.
-- src/biblo/_app_types.py          Which endpoints need an `x-app-type` other than "biblo".
+- src/biblo/_app_types.py          The `x-app-type` values each endpoint accepts.
 - src/biblo/_sync/                 The sync client, from src/biblo/_async/ (unasync).
 """
 
@@ -291,7 +291,7 @@ def loosen_constraints(source: str) -> str:
 def generate_app_types() -> str:
     spec = json.loads(SPEC.read_text())
     schemas = spec["components"]["schemas"]
-    overrides: dict[tuple[str, str], str] = {}
+    accepted: dict[tuple[str, str], tuple[str, ...]] = {}
     for path, operations in spec["paths"].items():
         for method, operation in operations.items():
             if not isinstance(operation, dict) or method == "head":
@@ -309,22 +309,21 @@ def generate_app_types() -> str:
             schema = header["schema"]
             if "$ref" in schema:
                 schema = schemas[schema["$ref"].rsplit("/", 1)[-1]]
-            allowed: list[str] = schema["enum"]
-            if PREFERRED_APP_TYPE not in allowed:
-                overrides[(method.upper(), path)] = allowed[0]
+            accepted[(method.upper(), path)] = tuple(schema["enum"])
 
     lines = [
         HEADER,
-        '"""The `x-app-type` for endpoints that refuse "biblo". Every endpoint not listed here',
-        'accepts "biblo". The API serves three apps: Biblo ("biblo"), Biblo GO ("biblogo") and',
-        'Mit Biblo ("mybiblo"), and the header also picks the data: "biblo" sees the digital',
-        'catalogue, "biblogo" its children\'s part, "mybiblo" print and physical reservations',
-        'and loans too. See "`x-app-type` picks the data" in AGENTS.md."""',
+        '"""The `x-app-type` values each endpoint accepts, in the spec\'s order. The API serves',
+        'three apps: Biblo ("biblo"), Biblo GO ("biblogo") and Mit Biblo ("mybiblo"), and the',
+        'header also picks the data: "biblo" sees the digital catalogue, "biblogo" its',
+        'children\'s part, "mybiblo" print and physical reservations and loans too. A request',
+        "sends DEFAULT_APP_TYPE where the endpoint accepts it, else the first value listed.",
+        'Endpoints not listed take any value. See "`x-app-type` picks the data" in AGENTS.md."""',
         "",
         f'DEFAULT_APP_TYPE = "{PREFERRED_APP_TYPE}"',
         "",
-        "APP_TYPE_OVERRIDES: dict[tuple[str, str], str] = {",
-        *(f"    {key!r}: {value!r}," for key, value in sorted(overrides.items())),
+        "ACCEPTED_APP_TYPES: dict[tuple[str, str], tuple[str, ...]] = {",
+        *(f"    {key!r}: {value!r}," for key, value in sorted(accepted.items())),
         "}",
     ]
     return "\n".join(lines) + "\n"

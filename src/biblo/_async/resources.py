@@ -18,11 +18,32 @@ if TYPE_CHECKING:
     from .client import AsyncBiblo
 
 LIB = "/v1/agencies/{agencyId}"
+# The Mit Biblo app's x-app-type: account calls under it include physical items (#3).
+MIT_BIBLO = "mybiblo"
 
 
 class AsyncResource:
     def __init__(self, client: AsyncBiblo) -> None:
         self._client = client
+
+    async def _digital_and_physical[T: m.Loan | m.ReservationItem](
+        self, listing: type[builtins.list[T]], template: str, library_id: str | None
+    ) -> builtins.list[T]:
+        """An account listing as Biblo sees it, then the physical items only Mit Biblo sees
+        (#3), each in the API's order. An item listed under both comes once, from the first."""
+        listings = [
+            await self._client._get(
+                listing, template, library_id=library_id, auth=True, app_type=app_type
+            )
+            for app_type in (None, MIT_BIBLO)
+        ]
+        seen: set[str] = set()
+        merged: builtins.list[T] = []
+        for found in listings[0] + listings[1]:
+            if found.id not in seen:
+                seen.add(found.id)
+                merged.append(found)
+        return merged
 
 
 class AsyncLibraries(AsyncResource):
@@ -336,9 +357,8 @@ class AsyncAccount(AsyncResource):
 
 class AsyncLoans(AsyncResource):
     async def list(self, library_id: str | None = None) -> builtins.list[m.Loan]:
-        return await self._client._get(
-            list[m.Loan], f"{LIB}/account/loans", library_id=library_id, auth=True
-        )
+        """Digital loans, then physical ones."""
+        return await self._digital_and_physical(list[m.Loan], f"{LIB}/account/loans", library_id)
 
     async def borrow(self, record_id: str, library_id: str | None = None) -> m.Loan:
         """Borrow a digital record (e-book, audiobook, podcast). Counts against the quota."""
@@ -390,8 +410,9 @@ class AsyncLoans(AsyncResource):
 
 class AsyncReservations(AsyncResource):
     async def list(self, library_id: str | None = None) -> builtins.list[m.ReservationItem]:
-        return await self._client._get(
-            list[m.ReservationItem], f"{LIB}/account/reservations", library_id=library_id, auth=True
+        """Digital reservations, then physical ones."""
+        return await self._digital_and_physical(
+            list[m.ReservationItem], f"{LIB}/account/reservations", library_id
         )
 
     async def create(
@@ -432,6 +453,8 @@ class AsyncReservations(AsyncResource):
             json=body,
             library_id=library_id,
             auth=True,
+            # Under "biblo" the API doesn't know physical records, which need a branch (#3).
+            app_type=MIT_BIBLO if pickup_branch_id is not None else None,
         )
         return result or []
 

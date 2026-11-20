@@ -12,14 +12,16 @@ from biblo import (
     AsyncBiblo,
     BadRequestError,
     Biblo,
+    BibloError,
     NotFoundError,
     PermissionDeniedError,
+    PickupBranchRequiredError,
     ResponseValidationError,
     models,
 )
 from biblo.models import _lenient
 from biblo.models._lenient import record_drift
-from tests.fake import LIBRARY, FakeBiblo, fixture
+from tests.fake import LIBRARY, LOAN, PHYSICAL_RECORD, RESERVATION, FakeBiblo, fixture
 
 
 async def test_catalogue(biblo: AsyncBiblo) -> None:
@@ -124,6 +126,50 @@ async def test_a_periodical_issue_can_be_picked_by_year_alone(
 async def test_the_old_periodical_parameters_are_gone(logged_in: AsyncBiblo) -> None:
     with pytest.raises(TypeError):
         await logged_in.reservations.create("870970-basis:141661116", volume_number="2")  # ty: ignore[unknown-argument]
+
+
+async def test_account_listings_include_physical_items(logged_in: AsyncBiblo) -> None:
+    """The API hides physical items unless asked as Mit Biblo (#3)."""
+    reservations = await logged_in.reservations.list()
+    assert [(r.id, r.physical is not None) for r in reservations] == [("r-1", False), ("p-1", True)]
+    loans = await logged_in.loans.list()
+    assert [loan.id for loan in loans] == ["123456", "p-loan-1"]
+
+
+async def test_an_item_listed_under_both_app_types_appears_once(
+    logged_in: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    fake.physical_reservations.insert(0, RESERVATION)
+    fake.physical_loans.append(LOAN)
+    assert [r.id for r in await logged_in.reservations.list()] == ["r-1", "p-1"]
+    assert [loan.id for loan in await logged_in.loans.list()] == ["123456", "p-loan-1"]
+
+
+def test_sync_account_listings_include_physical_items(sync_biblo: Biblo) -> None:
+    sync_biblo.login("0102031234", "1234")
+    assert [r.id for r in sync_biblo.reservations.list()] == ["r-1", "p-1"]
+    assert [loan.id for loan in sync_biblo.loans.list()] == ["123456", "p-loan-1"]
+
+
+async def test_a_reservation_with_a_pickup_branch_is_made_as_mit_biblo(
+    logged_in: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    """Under "biblo" the API doesn't know physical records (#3)."""
+    await logged_in.reservations.create(["870970-basis:141661116"], pickup_branch_id="DK-1")
+    await logged_in.reservations.create(["870970-basis:141661116"])
+    physical, digital = [r for r in fake.api_requests("/reservations") if r.method == "POST"]
+    assert physical.headers["x-app-type"] == "mybiblo"
+    assert digital.headers["x-app-type"] == "biblo"
+
+
+async def test_reserving_a_physical_record_without_a_branch_says_it_needs_one(
+    logged_in: AsyncBiblo,
+) -> None:
+    with pytest.raises(PickupBranchRequiredError) as caught:
+        await logged_in.reservations.create(PHYSICAL_RECORD)
+    assert isinstance(caught.value, BibloError)
+    assert "physical" in str(caught.value)
+    assert "pickup_branch_id" in str(caught.value)
 
 
 async def test_the_fake_api_refuses_bodies_the_spec_does_not_describe(

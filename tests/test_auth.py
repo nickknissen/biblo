@@ -131,10 +131,10 @@ async def test_tokens_about_to_expire_are_refreshed_first(
     storage.data = saved_session(expires_in=timedelta(seconds=10))
     http = httpx.AsyncClient(transport=httpx.MockTransport(fake.handle))
     async with AsyncBiblo(storage=storage, http_client=http) as client:
-        await client.loans.list()
+        await client.account.get()
     assert [r.url.path for r in fake.api_requests()] == [
         "/v1/auth/token-refresh",
-        f"/v1/agencies/{LIBRARY}/account/loans",
+        f"/v1/agencies/{LIBRARY}/account",
     ]
     assert storage.data is not None
     assert storage.data["tokens"]["access_token"] == "access-2"  # saved for next time
@@ -143,11 +143,11 @@ async def test_tokens_about_to_expire_are_refreshed_first(
 
 async def test_a_401_refreshes_once_and_retries(logged_in: AsyncBiblo, fake: FakeBiblo) -> None:
     fake.revoked.add("access-1")
-    loans = await logged_in.loans.list()
-    assert len(loans) == 1
+    account = await logged_in.account.get()
+    assert account.name == "Test Testesen"
     paths = [r.url.path for r in fake.api_requests()]
     assert paths.count("/v1/auth/token-refresh") == 1
-    assert fake.api_requests("/account/loans")[-1].headers["authorization"] == "Bearer access-2"
+    assert fake.api_requests("/account")[-1].headers["authorization"] == "Bearer access-2"
 
 
 async def test_a_refused_refresh_logs_out(

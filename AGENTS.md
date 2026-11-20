@@ -10,7 +10,8 @@ The goal is to be *the* Python library for it: stable public API, typed, sync an
 - `src/biblo/models/_generated.py` from `spec/ddf-openapi.json` (datamodel-codegen, configured
   in pyproject.toml), then: spec patterns/lengths dropped, `spec/patches.json` applied, and
   every field given the `Lenient` validator.
-- `src/biblo/_app_types.py`: endpoints that refuse `x-app-type: biblo`.
+- `src/biblo/_app_types.py`: the `x-app-type` values each endpoint accepts. A call picks
+  another than the default with `_call(..., app_type=)`; a value outside the set raises.
 - `src/biblo/_sync/` from `src/biblo/_async/` (unasync). Write async code only. Names
   starting with `Async` lose the prefix; `asyncio` becomes `threading`, so use nothing from
   asyncio but `Lock`.

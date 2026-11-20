@@ -19,11 +19,32 @@ if TYPE_CHECKING:
     from .client import Biblo
 
 LIB = "/v1/agencies/{agencyId}"
+# The Mit Biblo app's x-app-type: account calls under it include physical items (#3).
+MIT_BIBLO = "mybiblo"
 
 
 class Resource:
     def __init__(self, client: Biblo) -> None:
         self._client = client
+
+    def _digital_and_physical[T: m.Loan | m.ReservationItem](
+        self, listing: type[builtins.list[T]], template: str, library_id: str | None
+    ) -> builtins.list[T]:
+        """An account listing as Biblo sees it, then the physical items only Mit Biblo sees
+        (#3), each in the API's order. An item listed under both comes once, from the first."""
+        listings = [
+            self._client._get(
+                listing, template, library_id=library_id, auth=True, app_type=app_type
+            )
+            for app_type in (None, MIT_BIBLO)
+        ]
+        seen: set[str] = set()
+        merged: builtins.list[T] = []
+        for found in listings[0] + listings[1]:
+            if found.id not in seen:
+                seen.add(found.id)
+                merged.append(found)
+        return merged
 
 
 class Libraries(Resource):
@@ -327,9 +348,8 @@ class Account(Resource):
 
 class Loans(Resource):
     def list(self, library_id: str | None = None) -> builtins.list[m.Loan]:
-        return self._client._get(
-            list[m.Loan], f"{LIB}/account/loans", library_id=library_id, auth=True
-        )
+        """Digital loans, then physical ones."""
+        return self._digital_and_physical(list[m.Loan], f"{LIB}/account/loans", library_id)
 
     def borrow(self, record_id: str, library_id: str | None = None) -> m.Loan:
         """Borrow a digital record (e-book, audiobook, podcast). Counts against the quota."""
@@ -381,8 +401,9 @@ class Loans(Resource):
 
 class Reservations(Resource):
     def list(self, library_id: str | None = None) -> builtins.list[m.ReservationItem]:
-        return self._client._get(
-            list[m.ReservationItem], f"{LIB}/account/reservations", library_id=library_id, auth=True
+        """Digital reservations, then physical ones."""
+        return self._digital_and_physical(
+            list[m.ReservationItem], f"{LIB}/account/reservations", library_id
         )
 
     def create(
@@ -423,6 +444,8 @@ class Reservations(Resource):
             json=body,
             library_id=library_id,
             auth=True,
+            # Under "biblo" the API doesn't know physical records, which need a branch (#3).
+            app_type=MIT_BIBLO if pickup_branch_id is not None else None,
         )
         return result or []
 

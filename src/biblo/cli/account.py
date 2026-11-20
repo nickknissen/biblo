@@ -4,7 +4,7 @@ from typing import Annotated
 
 import typer
 
-from ..exceptions import BadRequestError, BibloError
+from ..exceptions import BibloError, PickupBranchRequiredError
 from ._output import console, day, due, join, print_json, success, table, warn
 from ._state import JsonOption, LibraryOption, UsageError, client, resolve_branch
 
@@ -187,14 +187,12 @@ def reserve(
             branch = preferred.id
         try:
             made = biblo.reservations.create(record_ids, pickup_branch_id=branch, expiry_days=days)
-        except BadRequestError as e:
-            # The API's refusal of a physical reservation without a branch is assumed to be a
-            # 400 ("No material types found for records" in #3); unconfirmed until #3 is fixed.
+        except PickupBranchRequiredError as e:
             if branch is not None:
                 raise
             raise BibloError(
-                f"{e}\nA physical item needs a pickup branch: pass --branch, or set one with "
-                "biblo account set --pickup-branch"
+                f"{e.message}\nThe record may be a physical item, which needs a pickup branch: "
+                "pass --branch, or set one with biblo account set --pickup-branch"
             ) from e
     if as_json:
         print_json(made)
