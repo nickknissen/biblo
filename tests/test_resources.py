@@ -10,6 +10,7 @@ import pytest
 
 from biblo import (
     AsyncBiblo,
+    BadRequestError,
     Biblo,
     NotFoundError,
     PermissionDeniedError,
@@ -93,6 +94,57 @@ async def test_reservations(logged_in: AsyncBiblo, fake: FakeBiblo) -> None:
     cancel = fake.api_requests("/account/reservations")[-1]
     assert cancel.method == "DELETE"
     assert cancel.url.params.get_list("reservationIds") == ["r-1", "r-2"]
+
+
+def reserved_with(fake: FakeBiblo) -> dict:
+    [post] = [r for r in fake.api_requests("/account/reservations") if r.method == "POST"]
+    return json.loads(post.content)
+
+
+async def test_reserving_a_periodical_issue_sends_the_specs_fields(
+    logged_in: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    await logged_in.reservations.create(
+        "870970-basis:141661116",
+        pickup_branch_id="b",
+        periodical_volume="1",
+        periodical_number="2",
+        periodical_year="2026",
+    )
+    assert reserved_with(fake)["periodical"] == {"volume": "1", "number": "2", "year": "2026"}
+
+
+async def test_a_periodical_issue_can_be_picked_by_year_alone(
+    logged_in: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    await logged_in.reservations.create("870970-basis:141661116", periodical_year="2026")
+    assert reserved_with(fake)["periodical"] == {"year": "2026"}
+
+
+async def test_the_old_periodical_parameters_are_gone(logged_in: AsyncBiblo) -> None:
+    with pytest.raises(TypeError):
+        await logged_in.reservations.create("870970-basis:141661116", volume_number="2")  # ty: ignore[unknown-argument]
+
+
+async def test_the_fake_api_refuses_bodies_the_spec_does_not_describe(
+    logged_in: AsyncBiblo,
+) -> None:
+    """So the client can't drift from the spec's request models unnoticed."""
+    body = {"recordIds": ["870970-basis:141661116"], "periodical": {"volumeNumber": "2"}}
+    with pytest.raises(BadRequestError, match="volumeNumber"):
+        await logged_in.request("POST", "/v1/agencies/{agencyId}/account/reservations", json=body)
+
+
+def test_sync_client_reserves_a_periodical_issue(sync_biblo: Biblo, fake: FakeBiblo) -> None:
+    sync_biblo.login("0102031234", "1234")
+    sync_biblo.reservations.create(
+        "870970-basis:141661116",
+        pickup_branch_id="b",
+        periodical_volume="1",
+        periodical_number="2",
+        periodical_year="2026",
+    )
+    assert reserved_with(fake)["periodical"] == {"volume": "1", "number": "2", "year": "2026"}
 
 
 async def test_account_favorites_and_messages(logged_in: AsyncBiblo, fake: FakeBiblo) -> None:

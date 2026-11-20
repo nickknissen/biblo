@@ -26,6 +26,11 @@ All notable changes to this project. The format follows
 
 ### Fixed
 
+- Reserving an issue of a periodical sends the fields the API expects. `reservations.create`
+  takes `periodical_volume`, `periodical_number` and `periodical_year` in place of
+  `volume_number` and `volume_year`, which sent field names the API doesn't know (#2).
+  **Breaking:** calls passing the old names now raise `TypeError`; they never made a valid
+  request.
 - `BibloConnectionError` always names what went wrong. A timeout used to give
   `The Biblo API could not be reached: ` with nothing after it; now it ends in `ReadTimeout`,
   and other errors in their type and text (e.g. `ConnectError: ...`). The same goes for
