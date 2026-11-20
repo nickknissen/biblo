@@ -150,7 +150,11 @@ uv run pytest -m live                    # read-only checks against the real API
 
 The models (`src/biblo/models/_generated.py`), the app-type table and the whole sync client
 (`src/biblo/_sync/`) are generated: edit `src/biblo/_async/` or `spec/`, then run
-`uv run python scripts/generate.py`. See [AGENTS.md](AGENTS.md) for the details.
+`uv run python scripts/generate.py`. See
+[AGENTS.md](https://github.com/nickknissen/biblo/blob/main/AGENTS.md) for the details.
+
+Releasing: `uv run python scripts/release.py X.Y.Z` bumps the version, commits, pushes and
+creates the GitHub release; publishing the release uploads it to PyPI.
 
 ## License
 

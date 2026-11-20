@@ -10,6 +10,10 @@ license = "MIT"
 license-files = ["LICENSE"]
 keywords = ["biblo", "library", "bibliotek", "ereolen", "danish", "api", "async"]
 classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",

@@ -1,0 +1,35 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write # PyPI trusted publishing: no token stored anywhere
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: "3.14.9"
+
+      - name: Tag matches the package version
+        run: test "${GITHUB_REF_NAME}" = "v$(uv version --short)"
+
+      - run: uv sync --locked
+      - run: uv run python scripts/generate.py --check
+      - run: uv run pytest
+
+      - run: uv build
+
+      - name: The built wheel installs and runs
+        run: |
+          uv run --isolated --no-project --with "$(ls dist/*.whl)[cli]" biblo --version
+          uv run --isolated --no-project --with "$(ls dist/*.whl)" python -c "import biblo; print(biblo.__version__)"
+
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
