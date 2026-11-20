@@ -400,21 +400,29 @@ class AsyncReservations(AsyncResource):
         *,
         pickup_branch_id: str | None = None,
         expiry_days: int | None = None,
-        volume_number: str | None = None,
-        volume_year: str | None = None,
+        periodical_volume: str | None = None,
+        periodical_number: str | None = None,
+        periodical_year: str | None = None,
         library_id: str | None = None,
     ) -> builtins.list[m.ReservationItem]:
         """Reserve records. A physical one needs `pickup_branch_id`.
 
-        `expiry_days` must be one the library's configuration lists. `volume_number` and
-        `volume_year` pick an issue of a periodical.
+        `expiry_days` must be one the library's configuration lists.
+
+        `periodical_volume`, `periodical_number` and `periodical_year` pick an issue of a
+        periodical, as strings like `"01"`, `"01"` and `"2026"`. The year is what identifies
+        the issue (the Mit Biblo app sends the others only along with it); give each you know.
         """
-        body = _without_none(
-            recordIds=ids(record_ids),
+        periodical = m.ReservePeriodicalRequest(
+            volume=periodical_volume, number=periodical_number, year=periodical_year
+        )
+        request = m.ReserveRequest(
+            recordIds=[m.RecordId(i) for i in ids(record_ids)],
             pickupBranchId=pickup_branch_id,
             expiryInterval=expiry_days,
-            periodical=_without_none(volumeNumber=volume_number, volumeYear=volume_year) or None,
+            periodical=periodical if periodical.model_dump(exclude_none=True) else None,
         )
+        body = request.model_dump(mode="json", by_alias=True, exclude_none=True)
         result = await self._client._call(
             list[m.ReservationItem] | None,
             "POST",

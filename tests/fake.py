@@ -97,6 +97,8 @@ class FakeBiblo:
             return self._login(request)
         if request.url.host != API:
             raise AssertionError(f"Unexpected host {request.url}")
+        if (invalid := _check_body(request)) is not None:
+            return _error(400, 4000, "VALIDATION", invalid)
         if (override := self.overrides.get((request.method, request.url.path))) is not None:
             return override(request)
         return self._api(request)
@@ -270,6 +272,75 @@ class FakeBiblo:
                 "refresh_token": f"refresh-{self.token_number}",
             },
         )
+
+
+SPEC = json.loads((Path(__file__).parents[1] / "spec" / "ddf-openapi.json").read_text())
+BODY_SCHEMAS = [
+    (method.upper(), re.compile(re.sub(r"\{[^}]+\}", "[^/]+", template)), body["schema"])
+    for template, operations in SPEC["paths"].items()
+    for method, operation in operations.items()
+    if isinstance(operation, dict)
+    if (body := operation.get("requestBody", {}).get("content", {}).get("application/json"))
+]
+
+
+def _check_body(request: httpx.Request) -> str | None:
+    """Why a JSON body doesn't match the spec's request schema, or None if it does.
+
+    Checks keys, required fields and types, not the spec's patterns and lengths. Unlike the
+    spec, unknown keys are always refused, so a misspelled field can't pass unnoticed.
+    """
+    if not request.content or "json" not in request.headers.get("content-type", ""):
+        return None
+    for method, path, schema in BODY_SCHEMAS:
+        if method == request.method and path.fullmatch(request.url.path):
+            return _mismatch(json.loads(request.content), schema, "body")
+    return None
+
+
+def _mismatch(value: Any, schema: dict[str, Any], where: str) -> str | None:
+    if "$ref" in schema:
+        return _mismatch(value, SPEC["components"]["schemas"][schema["$ref"].split("/")[-1]], where)
+    if value is None:
+        return None if schema.get("nullable") else f"{where} is null"
+    for part in schema.get("allOf", []):
+        if (problem := _mismatch(value, part, where)) is not None:
+            return problem
+    if options := schema.get("anyOf") or schema.get("oneOf"):
+        problems = [_mismatch(value, option, where) for option in options]
+        if None not in problems:
+            return " or ".join(p for p in problems if p)
+    if "enum" in schema and value not in schema["enum"]:
+        return f"{where} is {value!r}, not one of {schema['enum']}"
+    match schema.get("type"):
+        case "object":
+            if not isinstance(value, dict):
+                return f"{where} is not an object"
+            properties = schema.get("properties", {})
+            if unknown := sorted(set(value) - set(properties)):
+                return f"{where} has unknown keys {unknown}"
+            if missing := sorted(set(schema.get("required", [])) - set(value)):
+                return f"{where} misses {missing}"
+            for key, item in value.items():
+                if (problem := _mismatch(item, properties[key], f"{where}.{key}")) is not None:
+                    return problem
+        case "array":
+            if not isinstance(value, list):
+                return f"{where} is not an array"
+            for i, item in enumerate(value):
+                if (
+                    problem := _mismatch(item, schema.get("items", {}), f"{where}[{i}]")
+                ) is not None:
+                    return problem
+        case "string" if not isinstance(value, str):
+            return f"{where} is not a string"
+        case "integer" if not isinstance(value, int) or isinstance(value, bool):
+            return f"{where} is not an integer"
+        case "number" if not isinstance(value, int | float) or isinstance(value, bool):
+            return f"{where} is not a number"
+        case "boolean" if not isinstance(value, bool):
+            return f"{where} is not a boolean"
+    return None
 
 
 def _error(status: int, code: int, kind: str, message: str) -> httpx.Response:
