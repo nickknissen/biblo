@@ -7,7 +7,7 @@ redirects to `biblo://?code=...`. This module submits that form and returns the 
 
 from __future__ import annotations
 
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 import httpx
 
@@ -70,7 +70,7 @@ async def _follow(http: httpx.AsyncClient, response: httpx.Response) -> httpx.Re
 
 def _forget_login_cookies(http: httpx.AsyncClient) -> None:
     """Don't leave login.bib.dk's cookies in an httpx client the caller may share."""
-    domain = LOGIN_BASE_URL.removeprefix("https://")
+    domain = urlsplit(LOGIN_BASE_URL).hostname
     for cookie in list(http.cookies.jar):
         if cookie.domain.lstrip(".") == domain:
             http.cookies.jar.clear(cookie.domain, cookie.path, cookie.name)

@@ -36,17 +36,12 @@ def account_show(
     if me.preferred_pickup_branch:
         console.print(f"Pickup branch: {me.preferred_pickup_branch.name}")
     t = table("", "E-books", "Audiobooks", title="\nDigital quota")
-    t.add_row(
-        "Loans left",
-        f"{quotas.remaining_loan_quotas.ebook} of {quotas.total_loan_quotas.ebook}",
-        f"{quotas.remaining_loan_quotas.audiobook} of {quotas.total_loan_quotas.audiobook}",
-    )
-    t.add_row(
-        "Reservations left",
-        f"{quotas.remaining_reservation_quotas.ebook} of {quotas.total_reservation_quotas.ebook}",
-        f"{quotas.remaining_reservation_quotas.audiobook} of "
-        f"{quotas.total_reservation_quotas.audiobook}",
-    )
+    rows = [
+        ("Loans left", quotas.remaining_loan_quotas, quotas.total_loan_quotas),
+        ("Reservations left", quotas.remaining_reservation_quotas, quotas.total_reservation_quotas),
+    ]
+    for label, left, total in rows:
+        t.add_row(label, f"{left.ebook} of {total.ebook}", f"{left.audiobook} of {total.audiobook}")
     console.print(t)
     if fees:
         t = table("Amount", "Reason", "Due", title="\nFees")
@@ -204,10 +199,10 @@ def reserve(
     if as_json:
         print_json(made)
         return
-    for r in made:
-        success(f"Reserved {r.details.title}")
     if not made:
         success("Reserved")
+    for r in made:
+        success(f"Reserved {r.details.title}")
 
 
 def cancel(

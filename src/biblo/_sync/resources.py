@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import builtins
 from collections.abc import Iterable, Iterator
-from typing import TYPE_CHECKING, Any, Unpack
+from typing import TYPE_CHECKING, Any, Unpack, cast
 
 from .. import models as m
 from .._base import ids
@@ -95,13 +95,14 @@ class Libraries(Resource):
         library_id: str | None = None,
     ) -> builtins.list[m.Event]:
         """Events at the library, or at one branch, from `start` to `end` (YYYY-MM-DD)."""
-        template, path = f"{LIB}/events", {}
-        if branch_id is not None:
-            template, path = f"{LIB}/branches/{{branchId}}/events", {"branchId": branch_id}
+        if branch_id is None:
+            template, path_params = f"{LIB}/events", {}
+        else:
+            template, path_params = f"{LIB}/branches/{{branchId}}/events", {"branchId": branch_id}
         return self._client._get(
             list[m.Event],
             template,
-            path,
+            path_params,
             params={"from": start, "to": end},
             library_id=library_id,
         )
@@ -562,12 +563,12 @@ class Devices(Resource):
 
 
 def _filters(filters: SearchFilters) -> dict[str, list[str]]:
-    result: dict[str, list[str]] = {}
-    for name, value in filters.items():
-        if name not in SEARCH_FILTER_PARAMS:
-            raise TypeError(f"Unknown search filter: {name}")
-        result[SEARCH_FILTER_PARAMS[name]] = ids(value)
-    return result
+    """The filters as the API's query parameters: camelCase names, list values."""
+    # Every SearchFilters value is `str | list[str]`; iterating a TypedDict loses that.
+    values = cast(dict[str, str | list[str]], filters)
+    if unknown := values.keys() - SEARCH_FILTER_PARAMS.keys():
+        raise TypeError(f"Unknown search filter: {', '.join(sorted(unknown))}")
+    return {SEARCH_FILTER_PARAMS[name]: ids(value) for name, value in values.items()}
 
 
 def _without_none(**fields: Any) -> dict[str, Any]:

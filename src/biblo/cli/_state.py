@@ -19,6 +19,11 @@ USER_AGENT = f"biblo-cli/{VERSION}"
 CONFIG_DIR_ENV = "BIBLO_CONFIG_DIR"
 LIBRARY_ENV = "BIBLO_LIBRARY"
 
+EXIT_ERROR = 1
+EXIT_USAGE = 2
+EXIT_NOT_LOGGED_IN = 4  # like gh
+EXIT_INTERRUPTED = 130  # 128 + SIGINT, like a shell
+
 LibraryOption = Annotated[
     str | None,
     typer.Option(
@@ -68,8 +73,8 @@ def resolve_branch(biblo: Biblo, branch: str) -> Branch:
         raise NotLoggedInError("Not logged in")
     branches = biblo.libraries.branches(library_id=biblo.login_library_id())
     wanted = branch.casefold()
-    if by_id := [b for b in branches if b.id.casefold() == wanted]:
-        return by_id[0]
+    if by_id := next((b for b in branches if b.id.casefold() == wanted), None):
+        return by_id
     return _pick(branch, [b for b in branches if wanted in b.name.casefold()], "branch", "branches")
 
 

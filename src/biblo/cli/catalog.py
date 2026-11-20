@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Annotated, cast
+from typing import Annotated, cast, get_args
 
 import typer
 
@@ -43,20 +43,21 @@ def search(
     as_json: JsonOption = False,
 ) -> None:
     """Search the catalogue. Show a result with: biblo work <id>"""
-    if by is not None and by not in ("all", "title", "creator", "subject"):
+    if by is not None and by not in get_args(SearchBy):
         raise UsageError("--by must be title, creator or subject")
-    chosen: SearchFilters = _parse_filters(filters or [])
-    formats = [FORMATS[f] for f, on in [("ebook", ebook), ("audiobook", audiobook)] if on]
-    if podcast:
-        formats.append(FORMATS["podcast"])
-    if formats:
+    chosen = _parse_filters(filters or [])
+    wanted = {"ebook": ebook, "audiobook": audiobook, "podcast": podcast}
+    if formats := [FORMATS[name] for name, on in wanted.items() if on]:
         chosen["material_types_specific"] = formats
     if language:
         chosen["main_languages"] = language
-    search_by: SearchBy | None = by  # type: ignore[assignment]
 
     with client(library) as biblo:
-        works = list(biblo.catalog.iter_search(query, by=search_by, max_results=limit, **chosen))
+        works = list(
+            biblo.catalog.iter_search(
+                query, by=cast(SearchBy | None, by), max_results=limit, **chosen
+            )
+        )
     if as_json:
         print_json(works)
         return
@@ -76,9 +77,8 @@ def search(
 
 def _parse_filters(raw: list[str]) -> SearchFilters:
     """`-f subjects=krimi -f mainLanguages=dan` (snake_case or the API's camelCase)."""
-    by_any_name = {
-        **{v: k for k, v in SEARCH_FILTER_PARAMS.items()},
-        **{k: k for k in SEARCH_FILTER_PARAMS},
+    by_any_name = {param: name for name, param in SEARCH_FILTER_PARAMS.items()} | {
+        name: name for name in SEARCH_FILTER_PARAMS
     }
     result: dict[str, list[str]] = {}
     for item in raw:

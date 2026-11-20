@@ -14,7 +14,7 @@ import asyncio
 import json
 import sys
 from collections import Counter
-from collections.abc import Awaitable
+from collections.abc import Awaitable, Callable
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +23,9 @@ from biblo.models._lenient import record_drift
 
 LIBRARIES = ["763000", "710100", "775100"]  # Vejle, København, Aarhus
 QUERIES = ["harry potter", "krimi", "tove ditlevsen", "podcast", "brætspil", "dvd"]
+
+type Call = Callable[[str, Awaitable[Any]], Awaitable[Any]]
+"""Awaits one API call, counting it; None if it failed."""
 
 
 async def main() -> int:
@@ -70,7 +73,7 @@ async def main() -> int:
     return 1 if drift or failures else 0
 
 
-async def crawl_library(b: AsyncBiblo, lib: str, call: Any) -> None:
+async def crawl_library(b: AsyncBiblo, lib: str, call: Call) -> None:
     await call(f"{lib} agency", b.libraries.get(lib))
     await call(f"{lib} configuration", b.libraries.configuration(lib))
     branches = await call(f"{lib} branches", b.libraries.branches(lib)) or []
@@ -115,7 +118,7 @@ async def crawl_library(b: AsyncBiblo, lib: str, call: Any) -> None:
                 await call(f"{lib} holdings", b.catalog.holdings(record_ids, lib))
 
 
-async def crawl_account(b: AsyncBiblo, call: Any) -> None:
+async def crawl_account(b: AsyncBiblo, call: Call) -> None:
     await call("account", b.account.get())
     await call("fees", b.account.fees())
     await call("quotas", b.account.quotas())

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import os
-import sys
 import tempfile
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -49,13 +48,13 @@ class AsyncFileTokenStorage(AsyncTokenStorage):
 
     async def save(self, data: dict[str, Any]) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        fd, tmp_path = tempfile.mkstemp(dir=self.path.parent, suffix=".tmp")
+        # mkstemp creates the file readable and writable only by its owner (0600).
+        fd, name = tempfile.mkstemp(dir=self.path.parent, suffix=".tmp")
+        tmp = Path(name)
         try:
             with os.fdopen(fd, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
-            if sys.platform != "win32":
-                os.chmod(tmp_path, 0o600)
-            os.replace(tmp_path, self.path)
-        except OSError:
-            os.unlink(tmp_path)
+            tmp.replace(self.path)
+        except BaseException:
+            tmp.unlink(missing_ok=True)
             raise

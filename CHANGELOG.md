@@ -24,6 +24,11 @@ All notable changes to this project. The format follows
   on your own `http_client` is replaced on API requests; the login at login.bib.dk still
   looks like a mobile browser (#5).
 
+### Fixed
+
+- `FileTokenStorage.save` no longer leaves a `.tmp` file behind when the session can't be
+  written as JSON.
+
 ## [0.1.0] - 2026-11-20
 
 The first release: an unofficial Python client and command line for Biblo, the Danish public

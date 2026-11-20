@@ -11,7 +11,14 @@ import typer
 from .._sync import Biblo
 from ..exceptions import NotLoggedInError
 from ._output import console, err, print_json, success, warn
-from ._state import JsonOption, LibraryOption, UsageError, client, session_path
+from ._state import (
+    EXIT_NOT_LOGGED_IN,
+    JsonOption,
+    LibraryOption,
+    UsageError,
+    client,
+    session_path,
+)
 
 app = typer.Typer(help="Log in, log out and check the session.", no_args_is_help=True)
 
@@ -103,7 +110,7 @@ def status(as_json: JsonOption = False) -> None:
     if tokens is None:
         console.print("Not logged in. Log in with: [bold]biblo auth login[/bold]")
         console.print(f"Session file: {session_path()}")
-        raise typer.Exit(4)
+        raise typer.Exit(EXIT_NOT_LOGGED_IN)
     left = tokens.expires_at - datetime.now(UTC)
     hours = int(left.total_seconds() // 3600)
     valid = f"{left.days} days" if left.days >= 2 else f"{hours} hours"

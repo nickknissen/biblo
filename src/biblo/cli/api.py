@@ -31,16 +31,12 @@ def api(
     `{agencyId}` in the path becomes your library; your session's token is sent. The
     endpoints are described at https://api.detdigitalefolkebibliotek.dk/
     """
-    query: dict[str, str | list[str]] = {}
+    query: dict[str, list[str]] = {}  # a repeated name is sent as name=a&name=b
     for item in params or []:
         name, sep, value = item.partition("=")
         if not sep:
             raise UsageError(f"Bad --param {item!r}: use name=value")
-        existing = query.get(name)
-        if existing is None:
-            query[name] = value
-        else:
-            query[name] = [*([existing] if isinstance(existing, str) else existing), value]
+        query.setdefault(name, []).append(value)
     try:
         payload = json.loads(body) if body is not None else None
     except json.JSONDecodeError as e:

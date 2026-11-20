@@ -43,7 +43,9 @@ def main() -> None:
     with httpx.Client(timeout=30) as http:
         for name, (template, params) in ENDPOINTS.items():
             params = dict(params)
-            headers = _base.headers("GET", template, "fixture-capture", None)
+            headers = _base.headers(
+                "GET", template, "fixture-capture", None, _base.api_user_agent()
+            )
             if forced := params.pop("_app_type", None):
                 headers["x-app-type"] = forced
             path = _base.fill_path(template, {"agencyId": LIBRARY})
