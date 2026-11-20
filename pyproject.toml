@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-cli = ["typer>=0.27.3,<0.28", "rich>=13.7"]
+cli = ["typer>=0.29.2", "rich>=13.7"]
 
 [project.scripts]
 biblo = "biblo.__main__:main"
@@ -43,6 +43,9 @@ build-backend = "uv_build"
 
 [tool.uv]
 default-groups = ["dev"]
+# datamodel-code-generator caps isort below 9, but scripts/generate.py runs it with
+# --formatters builtin, so isort is never used; this lets the lock take current isort.
+override-dependencies = ["isort>=9"]
 
 [tool.ruff]
 target-version = "py312"
