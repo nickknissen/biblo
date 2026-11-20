@@ -315,9 +315,11 @@ def generate_app_types() -> str:
 
     lines = [
         HEADER,
-        '"""The `x-app-type` for endpoints that refuse "biblo". The API serves three apps:',
-        "Biblo (digital loans), Mit Biblo (the physical library: branches, events, Scan & Loan)",
-        'and Biblo Go (children). Every endpoint not listed here accepts "biblo"."""',
+        '"""The `x-app-type` for endpoints that refuse "biblo". Every endpoint not listed here',
+        'accepts "biblo". The API serves three apps: Biblo ("biblo"), Biblo GO ("biblogo") and',
+        'Mit Biblo ("mybiblo"), and the header also picks the data: "biblo" sees the digital',
+        'catalogue, "biblogo" its children\'s part, "mybiblo" print and physical reservations',
+        'and loans too. See "`x-app-type` picks the data" in AGENTS.md."""',
         "",
         f'DEFAULT_APP_TYPE = "{PREFERRED_APP_TYPE}"',
         "",

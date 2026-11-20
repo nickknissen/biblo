@@ -17,6 +17,20 @@ The goal is to be *the* Python library for it: stable public API, typed, sync an
 
 `--fetch` first downloads the live spec. Review its diff: renamed schemas rename models.
 
+## `x-app-type` picks the data
+
+One backend serves three apps, and the header changes what comes back, not just which
+endpoints answer: `biblo` sees the digital catalogue, `biblogo` its children's part,
+`mybiblo` print, CDs, holdings and physical reservations and loans. Search hits, a work's
+`variations`, favorites' details and `account/reservations` all differ, and no value is a
+strict superset (#1, #3). Before trusting a response, compare it under every value the
+endpoint accepts.
+
+The apps are one Kotlin codebase; each build sends one fixed value. To see what an app really
+sends, decompile its APK with jadx. The maintainer keeps them in the git-ignored `apk/`
+(`base.apk` is Biblo, `mybiblo/`, `go/`). Class names are obfuscated: search for the DTO name
+(e.g. `ReserveRequestDto`), whose serializer lists the JSON field names.
+
 ## When the API disagrees with its spec
 
 Tests parse strictly (`tests/conftest.py`). For real-world mismatches:
