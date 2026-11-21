@@ -66,6 +66,42 @@ RESERVATION = {
         "blueTitle": False,
     },
 }
+PRINTED_BOOK = {"display": "bog", "displayWithPronoun": "Denne bog", "category": "BOOKS"}
+# A made-up printed book: fixtures carry no real account's ids (#3).
+PHYSICAL_RECORD = "870970-basis:99999901"
+# Physical items, as `x-app-type: mybiblo` lists them (shape recorded 2026-11-20, #3).
+PHYSICAL_RESERVATION = {
+    "id": "p-1",
+    "reservationDate": "2026-11-15T10:00:00.000Z",
+    "state": "RESERVED",
+    "physical": {"expiryDate": "2027-05-15", "pickupBranch": "DK-763004", "numberInQueue": 3},
+    "details": {
+        "recordId": PHYSICAL_RECORD,
+        "workId": "work-of:870970-basis:99999901",
+        "title": "En trykt bog",
+        "coverUrl": None,
+        "author": "En Forfatter",
+        "publishYear": "2024",
+        "materialType": PRINTED_BOOK,
+        "blueTitle": False,
+    },
+}
+PHYSICAL_LOAN = {
+    "id": "p-loan-1",
+    "loanDate": "2026-11-12T10:00:00.000Z",
+    "dueDate": "2026-12-10T10:00:00.000Z",
+    "isRenewable": True,
+    "record": {
+        "recordId": PHYSICAL_RECORD,
+        "workId": "work-of:870970-basis:99999901",
+        "title": "En trykt bog",
+        "author": "En Forfatter",
+        "publishYear": "2024",
+        "materialType": PRINTED_BOOK,
+        "blueTitle": False,
+        "series": False,
+    },
+}
 ACCOUNT = {"accountType": "AdgangsPlatformen", "name": "Test Testesen", "email": None}
 QUOTAS = {
     "totalLoanQuotas": {"ebook": 5, "audiobook": 5},
@@ -85,6 +121,11 @@ class FakeBiblo:
     revoked: set[str] = field(default_factory=set)
     overrides: dict[tuple[str, str], Handler] = field(default_factory=dict)
     loans: list[dict[str, Any]] = field(default_factory=lambda: [LOAN])
+    physical_loans: list[dict[str, Any]] = field(default_factory=lambda: [PHYSICAL_LOAN])
+    reservations: list[dict[str, Any]] = field(default_factory=lambda: [RESERVATION])
+    physical_reservations: list[dict[str, Any]] = field(
+        default_factory=lambda: [PHYSICAL_RESERVATION]
+    )
     account: dict[str, Any] = field(default_factory=lambda: dict(ACCOUNT))
 
     @property
@@ -198,6 +239,9 @@ class FakeBiblo:
 
     def _account(self, request: httpx.Request) -> httpx.Response:
         path, method = request.url.path, request.method
+        # The real API lists physical items only to Mit Biblo, and digital ones (as far as we
+        # know) only to the others (#3).
+        mit_biblo = request.headers["x-app-type"] == "mybiblo"
         base = f"/v1/agencies/{LIBRARY}/account"
         if (method, path) == ("GET", base):
             return httpx.Response(200, json={"data": self.account})
@@ -212,7 +256,9 @@ class FakeBiblo:
         if (method, path) == ("GET", f"{base}/fees"):
             return httpx.Response(200, json={"data": []})
         if (method, path) == ("GET", f"{base}/loans"):
-            return httpx.Response(200, json={"data": self.loans})
+            return httpx.Response(
+                200, json={"data": self.physical_loans if mit_biblo else self.loans}
+            )
         if (method, path) == ("POST", f"{base}/loans"):
             body = json.loads(request.content)
             return httpx.Response(
@@ -237,8 +283,14 @@ class FakeBiblo:
                 },
             )
         if (method, path) == ("GET", f"{base}/reservations"):
-            return httpx.Response(200, json={"data": [RESERVATION]})
+            listed = self.physical_reservations if mit_biblo else self.reservations
+            return httpx.Response(200, json={"data": listed})
         if (method, path) == ("POST", f"{base}/reservations"):
+            record_ids = json.loads(request.content)["recordIds"]
+            if PHYSICAL_RECORD in record_ids and not mit_biblo:
+                # The status and message the real API answered with on 2026-11-20 (#3).
+                message = f"No material types found for records: {PHYSICAL_RECORD}"
+                return _error(400, 4000, "VALIDATION", message)
             return httpx.Response(200, json={"data": [RESERVATION]})
         if (method, path) == ("DELETE", f"{base}/reservations"):
             return httpx.Response(204)

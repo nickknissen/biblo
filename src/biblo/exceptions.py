@@ -10,6 +10,7 @@ BibloError
 ├── ResponseValidationError     the API sent data that doesn't match its spec
 └── APIError                    the API answered with an error status
     ├── BadRequestError             400, e.g. a validation error
+    │   └── PickupBranchRequiredError   a physical record reserved without a branch
     ├── AuthenticationError         401
     ├── PermissionDeniedError       403
     ├── NotFoundError               404
@@ -43,6 +44,11 @@ class LoginFlowError(LoginError):
 
 class NoLibraryError(BibloError, ValueError):
     """A call that belongs to a library, with no library given and none logged in at."""
+
+
+class AppTypeNotAcceptedError(BibloError, ValueError):
+    """A call asked for an `x-app-type` the endpoint doesn't accept; nothing was sent.
+    Internal for now: only the library itself picks an app type (#1 will let callers)."""
 
 
 class NotLoggedInError(BibloError):
@@ -88,6 +94,18 @@ class APIError(BibloError):
 
 class BadRequestError(APIError):
     """400: the API refused the request, e.g. a missing or malformed parameter."""
+
+
+class PickupBranchRequiredError(BadRequestError):
+    """400 "No material types found for records" from a reservation without a pickup
+    branch: what the API answers when the record is physical. `message` is the API's."""
+
+    def __init__(self, status_code: int, body: Any, method: str, url: str) -> None:
+        super().__init__(status_code, body, method, url)
+        self.args = (
+            f"{self.args[0]}\nThe record may be a physical item (a printed book, a CD, ...): "
+            "reserving one needs a pickup branch (pickup_branch_id).",
+        )
 
 
 class AuthenticationError(APIError):

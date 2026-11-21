@@ -16,7 +16,7 @@ from urllib.parse import parse_qs, quote, urlencode, urlparse
 import httpx
 from pydantic import TypeAdapter, ValidationError
 
-from ._app_types import APP_TYPE_OVERRIDES, DEFAULT_APP_TYPE
+from ._app_types import ACCEPTED_APP_TYPES, DEFAULT_APP_TYPE
 from ._constants import (
     API_KEY,
     APP_VERSION,
@@ -28,6 +28,7 @@ from ._constants import (
     TOKEN_RENEWAL_MARGIN_SECONDS,
 )
 from .exceptions import (
+    AppTypeNotAcceptedError,
     InvalidCredentialsError,
     LoginFlowError,
     ResponseValidationError,
@@ -125,26 +126,44 @@ class Session:
 # ------------------------------------------------------------------------- requests
 
 
-def app_type(method: str, path: str) -> str:
-    """The `x-app-type` an endpoint accepts (see _app_types.py). `path` may be the template
-    (`/v1/agencies/{agencyId}/branches`) or a filled-in path."""
-    if found := APP_TYPE_OVERRIDES.get((method, path)):
+def app_type(method: str, path: str, wanted: str | None = None) -> str:
+    """The `x-app-type` to send (see _app_types.py): `wanted` if given, else "biblo" where the
+    endpoint accepts it. `path` may be the template (`/v1/agencies/{agencyId}/branches`) or a
+    filled-in path. Raises AppTypeNotAcceptedError if the endpoint refuses `wanted`."""
+    accepted = _accepted_app_types(method, path)
+    if wanted is None:
+        return DEFAULT_APP_TYPE if accepted is None or DEFAULT_APP_TYPE in accepted else accepted[0]
+    if accepted is None:
+        raise AppTypeNotAcceptedError(
+            f"Can't send x-app-type {wanted!r} to {method} {path}: the spec doesn't list it"
+        )
+    if wanted not in accepted:
+        raise AppTypeNotAcceptedError(
+            f"{method} {path} doesn't accept x-app-type {wanted!r}, only {', '.join(accepted)}"
+        )
+    return wanted
+
+
+def _accepted_app_types(method: str, path: str) -> tuple[str, ...] | None:
+    if found := ACCEPTED_APP_TYPES.get((method, path)):
         return found
-    for pattern, override in _override_patterns():
+    for pattern, accepted in _endpoint_patterns():
         if pattern.fullmatch(f"{method} {path}"):
-            return override
-    return DEFAULT_APP_TYPE
+            return accepted
+    return None
 
 
 @cache
-def _override_patterns() -> list[tuple[re.Pattern[str], str]]:
-    """Each override's `METHOD /path/{param}` as a regex where `{param}` is one segment."""
+def _endpoint_patterns() -> list[tuple[re.Pattern[str], tuple[str, ...]]]:
+    """Each endpoint's `METHOD /path/{param}` as a regex where `{param}` is one segment,
+    those with fewer parameters first, so `.../reservations/convert` beats `.../{id}`."""
 
     def pattern(method: str, path: str) -> re.Pattern[str]:
         literal_parts = re.split(r"\{\w+\}", f"{method} {path}")
         return re.compile("[^/]+".join(map(re.escape, literal_parts)))
 
-    return [(pattern(*key), value) for key, value in APP_TYPE_OVERRIDES.items()]
+    endpoints = sorted(ACCEPTED_APP_TYPES.items(), key=lambda item: item[0][1].count("{"))
+    return [(pattern(*key), accepted) for key, accepted in endpoints]
 
 
 def api_user_agent(product: str | None = None) -> str:
@@ -157,12 +176,18 @@ def api_user_agent(product: str | None = None) -> str:
 
 
 def headers(
-    method: str, template: str, installation_id: str, tokens: Tokens | None, user_agent: str
+    method: str,
+    template: str,
+    installation_id: str,
+    tokens: Tokens | None,
+    user_agent: str,
+    chosen_app_type: str | None = None,
 ) -> dict[str, str]:
+    """`chosen_app_type` is one `app_type()` already returned; without it, the default."""
     result = {
         "User-Agent": user_agent,
         "x-app": f"Android/{APP_VERSION}",
-        "x-app-type": app_type(method, template),
+        "x-app-type": chosen_app_type or app_type(method, template),
         "x-installation-id": installation_id,
         "x-api-key": API_KEY,
     }

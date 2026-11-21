@@ -258,9 +258,17 @@ class Biblo:
         params: dict[str, Any] | None = None,
         library_id: str | None = None,
         auth: bool = False,
+        app_type: str | None = None,
     ) -> T:
         return self._call(
-            tp, "GET", template, path_params, params=params, library_id=library_id, auth=auth
+            tp,
+            "GET",
+            template,
+            path_params,
+            params=params,
+            library_id=library_id,
+            auth=auth,
+            app_type=app_type,
         )
 
     def _call(
@@ -274,7 +282,11 @@ class Biblo:
         json: Any = None,
         library_id: str | None = None,
         auth: bool = False,
+        app_type: str | None = None,
     ) -> Any:
+        """`app_type` asks for an `x-app-type` other than the endpoint's default; it picks
+        which data the API answers with (see _app_types.py)."""
+        app_type = _base.app_type(method, template, app_type)  # raises before anything is sent
         session = self._loaded()
         if auth and session.tokens is None:
             raise NotLoggedInError(f"{method} {template} needs a logged-in user")
@@ -287,7 +299,11 @@ class Biblo:
         path = _base.fill_path(template, path_values)
 
         tokens = self._fresh_tokens()
-        kwargs: dict[str, Any] = {"params": _base.query(params), "json": json}
+        kwargs: dict[str, Any] = {
+            "params": _base.query(params),
+            "json": json,
+            "app_type": app_type,
+        }
         response = self._send(method, template, path, session, tokens, **kwargs)
         if response.status_code == 401 and tokens is not None:
             with self._refresh_lock:
@@ -304,9 +320,12 @@ class Biblo:
         path: str,
         session: Session,
         tokens: Tokens | None,
+        app_type: str | None = None,
         **kwargs: Any,
     ) -> httpx.Response:
-        headers = _base.headers(method, template, session.installation_id, tokens, self._user_agent)
+        headers = _base.headers(
+            method, template, session.installation_id, tokens, self._user_agent, app_type
+        )
         try:
             return self._http.request(method, f"{self._base_url}{path}", headers=headers, **kwargs)
         except httpx.TransportError as err:

@@ -26,6 +26,14 @@ All notable changes to this project. The format follows
 
 ### Fixed
 
+- Physical loans and reservations show up. The API lists them only to the Mit Biblo app, so
+  `loans.list()` and `reservations.list()` (and `biblo loans` / `biblo reservations`) now ask
+  as Biblo and as Mit Biblo and merge the answers: digital items first, then physical, each
+  once. They make two requests where they made one (#3).
+- Physical items can be reserved. `reservations.create` with a `pickup_branch_id` is sent as
+  Mit Biblo; under Biblo the API refused every physical record. Reserving one without a branch
+  raises the new `PickupBranchRequiredError` (a `BadRequestError`), whose message says the
+  record may be physical and needs a pickup branch (#3).
 - Reserving an issue of a periodical sends the fields the API expects. `reservations.create`
   takes `periodical_volume`, `periodical_number` and `periodical_year` in place of
   `volume_number` and `volume_year`, which sent field names the API doesn't know (#2).

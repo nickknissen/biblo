@@ -140,9 +140,11 @@ login, `NotLoggedInError` when a session is missing or can no longer be refreshe
 The app's backend, `https://api.detdigitalefolkebibliotek.dk`, publishes its OpenAPI spec
 (the root URL is a Swagger UI). It serves three apps: Biblo, Mit Biblo (the physical
 library: branches, events, Scan & Loan) and Biblo Go, and some endpoints only answer one of
-them; the client sends the right `x-app-type` for each. The API key, app version and
-login.bib.dk OAuth client are the ones every copy of the Android app ships
-(`src/biblo/_constants.py`).
+them; the client sends the right `x-app-type` for each. The header also picks the data:
+only Mit Biblo sees physical loans and reservations, so `loans.list()` and
+`reservations.list()` ask as both apps and merge the answers, digital items first. The API
+key, app version and login.bib.dk OAuth client are the ones every copy of the Android app
+ships (`src/biblo/_constants.py`).
 
 Logging in goes through login.bib.dk (Adgangsplatformen): its library-card form is posted,
 the `biblo://?code=...` redirect is caught, and the code is exchanged at `/v1/auth/login`.

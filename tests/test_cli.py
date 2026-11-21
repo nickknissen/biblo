@@ -10,7 +10,7 @@ import pytest
 
 from biblo import Biblo, __version__
 from biblo.cli import _state, main
-from tests.fake import LIBRARY, PIN, USER, FakeBiblo
+from tests.fake import LIBRARY, PHYSICAL_RECORD, PIN, USER, FakeBiblo
 
 Run = Callable[..., tuple[int, str, str]]
 
@@ -134,6 +134,29 @@ def logged_in(run: Run, monkeypatch: pytest.MonkeyPatch) -> None:
     assert code == 0, err
 
 
+def test_reservations_and_loans_show_physical_items(run: Run, logged_in: None) -> None:
+    code, out, err = run("reservations")
+    assert code == 0, err
+    assert "Harry Potter" in out
+    assert "En trykt bog" in out
+    assert "number 3 in queue" in out
+
+    code, out, err = run("reservations", "--json")
+    assert code == 0, err
+    listed = json.loads(out)
+    assert [r["id"] for r in listed] == ["r-1", "p-1"]
+    assert listed[1]["physical"]["pickup_branch"] == "DK-763004"
+
+    code, out, err = run("loans")
+    assert code == 0, err
+    assert "Harry Potter" in out
+    assert "En trykt bog" in out
+
+    code, out, err = run("loans", "--json")
+    assert code == 0, err
+    assert [loan["id"] for loan in json.loads(out)] == ["123456", "p-loan-1"]
+
+
 def test_set_pickup_branch_by_part_of_its_name(run: Run, fake: FakeBiblo, logged_in: None) -> None:
     code, _, err = run("account", "set", "--pickup-branch", "børkop")
     assert code == 0, err
@@ -218,23 +241,24 @@ def test_reserve_without_any_branch_sends_none(run: Run, fake: FakeBiblo, logged
 
 
 def test_rejected_reservation_without_a_branch_says_how_to_give_one(
-    run: Run, fake: FakeBiblo, logged_in: None
+    run: Run, logged_in: None
 ) -> None:
-    fake.overrides[("POST", f"/v1/agencies/{LIBRARY}/account/reservations")] = lambda _: (
-        httpx.Response(
-            400,
-            json={
-                "id": 4000,
-                "type": "BAD_REQUEST",
-                "message": "No material types found for records",
-            },
-        )
-    )
-    code, _, err = run("reserve", "870970-basis:141661116")
+    code, _, err = run("reserve", PHYSICAL_RECORD)
     assert code == 1
     assert "No material types found for records" in err
+    assert "physical item" in err
     assert "--branch" in err
     assert "biblo account set --pickup-branch" in err
+    assert "pickup_branch_id" not in err  # the library's wording, not the CLI's
+
+
+def test_reserve_with_a_branch_reserves_a_physical_record(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    code, _, err = run("reserve", PHYSICAL_RECORD, "--branch", "DK-763004")
+    assert code == 0, err
+    [post] = [r for r in fake.api_requests("/account/reservations") if r.method == "POST"]
+    assert post.headers["x-app-type"] == "mybiblo"
 
 
 def test_login_hints_at_setting_a_pickup_branch_only_when_there_is_none(

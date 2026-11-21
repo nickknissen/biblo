@@ -13,17 +13,38 @@ from typing import TYPE_CHECKING, Any, Unpack, cast
 
 from .. import models as m
 from .._base import ids
+from ..exceptions import BadRequestError, PickupBranchRequiredError
 from ..types import SEARCH_FILTER_PARAMS, SampleFormat, SearchBy, SearchFilters
 
 if TYPE_CHECKING:
     from .client import Biblo
 
 LIB = "/v1/agencies/{agencyId}"
+# The Mit Biblo app's x-app-type: account calls under it include physical items (#3).
+MIT_BIBLO = "mybiblo"
 
 
 class Resource:
     def __init__(self, client: Biblo) -> None:
         self._client = client
+
+
+def _digital_and_physical[T: m.Loan | m.ReservationItem](
+    client: Biblo, listing: type[list[T]], template: str, library_id: str | None
+) -> list[T]:
+    """An account listing as Biblo sees it, then the physical items only Mit Biblo sees
+    (#3), each in the API's order. An item listed under both comes once, from the first."""
+    listings = [
+        client._get(listing, template, library_id=library_id, auth=True, app_type=app_type)
+        for app_type in (None, MIT_BIBLO)
+    ]
+    seen: set[str] = set()
+    merged: list[T] = []
+    for found in listings[0] + listings[1]:
+        if found.id not in seen:
+            seen.add(found.id)
+            merged.append(found)
+    return merged
 
 
 class Libraries(Resource):
@@ -327,9 +348,8 @@ class Account(Resource):
 
 class Loans(Resource):
     def list(self, library_id: str | None = None) -> builtins.list[m.Loan]:
-        return self._client._get(
-            list[m.Loan], f"{LIB}/account/loans", library_id=library_id, auth=True
-        )
+        """Digital loans, then physical ones."""
+        return _digital_and_physical(self._client, list[m.Loan], f"{LIB}/account/loans", library_id)
 
     def borrow(self, record_id: str, library_id: str | None = None) -> m.Loan:
         """Borrow a digital record (e-book, audiobook, podcast). Counts against the quota."""
@@ -381,8 +401,9 @@ class Loans(Resource):
 
 class Reservations(Resource):
     def list(self, library_id: str | None = None) -> builtins.list[m.ReservationItem]:
-        return self._client._get(
-            list[m.ReservationItem], f"{LIB}/account/reservations", library_id=library_id, auth=True
+        """Digital reservations, then physical ones."""
+        return _digital_and_physical(
+            self._client, list[m.ReservationItem], f"{LIB}/account/reservations", library_id
         )
 
     def create(
@@ -416,14 +437,22 @@ class Reservations(Resource):
             else None,
         )
         body = request.model_dump(mode="json", by_alias=True, exclude_none=True)
-        result = self._client._call(
-            list[m.ReservationItem] | None,
-            "POST",
-            f"{LIB}/account/reservations",
-            json=body,
-            library_id=library_id,
-            auth=True,
-        )
+        try:
+            result = self._client._call(
+                list[m.ReservationItem] | None,
+                "POST",
+                f"{LIB}/account/reservations",
+                json=body,
+                library_id=library_id,
+                auth=True,
+                # Under "biblo" the API doesn't know physical records, which need a branch (#3).
+                app_type=MIT_BIBLO if pickup_branch_id is not None else None,
+            )
+        except BadRequestError as err:
+            if pickup_branch_id is None and err.message.startswith("No material types found"):
+                error = PickupBranchRequiredError(err.status_code, err.body, err.method, err.url)
+                raise error from err
+            raise
         return result or []
 
     def update(

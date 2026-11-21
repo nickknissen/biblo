@@ -10,6 +10,7 @@ from biblo import (
     AsyncMemoryTokenStorage,
     Biblo,
     BibloConnectionError,
+    BibloError,
     NoLibraryError,
     NotLoggedInError,
     __version__,
@@ -96,6 +97,36 @@ async def test_mybiblo_only_endpoints_get_that_app_type(biblo: AsyncBiblo, fake:
 )
 def test_app_type_matches_templates_and_filled_paths(method: str, path: str, expected: str) -> None:
     assert app_type(method, path) == expected
+
+
+@pytest.mark.parametrize(
+    ("method", "path", "wanted"),
+    [
+        ("GET", "/v1/agencies/763000/account/reservations", "mybiblo"),
+        ("GET", "/v1/agencies/{agencyId}/account/quotas", "biblogo"),
+        ("GET", "/v1/agencies/763000/branches", "mybiblo"),
+    ],
+)
+def test_a_call_can_ask_for_an_app_type_the_endpoint_accepts(
+    method: str, path: str, wanted: str
+) -> None:
+    assert app_type(method, path, wanted) == wanted
+
+
+@pytest.mark.parametrize(
+    ("method", "path", "wanted"),
+    [
+        ("GET", "/v1/agencies/763000/account/quotas", "mybiblo"),
+        ("GET", "/v1/user/messages", "biblogo"),
+        ("GET", "/v1/agencies/{agencyId}/branches", "biblo"),
+        ("GET", "/v1/not-in-the-spec", "mybiblo"),
+    ],
+)
+def test_an_app_type_the_endpoint_refuses_raises_before_sending(
+    method: str, path: str, wanted: str
+) -> None:
+    with pytest.raises(BibloError, match=wanted):
+        app_type(method, path, wanted)
 
 
 async def test_ids_with_colons_stay_readable_in_the_path(
