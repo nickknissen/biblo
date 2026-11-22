@@ -48,7 +48,11 @@ class NoLibraryError(BibloError, ValueError):
 
 class AppTypeNotAcceptedError(BibloError, ValueError):
     """A call asked for an `x-app-type` the endpoint doesn't accept; nothing was sent.
-    Internal for now: only the library itself picks an app type (#1 will let callers)."""
+    Internal: every endpoint that takes `catalogue=` accepts all three apps."""
+
+
+class UnknownCatalogueError(BibloError, ValueError):
+    """`catalogue=` was not one of `types.Catalogue`; nothing was sent."""
 
 
 class NotLoggedInError(BibloError):

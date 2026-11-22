@@ -11,9 +11,9 @@ from collections.abc import AsyncIterator, Iterable
 from typing import TYPE_CHECKING, Any, Unpack, cast
 
 from .. import models as m
-from .._base import ids
+from .._base import catalogue_app_type, ids
 from ..exceptions import BadRequestError, PickupBranchRequiredError
-from ..types import SEARCH_FILTER_PARAMS, SampleFormat, SearchBy, SearchFilters
+from ..types import SEARCH_FILTER_PARAMS, Catalogue, SampleFormat, SearchBy, SearchFilters
 
 if TYPE_CHECKING:
     from .client import AsyncBiblo
@@ -142,13 +142,21 @@ class AsyncCatalog(AsyncResource):
         by: SearchBy | None = None,
         offset: int | None = None,
         limit: int | None = None,
+        catalogue: Catalogue = "digital",
         library_id: str | None = None,
         **filters: Unpack[SearchFilters],
     ) -> m.WorkSearchResult:
-        """Search the library's catalogue. `.hitcount` is the total, `.works` this page."""
+        """Search the library's catalogue. `.hitcount` is the total, `.works` this page.
+
+        `catalogue` picks the digital one (the default), the children's, or all material
+        including print (see `types.Catalogue`)."""
         params = {"q": q, "type": by, "offset": offset, "limit": limit, **_filters(filters)}
         return await self._client._get(
-            m.WorkSearchResult, f"{LIB}/search/works", params=params, library_id=library_id
+            m.WorkSearchResult,
+            f"{LIB}/search/works",
+            params=params,
+            library_id=library_id,
+            app_type=catalogue_app_type(catalogue),
         )
 
     async def iter_search(
@@ -158,15 +166,22 @@ class AsyncCatalog(AsyncResource):
         by: SearchBy | None = None,
         page_size: int = 50,
         max_results: int | None = None,
+        catalogue: Catalogue = "digital",
         library_id: str | None = None,
         **filters: Unpack[SearchFilters],
     ) -> AsyncIterator[m.WorkLight]:
-        """Every work a search finds, fetching pages of `page_size` as needed."""
+        """Every work a search finds in `catalogue`, fetching pages of `page_size` as needed."""
         offset = 0
         while max_results is None or offset < max_results:
             limit = page_size if max_results is None else min(page_size, max_results - offset)
             page = await self.search(
-                q, by=by, offset=offset, limit=limit, library_id=library_id, **filters
+                q,
+                by=by,
+                offset=offset,
+                limit=limit,
+                catalogue=catalogue,
+                library_id=library_id,
+                **filters,
             )
             for work in page.works:
                 yield work
@@ -180,46 +195,71 @@ class AsyncCatalog(AsyncResource):
         *,
         by: SearchBy | None = None,
         values_limit: int | None = None,
+        catalogue: Catalogue = "digital",
         library_id: str | None = None,
         **filters: Unpack[SearchFilters],
     ) -> m.Facets:
-        """The filter values a search has, with counts."""
+        """The filter values a search in `catalogue` has, with counts."""
         params = {"q": q, "type": by, "valuesLimit": values_limit, **_filters(filters)}
         return await self._client._get(
-            m.Facets, f"{LIB}/search/facets", params=params, library_id=library_id
+            m.Facets,
+            f"{LIB}/search/facets",
+            params=params,
+            library_id=library_id,
+            app_type=catalogue_app_type(catalogue),
         )
 
-    async def suggest(self, q: str, library_id: str | None = None) -> builtins.list[m.Link]:
-        """Search-as-you-type suggestions."""
+    async def suggest(
+        self, q: str, library_id: str | None = None, *, catalogue: Catalogue = "digital"
+    ) -> builtins.list[m.Link]:
+        """Search-as-you-type suggestions from `catalogue` (see `types.Catalogue`)."""
         return await self._client._get(
-            list[m.Link], f"{LIB}/search/suggest", params={"q": q}, library_id=library_id
+            list[m.Link],
+            f"{LIB}/search/suggest",
+            params={"q": q},
+            library_id=library_id,
+            app_type=catalogue_app_type(catalogue),
         )
 
-    async def work(self, work_id: str, library_id: str | None = None) -> m.Work:
-        """A work and its `variations`: the records (editions) you borrow or reserve."""
+    async def work(
+        self, work_id: str, library_id: str | None = None, *, catalogue: Catalogue = "digital"
+    ) -> m.Work:
+        """A work and its `variations`: the records (editions) you borrow or reserve.
+
+        Which editions it has depends on `catalogue`: printed books and CDs only show up
+        under "all", which can also leave out a digital edition "digital" lists (see
+        `types.Catalogue`)."""
         return await self._client._get(
-            m.Work, f"{LIB}/works/{{workId}}", {"workId": work_id}, library_id=library_id
+            m.Work,
+            f"{LIB}/works/{{workId}}",
+            {"workId": work_id},
+            library_id=library_id,
+            app_type=catalogue_app_type(catalogue),
         )
 
     async def availability(
-        self, work_id: str, library_id: str | None = None
+        self, work_id: str, library_id: str | None = None, *, catalogue: Catalogue = "digital"
     ) -> builtins.list[m.MaterialTypeOverview]:
-        """Per material type (e-book, audiobook, book, ...): can it be borrowed or reserved."""
+        """Per material type (e-book, audiobook, book, ...): can it be borrowed or reserved.
+        Printed and CD types are listed under `catalogue="all"`."""
         return await self._client._get(
             list[m.MaterialTypeOverview],
             f"{LIB}/works/{{workId}}/material-type-status",
             {"workId": work_id},
             library_id=library_id,
+            app_type=catalogue_app_type(catalogue),
         )
 
     async def recommendations(
-        self, work_id: str, library_id: str | None = None
+        self, work_id: str, library_id: str | None = None, *, catalogue: Catalogue = "digital"
     ) -> builtins.list[m.WorkLight]:
+        """Works like this one, from `catalogue` (see `types.Catalogue`)."""
         return await self._client._get(
             list[m.WorkLight],
             f"{LIB}/works/{{workId}}/recommendations",
             {"workId": work_id},
             library_id=library_id,
+            app_type=catalogue_app_type(catalogue),
         )
 
     async def reviews(
@@ -513,8 +553,16 @@ class AsyncReservations(AsyncResource):
 class AsyncFavorites(AsyncResource):
     """The user's saved works ("Huskeliste"). Not tied to a library."""
 
-    async def list(self) -> builtins.list[m.Work]:
-        return await self._client._get(list[m.Work], "/v1/user/favorites", auth=True)
+    async def list(self, *, catalogue: Catalogue = "digital") -> builtins.list[m.Work]:
+        """The saved works, each with the editions `catalogue` has. The works are the same
+        under every catalogue; "all" adds printed editions but can leave out a digital one
+        (see `types.Catalogue`)."""
+        return await self._client._get(
+            list[m.Work],
+            "/v1/user/favorites",
+            auth=True,
+            app_type=catalogue_app_type(catalogue),
+        )
 
     async def add(self, work_id: str) -> None:
         await self._client._call(
@@ -584,24 +632,44 @@ class AsyncContent(AsyncResource):
             library_id=library_id,
         )
 
-    async def known_pages(self, library_id: str | None = None) -> m.KnownPages:
+    async def known_pages(
+        self, library_id: str | None = None, *, catalogue: Catalogue = "digital"
+    ) -> m.KnownPages:
+        """The app's fixed pages, e.g. `.explore`: each catalogue has its own Explore page."""
         return await self._client._get(
-            m.KnownPages, f"{LIB}/content/known-pages", library_id=library_id
+            m.KnownPages,
+            f"{LIB}/content/known-pages",
+            library_id=library_id,
+            app_type=catalogue_app_type(catalogue),
         )
 
-    async def page(self, page_id: str, library_id: str | None = None) -> m.Page:
+    async def page(
+        self, page_id: str, library_id: str | None = None, *, catalogue: Catalogue = "digital"
+    ) -> m.Page:
+        """A content page; its elements' works come from `catalogue` (see `types.Catalogue`)."""
         return await self._client._get(
-            m.Page, f"{LIB}/content/pages/{{pageId}}", {"pageId": page_id}, library_id=library_id
+            m.Page,
+            f"{LIB}/content/pages/{{pageId}}",
+            {"pageId": page_id},
+            library_id=library_id,
+            app_type=catalogue_app_type(catalogue),
         )
 
     async def page_element(
-        self, page_id: str, element_id: str, library_id: str | None = None
+        self,
+        page_id: str,
+        element_id: str,
+        library_id: str | None = None,
+        *,
+        catalogue: Catalogue = "digital",
     ) -> m.HydratedElement:
+        """An element of a page with its works, which `catalogue` picks from."""
         return await self._client._get(
             m.HydratedElement,
             f"{LIB}/content/pages/{{pageId}}/elements/{{elementId}}",
             {"pageId": page_id, "elementId": element_id},
             library_id=library_id,
+            app_type=catalogue_app_type(catalogue),
         )
 
 

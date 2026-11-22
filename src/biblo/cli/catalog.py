@@ -4,9 +4,17 @@ from typing import Annotated, cast, get_args
 
 import typer
 
-from ..types import SEARCH_FILTER_PARAMS, SearchBy, SearchFilters
+from ..types import SEARCH_FILTER_PARAMS, Catalogue, SearchBy, SearchFilters
 from ._output import console, join, print_json, table
 from ._state import JsonOption, LibraryOption, UsageError, client
+
+CatalogueOption = Annotated[
+    str,
+    typer.Option(
+        help="Which catalogue: digital (e-books, online audiobooks, podcasts), children "
+        "(the children's part of it) or all (print, CDs and the rest of the shelves too).",
+    ),
+]
 
 FORMATS = {
     "ebook": "e-bog",
@@ -39,12 +47,14 @@ def search(
         ),
     ] = None,
     limit: Annotated[int, typer.Option("--limit", "-n", help="How many results.")] = 20,
+    catalogue: CatalogueOption = "digital",
     library: LibraryOption = None,
     as_json: JsonOption = False,
 ) -> None:
     """Search the catalogue. Show a result with: biblo work <id>"""
     if by is not None and by not in get_args(SearchBy):
         raise UsageError("--by must be title, creator or subject")
+    chosen_catalogue = _catalogue(catalogue)
     chosen = _parse_filters(filters or [])
     wanted = {"ebook": ebook, "audiobook": audiobook, "podcast": podcast}
     if formats := [FORMATS[name] for name, on in wanted.items() if on]:
@@ -55,7 +65,11 @@ def search(
     with client(library) as biblo:
         works = list(
             biblo.catalog.iter_search(
-                query, by=cast(SearchBy | None, by), max_results=limit, **chosen
+                query,
+                by=cast(SearchBy | None, by),
+                max_results=limit,
+                catalogue=chosen_catalogue,
+                **chosen,
             )
         )
     if as_json:
@@ -90,17 +104,28 @@ def _parse_filters(raw: list[str]) -> SearchFilters:
     return cast(SearchFilters, result)
 
 
+def _catalogue(value: str) -> Catalogue:
+    choices = get_args(Catalogue)
+    if value not in choices:
+        raise UsageError(f"--catalogue must be {', '.join(choices[:-1])} or {choices[-1]}")
+    return cast(Catalogue, value)
+
+
 def work(
     work_id: Annotated[
         str, typer.Argument(help="A work id from search, e.g. work-of:870970-basis:22252852")
     ],
+    catalogue: CatalogueOption = "digital",
     library: LibraryOption = None,
     as_json: JsonOption = False,
 ) -> None:
-    """Show a work: description, formats, availability and the records to borrow."""
+    """Show a work: description, formats, availability and the records to borrow.
+
+    Printed books, CDs and their record ids show up with --catalogue all."""
+    chosen = _catalogue(catalogue)
     with client(library) as biblo:
-        w = biblo.catalog.work(work_id)
-        availability = biblo.catalog.availability(work_id)
+        w = biblo.catalog.work(work_id, catalogue=chosen)
+        availability = biblo.catalog.availability(work_id, catalogue=chosen)
     if as_json:
         print_json({"work": w, "availability": availability})
         return

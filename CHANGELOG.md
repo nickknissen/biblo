@@ -8,6 +8,15 @@ All notable changes to this project. The format follows
 
 ### Added
 
+- Search and browse the children's catalogue or the whole library, print and CDs too. A
+  `catalogue="digital" | "children" | "all"` keyword (the new `biblo.Catalogue` type) on
+  `catalog.search`, `iter_search`, `facets`, `suggest`, `work`, `availability`,
+  `recommendations`, `content.known_pages`, `page`, `page_element` and `favorites.list` asks
+  as Biblo, Biblo GO or Mit Biblo. The default, `"digital"`, sends what was sent before.
+  `catalog.work(..., catalogue="all")` lists printed editions and their record ids, to
+  reserve with a pickup branch. An unknown value raises the new `UnknownCatalogueError` (a
+  `ValueError`) before anything is sent (#1).
+- `biblo search` and `biblo work` take `--catalogue digital|children|all` (#1).
 - `biblo account set --pickup-branch` sets the account's preferred pickup branch, from a branch
   id or part of its name. The setting is saved on the account, so the apps and the library's
   website use it too (#4).

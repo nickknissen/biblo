@@ -60,6 +60,29 @@ def test_search_table_and_json(run: Run) -> None:
     assert works[0]["title"]
 
 
+def test_search_all_catalogues_finds_print(run: Run, fake: FakeBiblo) -> None:
+    code, out, _ = run("search", "harry potter", "-l", LIBRARY, "--catalogue", "all", "--json")
+    assert code == 0
+    formats = {t["display"] for w in json.loads(out) for t in w["material_types"]}
+    assert "bog" in formats
+    assert fake.api_requests("/search/works")[-1].headers["x-app-type"] == "mybiblo"
+
+
+def test_work_in_all_catalogues_lists_printed_editions(run: Run, fake: FakeBiblo) -> None:
+    work_id = "work-of:870970-basis:22252852"
+    code, out, _ = run("work", work_id, "-l", LIBRARY, "--catalogue", "all", "--json")
+    assert code == 0
+    formats = {v["material_type"]["display"] for v in json.loads(out)["work"]["variations"]}
+    assert "bog" in formats
+    assert {r.headers["x-app-type"] for r in fake.api_requests("/works/")} == {"mybiblo"}
+
+
+def test_unknown_catalogue_is_a_usage_error(run: Run) -> None:
+    code, _, err = run("search", "harry potter", "-l", LIBRARY, "--catalogue", "nope")
+    assert code == 2
+    assert "catalogue" in err
+
+
 def test_library_by_name(run: Run) -> None:
     code, out, err = run("search", "potter", "-l", "vejle", "-n", "1")
     assert code == 0, err

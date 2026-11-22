@@ -33,7 +33,9 @@ from .exceptions import (
     RateLimitError,
     ResponseValidationError,
     ServerError,
+    UnknownCatalogueError,
 )
+from .types import Catalogue
 
 __all__ = [
     "APIError",
@@ -46,6 +48,7 @@ __all__ = [
     "Biblo",
     "BibloConnectionError",
     "BibloError",
+    "Catalogue",
     "ConflictError",
     "FileTokenStorage",
     "InvalidCredentialsError",
@@ -62,6 +65,7 @@ __all__ = [
     "ServerError",
     "TokenStorage",
     "Tokens",
+    "UnknownCatalogueError",
     "__version__",
     "authorize_url",
     "code_from_redirect",

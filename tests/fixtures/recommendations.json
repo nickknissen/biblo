@@ -1,0 +1,145 @@
+{
+  "status": 200,
+  "body": {
+    "data": [
+      {
+        "id": "work-of:870970-basis:25197887",
+        "title": "Harry Potter og Hemmelighedernes Kammer",
+        "creators": [
+          "Joanne K. Rowling"
+        ],
+        "coverUrl": "https://fbiinfo-present.dbc.dk/images/20ZUFFhNSfaeQXBVeex1qg/960px!AUaNBY5qVUQAXPC-0MoyJpFD9IHsMWrc1YYn4fLyOCtypg",
+        "workYear": "1998",
+        "publisher": "Pottermore Publishing",
+        "materialTypes": [
+          {
+            "display": "e-bog",
+            "displayWithPronoun": "Denne e-bog",
+            "category": "EBOOKS"
+          },
+          {
+            "display": "lydbog (online)",
+            "displayWithPronoun": "Denne lydbog (online)",
+            "category": "AUDIO_BOOKS_ONLINE"
+          }
+        ],
+        "series": [
+          {
+            "title": "Harry Potter",
+            "numberInSeries": "Del 2"
+          }
+        ],
+        "hasRecordWithBlueTitle": false
+      },
+      {
+        "id": "work-of:870970-basis:141330551",
+        "title": "Et rige af sølvflammer",
+        "creators": [
+          "Sarah J. Maas"
+        ],
+        "coverUrl": "https://fbiinfo-present.dbc.dk/images/shhSYgnuRDGdT20kXDzxZA/960px!AUbBJ2QH9klxwFpKTzkWCuc8mCbdolFVHYopdBCgRpBtgQ",
+        "publisher": "Gyldendal",
+        "materialTypes": [
+          {
+            "display": "e-bog",
+            "displayWithPronoun": "Denne e-bog",
+            "category": "EBOOKS"
+          },
+          {
+            "display": "lydbog (online)",
+            "displayWithPronoun": "Denne lydbog (online)",
+            "category": "AUDIO_BOOKS_ONLINE"
+          }
+        ],
+        "series": [
+          {
+            "title": "Et rige af torne og roser",
+            "numberInSeries": "Del 5"
+          }
+        ],
+        "hasRecordWithBlueTitle": false
+      },
+      {
+        "id": "work-of:870970-basis:25197879",
+        "title": "Harry Potter og fangen fra Azkaban",
+        "creators": [
+          "Joanne K. Rowling"
+        ],
+        "coverUrl": "https://fbiinfo-present.dbc.dk/images/0U-m1SPZTWu7q1qQaF2xUA/960px!AUaQrx2D0In2e-EpSqoOwr7lr5IG0VGP4STXeogvaQ_30g",
+        "workYear": "1999",
+        "publisher": "Pottermore Publishing",
+        "materialTypes": [
+          {
+            "display": "e-bog",
+            "displayWithPronoun": "Denne e-bog",
+            "category": "EBOOKS"
+          },
+          {
+            "display": "lydbog (online)",
+            "displayWithPronoun": "Denne lydbog (online)",
+            "category": "AUDIO_BOOKS_ONLINE"
+          }
+        ],
+        "series": [
+          {
+            "title": "Harry Potter",
+            "numberInSeries": "Del 3"
+          }
+        ],
+        "hasRecordWithBlueTitle": false
+      },
+      {
+        "id": "work-of:870970-basis:53875033",
+        "title": "Nevermoor - Morrigan Crows magiske prøvelser",
+        "creators": [
+          "Jessica Townsend"
+        ],
+        "coverUrl": "https://fbiinfo-present.dbc.dk/images/Uk1TNY6jRdWIq5TE58vYHA/960px!AUY1hhsjWqovFg15X41HOcvWQlDcY3X5U-cgoV96PYqZyw",
+        "publisher": "Gyldendal",
+        "materialTypes": [
+          {
+            "display": "lydbog (online)",
+            "displayWithPronoun": "Denne lydbog (online)",
+            "category": "AUDIO_BOOKS_ONLINE"
+          }
+        ],
+        "series": [
+          {
+            "title": "Nevermoor",
+            "numberInSeries": "Del 1"
+          }
+        ],
+        "hasRecordWithBlueTitle": true
+      },
+      {
+        "id": "work-of:870970-basis:22758454",
+        "title": "Skammerens datter",
+        "creators": [
+          "Lene Kaaberbøl"
+        ],
+        "coverUrl": "https://fbiinfo-present.dbc.dk/images/l34pANXnRR2skByZkLFajQ/960px!AUYmaYUJNr6wb90inUS8fgpQCg2q4GynnHUV2sASvGgUSg",
+        "workYear": "2000",
+        "publisher": "Gyldendal",
+        "materialTypes": [
+          {
+            "display": "e-bog",
+            "displayWithPronoun": "Denne e-bog",
+            "category": "EBOOKS"
+          },
+          {
+            "display": "lydbog (online)",
+            "displayWithPronoun": "Denne lydbog (online)",
+            "category": "AUDIO_BOOKS_ONLINE"
+          }
+        ],
+        "series": [
+          {
+            "title": "Skammerens datter",
+            "numberInSeries": "Del 1"
+          }
+        ],
+        "hasRecordWithBlueTitle": true
+      }
+    ]
+  }
+}

@@ -1601,8 +1601,10 @@ class HydratedMaterialGridAutomatic(BaseModel):
     type: Literal["AppContentElementMaterialGridAutomatic"]
     id: Annotated[str, Lenient]
     title: Annotated[str, Lenient]
-    description: Annotated[str, Lenient]
-    priority_material_type: Annotated[str, Field(alias="priorityMaterialType"), Lenient]
+    description: Annotated[str | None, Lenient] = None
+    priority_material_type: Annotated[str | None, Field(alias="priorityMaterialType"), Lenient] = (
+        None
+    )
     work_result: Annotated[list[WorkLight], Field(alias="workResult"), Lenient]
 
 

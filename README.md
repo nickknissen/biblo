@@ -44,8 +44,8 @@ default.
 | --- | --- |
 | `biblo libraries [town]` | find your library's id |
 | `biblo auth login` / `status` / `logout` / `token` | your session |
-| `biblo search QUERY` | `--ebook`, `--audiobook`, `--podcast`, `--language dan`, `--by title`, `-f subjects=krimi` |
-| `biblo work WORK_ID` | description, availability and the records (editions) to borrow |
+| `biblo search QUERY` | `--ebook`, `--audiobook`, `--podcast`, `--language dan`, `--by title`, `-f subjects=krimi`, `--catalogue all` |
+| `biblo work WORK_ID` | description, availability and the records (editions) to borrow or reserve; `--catalogue all` lists printed books and CDs too |
 | `biblo borrow RECORD_ID` | borrow an e-book, audiobook or podcast |
 | `biblo loans` / `biblo renew [--all]` | your loans |
 | `biblo reservations` / `reserve` / `cancel` | reservations; `reserve` picks up at your account's branch unless `--branch` says otherwise |
@@ -56,6 +56,10 @@ default.
 | `biblo api PATH` | call any endpoint, like `gh api` |
 
 Every listing takes `--json` for scripts, e.g. `biblo loans --json | jq '.[].due_date'`.
+
+**Catalogues.** `search` and `work` look in Biblo's digital catalogue unless `--catalogue`
+says otherwise: `children` is the children's part of it (Biblo GO), `all` the whole library,
+print and CDs too (Mit Biblo).
 
 **Logging in.** `biblo auth login` asks for your card number or CPR and pincode and logs in
 at login.bib.dk the way the app does. For scripts, pass `--user` (or `BIBLO_USER`) and the
@@ -114,6 +118,14 @@ through as sent and logged at DEBUG on the `biblo` logger instead of failing the
 
 **Libraries.** Calls default to the library given to the client; account calls default to
 the library you logged in at. Every method also takes `library_id=`.
+
+**Catalogues.** Searching, works and the content pages see Biblo's digital catalogue (e-books,
+online audiobooks, podcasts, magazines) by default. Pass `catalogue="children"` for Biblo
+GO's children's part of it, or `catalogue="all"` for what Mit Biblo shows: printed books,
+CDs and the rest of the shelves too. `catalog.search`, `iter_search`, `facets`, `suggest`,
+`work`, `availability`, `recommendations`, `content.known_pages`, `page`, `page_element` and
+`favorites.list` take it. `"all"` is mostly but not strictly a superset: a work can list a
+digital edition under `"digital"` that it leaves out under `"all"`.
 
 **Sessions.** Give the client a `storage` and it saves the tokens after login and every
 refresh: `FileTokenStorage`, `MemoryTokenStorage`, or your own `TokenStorage`

@@ -33,6 +33,13 @@ async def test_catalogue(live: AsyncBiblo) -> None:
         await live.catalog.suggest("harr")
 
 
+async def test_all_catalogues_find_more_than_the_digital_one(live: AsyncBiblo) -> None:
+    async with live:
+        digital = await live.catalog.search("harry potter", limit=1)
+        everything = await live.catalog.search("harry potter", limit=1, catalogue="all")
+        assert everything.hitcount > digital.hitcount
+
+
 async def test_libraries_and_content(live: AsyncBiblo) -> None:
     async with live:
         assert any(a.id == VEJLE for a in await live.libraries.list())

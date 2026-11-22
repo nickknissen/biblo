@@ -1,7 +1,8 @@
 """Record real API responses as test fixtures (anonymous endpoints only).
 
-    uv run python scripts/capture_fixtures.py
+    uv run python scripts/capture_fixtures.py [NAME ...]
 
+Names (keys of ENDPOINTS) record only those fixtures.
 Writes tests/fixtures/*.json with the raw JSON bodies, and login_page.html with
 login.bib.dk's login form. Re-run when the API changes; the tests parse these strictly.
 """
@@ -9,6 +10,7 @@ login.bib.dk's login form. Re-run when the API changes; the tests parse these st
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import httpx
@@ -20,6 +22,8 @@ FIXTURES = Path(__file__).resolve().parent.parent / "tests" / "fixtures"
 LIBRARY = "763000"  # Vejle Bibliotekerne
 WORK = "work-of:870970-basis:22252852"  # Harry Potter og De Vises Sten
 RECORD = "870970-basis:141629433"  # ... its e-book
+PAGE = "2cc7760a-33ff-4268-b07a-d0d283dc88f4"  # Biblo's "Opdag" (known-pages' explore)
+ELEMENT = "946be7d1-09e1-4b16-8c9d-aa194d4e39aa"  # ... its "Populære titler" grid
 
 ENDPOINTS = {
     "agencies": ("/v1/agencies", {}),
@@ -34,14 +38,31 @@ ENDPOINTS = {
     "availability": (f"/v1/agencies/{{agencyId}}/works/{WORK}/material-type-status", {}),
     "record": (f"/v1/agencies/{{agencyId}}/records/{RECORD}", {}),
     "categories": ("/v1/agencies/{agencyId}/content/categories", {}),
+    "known_pages": ("/v1/agencies/{agencyId}/content/known-pages", {}),
+    "known_pages_all": ("/v1/agencies/{agencyId}/content/known-pages", {"_app_type": "mybiblo"}),
+    "page": (f"/v1/agencies/{{agencyId}}/content/pages/{PAGE}", {}),
+    "page_element": (f"/v1/agencies/{{agencyId}}/content/pages/{PAGE}/elements/{ELEMENT}", {}),
+    "recommendations": (f"/v1/agencies/{{agencyId}}/works/{WORK}/recommendations", {}),
+    # The same work and search as Mit Biblo sees them: print and CDs too (catalogue="all").
+    "search_all": (
+        "/v1/agencies/{agencyId}/search/works",
+        {"q": "harry potter", "limit": 5, "_app_type": "mybiblo"},
+    ),
+    "work_all": (f"/v1/agencies/{{agencyId}}/works/{WORK}", {"_app_type": "mybiblo"}),
     "error_forbidden_app_type": ("/v1/agencies/{agencyId}/branches", {"_app_type": "biblo"}),
 }
 
 
 def main() -> None:
+    """Records every fixture, or only those named on the command line."""
+    wanted = set(sys.argv[1:])
+    if unknown := wanted - ENDPOINTS.keys():
+        sys.exit(f"Unknown fixtures: {', '.join(sorted(unknown))}")
     FIXTURES.mkdir(parents=True, exist_ok=True)
     with httpx.Client(timeout=30) as http:
         for name, (template, params) in ENDPOINTS.items():
+            if wanted and name not in wanted:
+                continue
             params = dict(params)
             headers = _base.headers(
                 "GET", template, "fixture-capture", None, _base.api_user_agent()
@@ -59,6 +80,8 @@ def main() -> None:
             )
             print(f"{name}: {response.status_code}")
 
+        if wanted:
+            return
         login = http.get(
             _base.authorize_url(), headers={"User-Agent": BROWSER_USER_AGENT}, follow_redirects=True
         )

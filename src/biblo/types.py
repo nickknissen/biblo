@@ -9,6 +9,16 @@ SearchBy = Literal["all", "subject", "creator", "title"]
 
 SampleFormat = Literal["epub", "mp3"]
 
+Catalogue = Literal["digital", "children", "all"]
+"""Which catalogue catalogue and content calls see; each is what one of the apps shows.
+
+- "digital" (the default): Biblo's e-books, online audiobooks, podcasts and magazines.
+- "children": Biblo GO's, the children's part of the digital catalogue.
+- "all": Mit Biblo's, printed books, CDs, films and the rest of the library's shelves too.
+  Mostly a superset of "digital", but not strictly: a work can list a digital edition under
+  "digital" that it doesn't list under "all".
+"""
+
 
 class SearchFilters(TypedDict, total=False):
     """Facet filters for search. Each takes one value or a list (any of them matches).

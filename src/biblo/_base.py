@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from functools import cache
 from importlib.metadata import PackageNotFoundError, version
-from typing import Any
+from typing import Any, get_args
 from urllib.parse import parse_qs, quote, urlencode, urlparse
 
 import httpx
@@ -32,8 +32,10 @@ from .exceptions import (
     InvalidCredentialsError,
     LoginFlowError,
     ResponseValidationError,
+    UnknownCatalogueError,
     api_error,
 )
+from .types import Catalogue
 
 try:
     VERSION = version("biblo")
@@ -142,6 +144,26 @@ def app_type(method: str, path: str, wanted: str | None = None) -> str:
             f"{method} {path} doesn't accept x-app-type {wanted!r}, only {', '.join(accepted)}"
         )
     return wanted
+
+
+CATALOGUE_APP_TYPES: dict[Catalogue, str] = {
+    "digital": "biblo",
+    "children": "biblogo",
+    "all": "mybiblo",
+}
+"""Each `types.Catalogue` and the `x-app-type` of the app that shows it."""
+
+
+def catalogue_app_type(catalogue: Catalogue) -> str:
+    """The `x-app-type` that asks for `catalogue`. Raises UnknownCatalogueError for a value
+    that isn't a `types.Catalogue` (a caller without type checking)."""
+    try:
+        return CATALOGUE_APP_TYPES[catalogue]
+    except KeyError:
+        choices = ", ".join(get_args(Catalogue))
+        raise UnknownCatalogueError(
+            f"Unknown catalogue {catalogue!r}: use one of {choices}"
+        ) from None
 
 
 def _accepted_app_types(method: str, path: str) -> tuple[str, ...] | None:

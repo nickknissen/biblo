@@ -22,5 +22,13 @@
   "ElementVideo.title": {
     "nullable": true,
     "reason": "Content categories send null for some videos (2026-11-20)."
+  },
+  "HydratedMaterialGridAutomatic.description": {
+    "nullable": true,
+    "reason": "Content page elements send null for material grids (2026-11-22)."
+  },
+  "HydratedMaterialGridAutomatic.priority_material_type": {
+    "nullable": true,
+    "reason": "Content page elements send null for material grids (2026-11-22)."
   }
 }

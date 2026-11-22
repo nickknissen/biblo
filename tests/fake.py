@@ -24,6 +24,7 @@ API = "api.detdigitalefolkebibliotek.dk"
 LOGIN = "login.bib.dk"
 USER, PIN = "0102031234", "1234"
 LIBRARY = "763000"
+PAGE = "2cc7760a-33ff-4268-b07a-d0d283dc88f4"  # the recorded content page
 
 
 def fixture(name: str) -> Any:
@@ -199,22 +200,31 @@ class FakeBiblo:
         if mybiblo_only and request.headers["x-app-type"] != "mybiblo":
             return httpx.Response(403, json=fixture("error_forbidden_app_type"))
 
-        work = f"/v1/agencies/{LIBRARY}/works/work-of:870970-basis:22252852"
+        # Mit Biblo sees print and CDs too: where one was recorded, its own fixture (#1).
+        mit_biblo = request.headers["x-app-type"] == "mybiblo"
+        lib = f"/v1/agencies/{LIBRARY}"
+        work = f"{lib}/works/work-of:870970-basis:22252852"
+        page = f"{lib}/content/pages/{PAGE}"
         public = {
             "/v1/agencies": "agencies",
-            f"/v1/agencies/{LIBRARY}/configuration": "agency_configuration",
-            f"/v1/agencies/{LIBRARY}/branches": "branches",
-            f"/v1/agencies/{LIBRARY}/openstatus": "open_status",
-            f"/v1/agencies/{LIBRARY}/events": "events",
-            f"/v1/agencies/{LIBRARY}/search/facets": "facets",
-            f"/v1/agencies/{LIBRARY}/search/suggest": "suggest",
-            work: "work",
+            f"{lib}/configuration": "agency_configuration",
+            f"{lib}/branches": "branches",
+            f"{lib}/openstatus": "open_status",
+            f"{lib}/events": "events",
+            f"{lib}/search/facets": "facets",
+            f"{lib}/search/suggest": "suggest",
+            work: "work_all" if mit_biblo else "work",
             f"{work}/material-type-status": "availability",
-            f"/v1/agencies/{LIBRARY}/records/870970-basis:141629433": "record",
-            f"/v1/agencies/{LIBRARY}/content/categories": "categories",
+            f"{work}/recommendations": "recommendations",
+            f"{lib}/records/870970-basis:141629433": "record",
+            f"{lib}/content/categories": "categories",
+            f"{lib}/content/known-pages": "known_pages_all" if mit_biblo else "known_pages",
+            page: "page",
         }
         if method == "GET" and path in public:
             return httpx.Response(200, json=fixture(public[path]))
+        if method == "GET" and path.startswith(f"{page}/elements/"):
+            return httpx.Response(200, json=fixture("page_element"))
         if method == "GET" and (match := re.fullmatch(r"/v1/agencies/(\d+)", path)):
             agency = [a for a in fixture("agencies")["data"] if a["id"] == match.group(1)]
             if agency:
@@ -230,7 +240,8 @@ class FakeBiblo:
 
     def _search(self, request: httpx.Request) -> httpx.Response:
         """The recorded page of 5 works, sliced as if the catalogue had 12 hits."""
-        works = fixture("search")["data"]["works"]
+        mit_biblo = request.headers["x-app-type"] == "mybiblo"
+        works = fixture("search_all" if mit_biblo else "search")["data"]["works"]
         offset = int(request.url.params.get("offset", 0))
         limit = int(request.url.params.get("limit", 10))
         catalogue = [works[i % len(works)] for i in range(12)]
@@ -295,7 +306,8 @@ class FakeBiblo:
         if (method, path) == ("DELETE", f"{base}/reservations"):
             return httpx.Response(204)
         if (method, path) == ("GET", "/v1/user/favorites"):
-            return httpx.Response(200, json={"data": [fixture("work")["data"]]})
+            favorite = fixture("work_all" if mit_biblo else "work")["data"]
+            return httpx.Response(200, json={"data": [favorite]})
         if method in ("PUT", "DELETE") and path.startswith("/v1/user/favorites"):
             return httpx.Response(204)
         if (method, path) == ("GET", "/v1/user/messages"):
