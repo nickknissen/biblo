@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
+from typing import Any
+
 import httpx
 import pytest
 
 from biblo import (
+    AppTypeNotAcceptedError,
     AsyncBiblo,
     AsyncMemoryTokenStorage,
     Biblo,
@@ -15,9 +19,10 @@ from biblo import (
     NotLoggedInError,
     __version__,
 )
-from biblo._base import app_type
+from biblo._base import app_type, catalogue_app_type
 from biblo._constants import API_KEY, APP_VERSION
-from tests.fake import LIBRARY, FakeBiblo
+from biblo.types import Catalogue
+from tests.fake import LIBRARY, PAGE, FakeBiblo
 
 
 async def test_every_request_carries_the_app_headers(biblo: AsyncBiblo, fake: FakeBiblo) -> None:
@@ -127,6 +132,80 @@ def test_an_app_type_the_endpoint_refuses_raises_before_sending(
 ) -> None:
     with pytest.raises(BibloError, match=wanted):
         app_type(method, path, wanted)
+
+
+WORK = "work-of:870970-basis:22252852"
+# Each call that takes `catalogue`: the path it requests, and the call (sync or async client).
+CATALOGUE_CALLS: list[tuple[str, Callable[..., Any]]] = [
+    ("/search/works", lambda b, **kw: b.catalog.search("harry potter", **kw)),
+    ("/search/facets", lambda b, **kw: b.catalog.facets("harry potter", **kw)),
+    ("/search/suggest", lambda b, **kw: b.catalog.suggest("harr", **kw)),
+    (f"/works/{WORK}", lambda b, **kw: b.catalog.work(WORK, **kw)),
+    ("/recommendations", lambda b, **kw: b.catalog.recommendations(WORK, **kw)),
+    ("/material-type-status", lambda b, **kw: b.catalog.availability(WORK, **kw)),
+    ("/known-pages", lambda b, **kw: b.content.known_pages(**kw)),
+    (f"/pages/{PAGE}", lambda b, **kw: b.content.page(PAGE, **kw)),
+    ("/elements/", lambda b, **kw: b.content.page_element(PAGE, "e-1", **kw)),
+]
+CALL_IDS = [path for path, _ in CATALOGUE_CALLS]
+
+
+@pytest.mark.parametrize(("path_part", "call"), CATALOGUE_CALLS, ids=CALL_IDS)
+@pytest.mark.parametrize(
+    ("catalogue", "expected"), [("digital", "biblo"), ("children", "biblogo"), ("all", "mybiblo")]
+)
+async def test_catalogue_calls_ask_the_chosen_catalogue(
+    biblo: AsyncBiblo,
+    sync_biblo: Biblo,
+    fake: FakeBiblo,
+    path_part: str,
+    call: Callable[..., Any],
+    catalogue: Catalogue,
+    expected: str,
+) -> None:
+    await call(biblo, catalogue=catalogue)
+    call(sync_biblo, catalogue=catalogue)
+    sent = [r.headers["x-app-type"] for r in fake.api_requests(path_part)]
+    assert sent == [expected, expected]
+
+
+@pytest.mark.parametrize(("path_part", "call"), CATALOGUE_CALLS, ids=CALL_IDS)
+async def test_catalogue_calls_ask_the_digital_catalogue_by_default(
+    biblo: AsyncBiblo, fake: FakeBiblo, path_part: str, call: Callable[..., Any]
+) -> None:
+    await call(biblo)
+    assert [r.headers["x-app-type"] for r in fake.api_requests(path_part)] == ["biblo"]
+
+
+async def test_iter_search_asks_the_chosen_catalogue_for_every_page(
+    biblo: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    works = [w async for w in biblo.catalog.iter_search("potter", page_size=5, catalogue="all")]
+    assert len(works) == 12
+    sent = {r.headers["x-app-type"] for r in fake.api_requests("/search/works")}
+    assert sent == {"mybiblo"}
+
+
+async def test_favorites_ask_the_chosen_catalogue(logged_in: AsyncBiblo, fake: FakeBiblo) -> None:
+    await logged_in.favorites.list()
+    favorites = await logged_in.favorites.list(catalogue="all")
+    sent = [r.headers["x-app-type"] for r in fake.api_requests("/favorites")]
+    assert sent == ["biblo", "mybiblo"]
+    assert "bog" in [v.material_type.display for v in favorites[0].variations]
+
+
+def test_a_catalogue_an_endpoint_refuses_raises_before_sending() -> None:
+    # Account quotas answer only Biblo and Biblo GO, so not the catalogue "all" (Mit Biblo).
+    with pytest.raises(AppTypeNotAcceptedError, match="mybiblo"):
+        app_type("GET", "/v1/agencies/763000/account/quotas", catalogue_app_type("all"))
+
+
+async def test_an_unknown_catalogue_raises_before_sending(
+    biblo: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    with pytest.raises(BibloError, match="nope"):
+        await biblo.catalog.search("potter", catalogue="nope")  # ty: ignore[invalid-argument-type]
+    assert not fake.api_requests()
 
 
 async def test_ids_with_colons_stay_readable_in_the_path(

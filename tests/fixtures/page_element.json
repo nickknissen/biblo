@@ -1,0 +1,266 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "type": "AppContentElementMaterialGridAutomatic",
+      "id": "946be7d1-09e1-4b16-8c9d-aa194d4e39aa",
+      "description": null,
+      "priorityMaterialType": null,
+      "title": "Populære titler",
+      "workResult": [
+        {
+          "id": "work-of:870970-basis:141099639",
+          "title": "Ude for uden",
+          "creators": [
+            "Niels Krause-Kjær"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/2DZcM879SeipuO631w_uTg/960px!AUZN8StJjKlUwmbg80ePqimrHCArBhQcg_i7SLl5NosabQ",
+          "workYear": "2025",
+          "publisher": "Lindhardt og Ringhof",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:62591943",
+          "title": "Annas sang",
+          "creators": [
+            "Benjamin Koppel"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/W-fawK2TRjmidXGOceOypw/960px!AUb-M3LAKMiy53tEDeDiQKxBiCKbbUO_FvjOebhQG80OOQ",
+          "workYear": "2022",
+          "publisher": "Gyldendal",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [
+            {
+              "title": "Annas sang",
+              "numberInSeries": "Del 1"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:46536827",
+          "title": "Mørkeland",
+          "creators": [
+            "Niels Krause-Kjær"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/UfW2L73fT126UukDqTI3OA/960px!AUZ9dqgBHB3chzHcQfHjekc18eQsQmvuduPhmGG1qTwtHg",
+          "workYear": "2019",
+          "publisher": "Lindhardt og Ringhof",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [
+            {
+              "title": "Ulrik Torp-serien",
+              "numberInSeries": "Del 2"
+            }
+          ],
+          "hasRecordWithBlueTitle": true
+        },
+        {
+          "id": "work-of:870970-basis:52281121",
+          "title": "Aftalt spil",
+          "creators": [
+            "Elle Kennedy"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/m6vOLIk_T-qtGeq6q1K4DA/960px!AUawvemhPpJmSBQYxOV_SChzThdSADjwS5kwe9bDB64BAA",
+          "publisher": "Flamingo",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [
+            {
+              "title": "Off-campus",
+              "numberInSeries": "Del 1"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:142927926",
+          "title": "Sød tøs",
+          "creators": [
+            "Anna Juul"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/Y_tOFsOxRyaQyUs7nFnhTQ/960px!AUY-HwfReNA3WmHxSaaq_sxHxA5llWt_yQW0ljDr7JiJpg",
+          "workYear": "2026",
+          "publisher": "Lindhardt og Ringhof",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:136999125",
+          "title": "7 veje til et langt liv",
+          "creators": [
+            "Anette Harbech Olesen"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/VWUPYpuFRR-91lVUDFSf7A/960px!AUY34QQndGAGB7rtujq_afSiwHMXIGuI-aP4aUjuZw_dTA",
+          "publisher": "Politiken",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            }
+          ],
+          "series": [],
+          "shelfmark": "61.3",
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:62186925",
+          "title": "Nøjsomheden",
+          "creators": [
+            "Stine Askov"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/5GUIhoKaQku62exXl6zpkQ/960px!AUY24TRP5b4xLMOskJinibgAG4y9Wc9cHazb0Xr6qsz-rg",
+          "workYear": "2022",
+          "publisher": "Gyldendal Stereo",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:29678944",
+          "title": "Hjemsøgelse",
+          "creators": [
+            "Jenny Erpenbeck"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/nhVB4w8hRG-hI60s5dQluw/960px!AUaTaurhtRzr5ZC-hZ3oFOJEpfPXnRTU02pBaDTUiPgWhw",
+          "publisher": "Gads Forlag",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:143392155",
+          "title": "Supernerven",
+          "creators": [
+            "Tine Jørgensen (f. 1991)",
+            "Simon Weisdorf"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/RTFOCeRXT4-EkdJvYtrf3w/960px!AUaqd_hlWGh7qQi-sAjpXuHl7bEwlGlNQ2I5Yav7gXld1g",
+          "publisher": "Gyldendal",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [],
+          "shelfmark": "61.28",
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:62884789",
+          "title": "Den spanske kærlighedsaffære",
+          "creators": [
+            "Elena Armas"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/0ShProlKRVue0vndWmj7yg/960px!AUaTDDn13LJFJqE9MOOvMQkwy7oMbzjZ_paqX8Ncgql_5g",
+          "publisher": "North Audio Publishing",
+          "materialTypes": [
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [
+            {
+              "title": "Den spanske kærlighedsaffære"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        }
+      ]
+    }
+  }
+}

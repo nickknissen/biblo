@@ -1,0 +1,727 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "id": "work-of:800010-katalog:99122014196505763",
+      "title": "Harry Potter og de vises sten",
+      "creators": [
+        "Joanne K. Rowling"
+      ],
+      "materialTypes": [
+        {
+          "display": "bog",
+          "displayWithPronoun": "Denne bog",
+          "category": "BOOKS"
+        },
+        {
+          "display": "e-bog",
+          "displayWithPronoun": "Denne e-bog",
+          "category": "EBOOKS"
+        },
+        {
+          "display": "lydbog (cd-mp3)",
+          "displayWithPronoun": "Denne lydbog (cd-mp3)",
+          "category": "AUDIO_BOOKS"
+        },
+        {
+          "display": "lydbog (cd)",
+          "displayWithPronoun": "Denne lydbog (cd)",
+          "category": "AUDIO_BOOKS"
+        },
+        {
+          "display": "lydbog (online)",
+          "displayWithPronoun": "Denne lydbog (online)",
+          "category": "AUDIO_BOOKS_ONLINE"
+        }
+      ],
+      "coverUrl": "https://fbiinfo-present.dbc.dk/images/ydF9rP7ARdGDtX6ng3HnWg/960px!AUYFKWOJhOkVyGImk6j3beypvcAKZqaXmIHSwJ3uM4oJAQ",
+      "abstract": "Den 11-årige forældreløse dreng Harry Potter bliver adopteret af sin onkel og tante som ikke bryder sig om ham. Han har trolddomsblod i årerne og bliver optaget på en skole for trolddomskyndige. Her får han nye venner og fjender.",
+      "details": {
+        "languages": [
+          "dansk"
+        ],
+        "genre": [
+          "romaner",
+          "fantasy",
+          "eventyrlige fortællinger"
+        ],
+        "edition": "2023 (25-års jubilæumsudgave)",
+        "originalTitle": "Harry Potter and the philosopher's stone",
+        "publisher": "Gyldendal",
+        "year": "1997",
+        "contributors": [
+          "Hanna Lützen"
+        ],
+        "audience": [
+          "11-16"
+        ],
+        "extent": "355 sider"
+      },
+      "fictionNonfiction": "skønlitteratur",
+      "subjects": [
+        "troldmænd",
+        "magi",
+        "Harry Potter",
+        "Ron Weasley",
+        "Hermione Granger",
+        "eventyrlige fortællinger",
+        "Børnebøger",
+        "fantasy",
+        "Hogwarts",
+        "fiktive steder",
+        "spændende",
+        "trist",
+        "uhyggelig",
+        "sport",
+        "venskaber",
+        "mit liv",
+        "skæve karakterer",
+        "eventyrlig",
+        "fantasy",
+        "gys",
+        "action"
+      ],
+      "related": [
+        {
+          "url": "/v1/agencies/763000/search/query?author=Joanne%20K.%20Rowling",
+          "title": "Joanne K. Rowling",
+          "type": "AUTHOR"
+        },
+        {
+          "url": "/v1/agencies/763000/series/0b75d1ae84f09c571070addcf8a2bbc2a03e2c4d4250d22aaf223be965750e7a",
+          "title": "Harry Potter",
+          "type": "SERIES"
+        },
+        {
+          "url": "/v1/agencies/763000/search/query?narrator=Jesper%20Christensen%20(f.%201948)",
+          "title": "Jesper Christensen (f. 1948)",
+          "type": "NARRATOR"
+        },
+        {
+          "url": "/v1/agencies/763000/works/work-of:800010-katalog:99122014196505763/recommendations",
+          "title": "Anbefalinger",
+          "type": "RECOMMENDATION"
+        }
+      ],
+      "series": [
+        {
+          "seriesId": "0b75d1ae84f09c571070addcf8a2bbc2a03e2c4d4250d22aaf223be965750e7a",
+          "title": "Harry Potter",
+          "description": "Den verdenskendte fantasyserie om den forældreløse Harry, der kommer på en magisk skole for at lære trolddom. Bøgerne følger ham gennem syv år, hvor han får nye venner og lærer mere om den magiske verden og om sine forældre. Men truslen fra den onde Lord Voldemort hænger hele tiden over Harry, der må igennem mange udfordringer, farer og mysterier. Serien bliver mørkere og mere alvorlig, efterhånden som Harry vokser op og nærmer sig den endelig konfrontation med Lord Voldemort",
+          "numberInSeries": "Del 1",
+          "members": [
+            {
+              "workId": "work-of:800010-katalog:99122014196505763",
+              "title": "Harry Potter og de vises sten",
+              "numberInSeries": "Del 1",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/ydF9rP7ARdGDtX6ng3HnWg/960px!AUYFKWOJhOkVyGImk6j3beypvcAKZqaXmIHSwJ3uM4oJAQ"
+            },
+            {
+              "workId": "work-of:870970-basis:25197887",
+              "title": "Harry Potter og Hemmelighedernes Kammer",
+              "numberInSeries": "Del 2",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/f9csmCjETjiXfzah3O6jlg/960px!AUYZdOAh04NwTGihZxwwFsgR8rGoLCNxRkJfXXl-_xkoWQ"
+            },
+            {
+              "workId": "work-of:870970-basis:25197879",
+              "title": "Harry Potter og fangen fra Azkaban",
+              "numberInSeries": "Del 3",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/zGLl6oR6R8Sxpc5klaUALA/960px!AUaTqnkn52L_fd_v6P1_2r-iY7aehSIWksVax2Q82pmWTQ"
+            },
+            {
+              "workId": "work-of:870970-basis:25197909",
+              "title": "Harry Potter og flammernes pokal",
+              "numberInSeries": "Del 4",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/TYYxphEoRtOGUjMA2wA0pg/960px!AUaWCfSscqswpu8ypCuUQ43VbaDXhjzqKUG3INzPlMX8Sw"
+            },
+            {
+              "workId": "work-of:870970-basis:25245784",
+              "title": "Harry Potter og Fønixordenen",
+              "numberInSeries": "Del 5",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/WlgxcPTvTXSSa4jeYUymOw/960px!AUbEj3SHzMTDANJo4S1jaZDaB8_QnZDZ37fmfP3sdgDK8A"
+            },
+            {
+              "workId": "work-of:870970-basis:25807995",
+              "title": "Harry Potter og halvblodsprinsen",
+              "numberInSeries": "Del 6",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/zk6IiEkqQBSmKizbyfywyg/960px!AUasjzQ__CRGd0UmujFPE0JvKS8dGjAJ0XRKyENDLVWKgQ"
+            },
+            {
+              "workId": "work-of:870970-basis:27267912",
+              "title": "Harry Potter og Dødsregalierne",
+              "numberInSeries": "Del 7",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/72tE6ukuS7-ZqSS1mcb1zw/960px!AUa-LNzBGF7jwiiD0lZhm9u9wWDnII1mlVR8Zt0sOg8W_A"
+            },
+            {
+              "workId": "work-of:870970-basis:52646251",
+              "title": "Harry Potter og det forbandede barn",
+              "numberInSeries": "Del 8",
+              "coverUrl": "https://fbiinfo-present.dbc.dk/images/oqTgzFwiQYO9raODU_kkjw/960px!AUbfT4rh_BpKuUWfEm77-ym0PnvnK3Hosg8cOA2T_hD7xg"
+            }
+          ]
+        }
+      ],
+      "variations": [
+        {
+          "recordId": "870970-basis:137198843",
+          "workId": "work-of:800010-katalog:99122014196505763",
+          "title": "Harry Potter og De Vises Sten",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/ydF9rP7ARdGDtX6ng3HnWg/960px!AUYFKWOJhOkVyGImk6j3beypvcAKZqaXmIHSwJ3uM4oJAQ",
+          "languages": [
+            "dansk"
+          ],
+          "edition": "2023 (25-års jubilæumsudgave)",
+          "originalTitle": "Harry Potter and the philosopher's stone",
+          "genre": [
+            "romaner",
+            "fantasy"
+          ],
+          "series": true,
+          "isbn": "9788702390292",
+          "publisher": [
+            "Gyldendal"
+          ],
+          "numberOfPages": 355,
+          "blueTitle": false,
+          "materialType": {
+            "display": "bog",
+            "displayWithPronoun": "Denne bog",
+            "category": "BOOKS"
+          },
+          "year": "2023",
+          "shelfmark": {
+            "name": "Rowling"
+          },
+          "contributors": [
+            {
+              "name": "Hanna Lützen",
+              "roles": [
+                "oversætter"
+              ]
+            }
+          ],
+          "audience": [
+            "11-16"
+          ],
+          "extent": "355 sider",
+          "notes": [
+            "Joanne K. Rowling bruger også pseudonymet: Robert Galbraith",
+            "På omslaget: Wizarding World",
+            "Film med titel: Harry Potter og De Vises Sten"
+          ],
+          "source": [
+            "Bibliotekskatalog"
+          ]
+        },
+        {
+          "recordId": "870970-basis:38289977",
+          "workId": "work-of:800010-katalog:99122014196505763",
+          "title": "Harry Potter og de vises sten (ill. MinaLima)",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/YVoSWahuRZSALnqGJuClcw/960px!AUYfLr2VlDUycPHwt4oH170V1NINObaMFMLxSv8PlwlnXg",
+          "languages": [
+            "dansk"
+          ],
+          "edition": "2020 (9. udgave)",
+          "originalTitle": "Harry Potter and the philosopher's stone",
+          "genre": [
+            "romaner",
+            "fantasy"
+          ],
+          "series": true,
+          "isbn": "9788702301588",
+          "publisher": [
+            "Gyldendal"
+          ],
+          "numberOfPages": 356,
+          "blueTitle": false,
+          "materialType": {
+            "display": "bog",
+            "displayWithPronoun": "Denne bog",
+            "category": "BOOKS"
+          },
+          "year": "2020",
+          "shelfmark": {
+            "name": "Rowling"
+          },
+          "contributors": [
+            {
+              "name": "Hanna Lützen",
+              "roles": [
+                "oversætter"
+              ]
+            },
+            {
+              "name": "MinaLima (firma)",
+              "roles": [
+                "illustrator"
+              ]
+            }
+          ],
+          "audience": [
+            "8-16"
+          ],
+          "extent": "356 sider, ill. i farver",
+          "notes": [
+            "Joanne K. Rowling bruger også pseudonymet: Robert Galbraith",
+            "Film med titel: Harry Potter og De Vises Sten",
+            "På ryggen: År 1"
+          ],
+          "source": [
+            "Bibliotekskatalog"
+          ]
+        },
+        {
+          "recordId": "870970-basis:54871910",
+          "workId": "work-of:800010-katalog:99122014196505763",
+          "title": "Harry Potter og de vises sten",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/v1x10Zt-RgyyLSXnaoGHSA/960px!AUYOIWFUIAKpylKgn81cekfRrIR1l3Vnc88NEIdEfiStTg",
+          "languages": [
+            "dansk"
+          ],
+          "edition": "2018 (8. udgave)",
+          "originalTitle": "Harry Potter and the philosopher's stone",
+          "genre": [
+            "romaner",
+            "fantasy"
+          ],
+          "series": true,
+          "isbn": "9788702272451",
+          "publisher": [
+            "Gyldendal"
+          ],
+          "numberOfPages": 355,
+          "blueTitle": false,
+          "materialType": {
+            "display": "bog",
+            "displayWithPronoun": "Denne bog",
+            "category": "BOOKS"
+          },
+          "year": "2018",
+          "shelfmark": {
+            "name": "Rowling"
+          },
+          "contributors": [
+            {
+              "name": "Hanna Lützen",
+              "roles": [
+                "oversætter"
+              ]
+            }
+          ],
+          "audience": [
+            "11-16"
+          ],
+          "extent": "355 sider",
+          "notes": [
+            "Joanne K. Rowling bruger også pseudonymet: Robert Galbraith",
+            "Film med titel: Harry Potter og De Vises Sten",
+            "På ryggen: 1",
+            "Tidligere: 7. udgave med titel: Harry Potter og de vises sten (Ill. Jim Kay). 2015. - 1. i.e. 6. udgave. 2015. ISBN: 9788702173222"
+          ],
+          "source": [
+            "Bibliotekskatalog"
+          ]
+        },
+        {
+          "recordId": "870970-basis:51989252",
+          "workId": "work-of:800010-katalog:99122014196505763",
+          "title": "Harry Potter og de vises sten (ill. Jim Kay)",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/TgzALfVTSyWhZoWpIUZV7w/960px!AUaa5BUr5db2URXhK-P5IrwGQaLPc49VEVkmNf0DdhdM3g",
+          "languages": [
+            "dansk"
+          ],
+          "edition": "2015 (1. illustrerede udgave, 7. udgave)",
+          "originalTitle": "Harry Potter and the philosopher's stone",
+          "genre": [
+            "romaner",
+            "fantasy"
+          ],
+          "series": true,
+          "isbn": "9788702179859",
+          "publisher": [
+            "Gyldendal"
+          ],
+          "numberOfPages": 246,
+          "blueTitle": false,
+          "materialType": {
+            "display": "bog",
+            "displayWithPronoun": "Denne bog",
+            "category": "BOOKS"
+          },
+          "year": "2015",
+          "shelfmark": {
+            "name": "Rowling"
+          },
+          "contributors": [
+            {
+              "name": "Jim Kay",
+              "roles": [
+                "illustrator"
+              ]
+            },
+            {
+              "name": "Hanna Lützen",
+              "roles": [
+                "oversætter"
+              ]
+            }
+          ],
+          "audience": [
+            "11-16"
+          ],
+          "extent": "246 sider, ill. i farver, 28cm",
+          "notes": [],
+          "source": [
+            "Bibliotekskatalog"
+          ]
+        },
+        {
+          "recordId": "870970-basis:51980247",
+          "workId": "work-of:800010-katalog:99122014196505763",
+          "title": "Harry Potter og De Vises Sten",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/ax5dLLQxQquk6Ogss5xQew/960px!AUbG4F1J4YkVRY0z-voFEwPfq8f4Hbr0Uv7YzFM1KgY9-Q",
+          "languages": [
+            "dansk"
+          ],
+          "edition": "2015 (6 udgave)",
+          "originalTitle": "Harry Potter and the philosopher's stone",
+          "genre": [
+            "romaner",
+            "fantasy"
+          ],
+          "series": true,
+          "isbn": "9788702173222",
+          "publisher": [
+            "Gyldendal"
+          ],
+          "numberOfPages": 355,
+          "blueTitle": false,
+          "materialType": {
+            "display": "bog",
+            "displayWithPronoun": "Denne bog",
+            "category": "BOOKS"
+          },
+          "year": "2015",
+          "shelfmark": {
+            "name": "Rowling"
+          },
+          "contributors": [
+            {
+              "name": "Hanna Lützen",
+              "roles": [
+                "oversætter"
+              ]
+            }
+          ],
+          "audience": [
+            "11-16"
+          ],
+          "extent": "355 sider",
+          "notes": [
+            "Film med titel: Harry Potter og De Vises Sten",
+            "På ryggen: 1"
+          ],
+          "source": [
+            "Bibliotekskatalog"
+          ]
+        },
+        {
+          "recordId": "870970-basis:29317038",
+          "workId": "work-of:800010-katalog:99122014196505763",
+          "title": "Harry Potter og De Vises Sten",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/y-_4xWxZT0KL7Lq7TqEvKA/960px!AUYVMoy5H0kVBLTBFJT2WfUtitcOd_YQhLcGkuHe2F2Pug",
+          "languages": [
+            "dansk"
+          ],
+          "edition": "2012 (5. udgave)",
+          "originalTitle": "Harry Potter and the philosopher's stone",
+          "genre": [
+            "romaner",
+            "fantasy"
+          ],
+          "series": true,
+          "isbn": "9788702113990",
+          "publisher": [
+            "Gyldendal"
+          ],
+          "numberOfPages": 303,
+          "blueTitle": false,
+          "materialType": {
+            "display": "bog",
+            "displayWithPronoun": "Denne bog",
+            "category": "BOOKS"
+          },
+          "year": "2012",
+          "shelfmark": {
+            "name": "Rowling"
+          },
+          "contributors": [
+            {
+              "name": "Hanna Lützen",
+              "roles": [
+                "oversætter"
+              ]
+            }
+          ],
+          "audience": [
+            "11-16"
+          ],
+          "extent": "303 sider",
+          "notes": [
+            "Film med titel: Harry Potter og De Vises Sten"
+          ],
+          "source": [
+            "Bibliotekskatalog"
+          ]
+        },
+        {
+          "recordId": "870970-basis:27638708",
+          "workId": "work-of:800010-katalog:99122014196505763",
+          "title": "Harry Potter og De Vises Sten (Ved Jesper Christensen, mp3)",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/nvh3-KdbSzeCv8_euVfCPw/960px!AUaIQlwC8UEQhi8c8SA21H9xEBp6rart4GJTLUaZcdF_2A",
+          "languages": [
+            "dansk"
+          ],
+          "edition": "2009",
+          "originalTitle": "Harry Potter and the philosopher's stone",
+          "genre": [
+            "eventyrlige fortællinger",
+            "romaner"
+          ],
+          "series": true,
+          "isbn": "9788702075380",
+          "publisher": [
+            "Gyldendal Lyd"
+          ],
+          "blueTitle": false,
+          "materialType": {
+            "display": "lydbog (cd-mp3)",
+            "displayWithPronoun": "Denne lydbog (cd-mp3)",
+            "category": "AUDIO_BOOKS"
+          },
+          "year": "2009",
+          "shelfmark": {
+            "name": "Rowling"
+          },
+          "contributors": [
+            {
+              "name": "Hanna Lützen",
+              "roles": [
+                "oversætter"
+              ]
+            },
+            {
+              "name": "Jesper Christensen (f. 1948)",
+              "roles": [
+                "indlæser"
+              ]
+            }
+          ],
+          "audience": [
+            "9-11"
+          ],
+          "extent": "1 cd i 1 mappe (mp3, 9 t., 40 min.)",
+          "notes": [
+            "Gengivelse af bogen",
+            "Bogforlæg ikke oplyst"
+          ],
+          "source": [
+            "Bibliotekskatalog"
+          ]
+        },
+        {
+          "recordId": "870970-basis:24168638",
+          "workId": "work-of:800010-katalog:99122014196505763",
+          "title": "Harry Potter og De Vises Sten (Ved Jesper Christensen)",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/B9EaC7uDRp63AA_73n7sPg/960px!AUZOMmcAVfbsqDfwafLFi2O9ciBaogf7WVCjjQnGLA1AGA",
+          "languages": [
+            "dansk"
+          ],
+          "edition": "2002",
+          "originalTitle": "Harry Potter and the philosopher's stone",
+          "genre": [
+            "eventyrlige fortællinger",
+            "romaner"
+          ],
+          "series": true,
+          "isbn": "9788702012767",
+          "publisher": [
+            "Gyldendal"
+          ],
+          "blueTitle": false,
+          "materialType": {
+            "display": "lydbog (cd)",
+            "displayWithPronoun": "Denne lydbog (cd)",
+            "category": "AUDIO_BOOKS"
+          },
+          "year": "2002",
+          "shelfmark": {
+            "name": "Rowling"
+          },
+          "contributors": [
+            {
+              "name": "Hanna Lützen",
+              "roles": [
+                "oversætter"
+              ]
+            },
+            {
+              "name": "Jesper Christensen (f. 1948)",
+              "roles": [
+                "indlæser"
+              ]
+            }
+          ],
+          "audience": [
+            "9-11"
+          ],
+          "extent": "8 cd'er (9 t., 40 min.)",
+          "notes": [
+            "Gengivelse af bogen"
+          ],
+          "source": [
+            "Bibliotekskatalog"
+          ]
+        },
+        {
+          "recordId": "870970-basis:141661116",
+          "workId": "work-of:800010-katalog:99122014196505763",
+          "title": "Harry Potter og De Vises Sten",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/Y9XEMItsSVa75wOa1aMVSw/960px!AUa3WaMjDLkSb-FcOHk0bwVD0eBEFfQVB7oaFc2JfInYpw",
+          "languages": [
+            "dansk"
+          ],
+          "edition": "2025",
+          "originalTitle": "Harry Potter and the philosopher's stone",
+          "genre": [
+            "eventyrlige fortællinger",
+            "romaner"
+          ],
+          "series": true,
+          "isbn": "9781781108109",
+          "publisher": [
+            "Pottermore Publishing"
+          ],
+          "blueTitle": false,
+          "materialType": {
+            "display": "lydbog (online)",
+            "displayWithPronoun": "Denne lydbog (online)",
+            "category": "AUDIO_BOOKS_ONLINE"
+          },
+          "year": "2025",
+          "shelfmark": {
+            "name": "Rowling"
+          },
+          "contributors": [
+            {
+              "name": "Hanna Lützen",
+              "roles": [
+                "oversætter"
+              ]
+            },
+            {
+              "name": "Jesper Christensen (f. 1948)",
+              "roles": [
+                "indlæser"
+              ]
+            }
+          ],
+          "audience": [
+            "9-11"
+          ],
+          "extent": "9 t., 40 min.",
+          "notes": [
+            "Downloades i MP3-format",
+            "Gengivelse af bogen",
+            "Bogforlæg ikke oplyst",
+            "Digitalisering af fysisk lydbog"
+          ],
+          "source": [
+            "eReolen"
+          ]
+        },
+        {
+          "recordId": "870970-basis:141629433",
+          "workId": "work-of:800010-katalog:99122014196505763",
+          "title": "Harry Potter og De Vises Sten",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/P-3GKMRrSD2B9VGeQD7lUQ/960px!AUYxqi-E2uxDpIIOq-vbgDBoMQDWadN9kpqJfSGWrh2DgQ",
+          "languages": [
+            "dansk"
+          ],
+          "edition": "2025",
+          "originalTitle": "Harry Potter and the philosopher's stone",
+          "genre": [
+            "romaner",
+            "fantasy"
+          ],
+          "series": true,
+          "isbn": "9781781103142",
+          "publisher": [
+            "Pottermore Publishing"
+          ],
+          "numberOfPages": 303,
+          "blueTitle": false,
+          "materialType": {
+            "display": "e-bog",
+            "displayWithPronoun": "Denne e-bog",
+            "category": "EBOOKS"
+          },
+          "year": "2025",
+          "shelfmark": {
+            "name": "Rowling"
+          },
+          "contributors": [
+            {
+              "name": "Hanna Lützen",
+              "roles": [
+                "oversætter"
+              ]
+            }
+          ],
+          "audience": [
+            "11-13"
+          ],
+          "extent": "303 sider",
+          "notes": [
+            "Downloades i EPUB-format",
+            "Digitalisering af trykt bog"
+          ],
+          "source": [
+            "eReolen"
+          ]
+        }
+      ]
+    },
+    "isExternal": false
+  }
+}

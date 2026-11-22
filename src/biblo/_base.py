@@ -144,6 +144,22 @@ def app_type(method: str, path: str, wanted: str | None = None) -> str:
     return wanted
 
 
+CATALOGUE_APP_TYPES: dict[str, str] = {"digital": "biblo", "children": "biblogo", "all": "mybiblo"}
+"""Each `types.Catalogue` and the `x-app-type` of the app that shows it."""
+
+
+def catalogue_app_type(catalogue: str) -> str:
+    """The `x-app-type` that asks for `catalogue`. Raises AppTypeNotAcceptedError for a value
+    that isn't a `types.Catalogue`."""
+    try:
+        return CATALOGUE_APP_TYPES[catalogue]
+    except KeyError:
+        choices = ", ".join(CATALOGUE_APP_TYPES)
+        raise AppTypeNotAcceptedError(
+            f"Unknown catalogue {catalogue!r}: use one of {choices}"
+        ) from None
+
+
 def _accepted_app_types(method: str, path: str) -> tuple[str, ...] | None:
     if found := ACCEPTED_APP_TYPES.get((method, path)):
         return found

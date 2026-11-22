@@ -1,0 +1,22 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "explore": {
+        "url": "/v1/agencies/763000/content/pages/2cc7760a-33ff-4268-b07a-d0d283dc88f4",
+        "title": "Opdag",
+        "type": "CONTENT_PAGE"
+      },
+      "search": {
+        "url": "/v1/agencies/763000/content/categories",
+        "title": "Søg",
+        "type": "CONTENT_CATEGORIES_OVERVIEW"
+      },
+      "alwaysLoanable": {
+        "url": "/v1/agencies/763000/content/pages/068ec435-48e7-457a-8c83-d174463f7eaa",
+        "title": "Bøger, du altid kan låne",
+        "type": "CONTENT_PAGE"
+      }
+    }
+  }
+}

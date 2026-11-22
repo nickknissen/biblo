@@ -1,0 +1,210 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "hitcount": 315,
+      "works": [
+        {
+          "id": "work-of:870970-basis:25197887",
+          "title": "Harry Potter og Hemmelighedernes Kammer",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/f9csmCjETjiXfzah3O6jlg/960px!AUYZdOAh04NwTGihZxwwFsgR8rGoLCNxRkJfXXl-_xkoWQ",
+          "workYear": "1998",
+          "publisher": "Gyldendal",
+          "materialTypes": [
+            {
+              "display": "bog",
+              "displayWithPronoun": "Denne bog",
+              "category": "BOOKS"
+            },
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (cd-mp3)",
+              "displayWithPronoun": "Denne lydbog (cd-mp3)",
+              "category": "AUDIO_BOOKS"
+            },
+            {
+              "display": "lydbog (cd)",
+              "displayWithPronoun": "Denne lydbog (cd)",
+              "category": "AUDIO_BOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [
+            {
+              "title": "Harry Potter",
+              "numberInSeries": "Del 2"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:25197879",
+          "title": "Harry Potter og fangen fra Azkaban",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/zGLl6oR6R8Sxpc5klaUALA/960px!AUaTqnkn52L_fd_v6P1_2r-iY7aehSIWksVax2Q82pmWTQ",
+          "workYear": "1999",
+          "publisher": "Gyldendal",
+          "materialTypes": [
+            {
+              "display": "bog",
+              "displayWithPronoun": "Denne bog",
+              "category": "BOOKS"
+            },
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (cd-mp3)",
+              "displayWithPronoun": "Denne lydbog (cd-mp3)",
+              "category": "AUDIO_BOOKS"
+            },
+            {
+              "display": "lydbog (cd)",
+              "displayWithPronoun": "Denne lydbog (cd)",
+              "category": "AUDIO_BOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [
+            {
+              "title": "Harry Potter",
+              "numberInSeries": "Del 3"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:52646251",
+          "title": "Harry Potter og det forbandede barn",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/oqTgzFwiQYO9raODU_kkjw/960px!AUbfT4rh_BpKuUWfEm77-ym0PnvnK3Hosg8cOA2T_hD7xg",
+          "workYear": "2016",
+          "publisher": "Gyldendal",
+          "materialTypes": [
+            {
+              "display": "bog",
+              "displayWithPronoun": "Denne bog",
+              "category": "BOOKS"
+            },
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            }
+          ],
+          "series": [
+            {
+              "title": "Harry Potter",
+              "numberInSeries": "Del 8"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:25197909",
+          "title": "Harry Potter og flammernes pokal",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/TYYxphEoRtOGUjMA2wA0pg/960px!AUaWCfSscqswpu8ypCuUQ43VbaDXhjzqKUG3INzPlMX8Sw",
+          "workYear": "2000",
+          "publisher": "Gyldendal",
+          "materialTypes": [
+            {
+              "display": "bog",
+              "displayWithPronoun": "Denne bog",
+              "category": "BOOKS"
+            },
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (cd-mp3)",
+              "displayWithPronoun": "Denne lydbog (cd-mp3)",
+              "category": "AUDIO_BOOKS"
+            },
+            {
+              "display": "lydbog (cd)",
+              "displayWithPronoun": "Denne lydbog (cd)",
+              "category": "AUDIO_BOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [
+            {
+              "title": "Harry Potter",
+              "numberInSeries": "Del 4"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        },
+        {
+          "id": "work-of:870970-basis:25245784",
+          "title": "Harry Potter og Fønixordenen",
+          "creators": [
+            "Joanne K. Rowling"
+          ],
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/WlgxcPTvTXSSa4jeYUymOw/960px!AUbEj3SHzMTDANJo4S1jaZDaB8_QnZDZ37fmfP3sdgDK8A",
+          "workYear": "2003",
+          "publisher": "Gyldendal",
+          "materialTypes": [
+            {
+              "display": "bog",
+              "displayWithPronoun": "Denne bog",
+              "category": "BOOKS"
+            },
+            {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            {
+              "display": "lydbog (cd)",
+              "displayWithPronoun": "Denne lydbog (cd)",
+              "category": "AUDIO_BOOKS"
+            },
+            {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            }
+          ],
+          "series": [
+            {
+              "title": "Harry Potter",
+              "numberInSeries": "Del 5"
+            }
+          ],
+          "hasRecordWithBlueTitle": false
+        }
+      ]
+    }
+  }
+}

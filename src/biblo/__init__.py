@@ -17,6 +17,7 @@ from ._base import Tokens, authorize_url, code_from_redirect
 from ._sync import Biblo, FileTokenStorage, MemoryTokenStorage, TokenStorage
 from .exceptions import (
     APIError,
+    AppTypeNotAcceptedError,
     AuthenticationError,
     BadRequestError,
     BibloConnectionError,
@@ -34,9 +35,11 @@ from .exceptions import (
     ResponseValidationError,
     ServerError,
 )
+from .types import Catalogue
 
 __all__ = [
     "APIError",
+    "AppTypeNotAcceptedError",
     "AsyncBiblo",
     "AsyncFileTokenStorage",
     "AsyncMemoryTokenStorage",
@@ -46,6 +49,7 @@ __all__ = [
     "Biblo",
     "BibloConnectionError",
     "BibloError",
+    "Catalogue",
     "ConflictError",
     "FileTokenStorage",
     "InvalidCredentialsError",

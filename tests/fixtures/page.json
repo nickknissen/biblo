@@ -1,0 +1,63 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "title": "eReolens inspirationsside",
+      "subtitle": "På denne side finder du inspiration til din næste læseoplevelse blandt eReolens ebøger, lydbøger og podcasts, hvis du vil læse og lytte på hjemmesiden.\r\nVær opmærksom på, at du vil få vist den fysiske bog som det første, når du klikker dig ind på en bog. Herefter skal du vælge mellem ebogen eller lydbogen.",
+      "image": "https://delingstjenesten.dk/sites/default/files/2025-09/Next-grafikker%20%2837%29.jpg",
+      "elements": [
+        {
+          "type": "AppContentElementNavSpotsManual",
+          "id": "5a6f8418-760c-40f7-b60b-014a121f769f",
+          "linkedPages": [
+            "eec1a843-5a70-4b11-96bd-7f661e679998"
+          ]
+        },
+        {
+          "type": "AppContentElementMaterialGridAutomatic",
+          "id": "0019596c-7ef9-405a-bd9c-a26fffd8c77c",
+          "description": null,
+          "priorityMaterialType": null,
+          "title": "Anna Juul anbefaler",
+          "link": {
+            "url": "/v1/agencies/763000/content/pages/2cc7760a-33ff-4268-b07a-d0d283dc88f4/elements/0019596c-7ef9-405a-bd9c-a26fffd8c77c",
+            "type": "CONTENT_ELEMENT"
+          }
+        },
+        {
+          "type": "AppContentElementMaterialGridAutomatic",
+          "id": "30c49b83-d973-4570-8e21-0322b814b26d",
+          "description": null,
+          "priorityMaterialType": null,
+          "title": "Bøger af Anna Juul",
+          "link": {
+            "url": "/v1/agencies/763000/content/pages/2cc7760a-33ff-4268-b07a-d0d283dc88f4/elements/30c49b83-d973-4570-8e21-0322b814b26d",
+            "type": "CONTENT_ELEMENT"
+          }
+        },
+        {
+          "type": "AppContentElementMaterialGridAutomatic",
+          "id": "946be7d1-09e1-4b16-8c9d-aa194d4e39aa",
+          "description": null,
+          "priorityMaterialType": null,
+          "title": "Populære titler",
+          "link": {
+            "url": "/v1/agencies/763000/content/pages/2cc7760a-33ff-4268-b07a-d0d283dc88f4/elements/946be7d1-09e1-4b16-8c9d-aa194d4e39aa",
+            "type": "CONTENT_ELEMENT"
+          }
+        },
+        {
+          "type": "AppContentElementMaterialGridAutomatic",
+          "id": "c8aec857-294c-4d27-ba39-d5189d183f7e",
+          "description": null,
+          "priorityMaterialType": null,
+          "title": "Ting, vi taler om",
+          "link": {
+            "url": "/v1/agencies/763000/content/pages/2cc7760a-33ff-4268-b07a-d0d283dc88f4/elements/c8aec857-294c-4d27-ba39-d5189d183f7e",
+            "type": "CONTENT_ELEMENT"
+          }
+        }
+      ]
+    }
+  }
+}
