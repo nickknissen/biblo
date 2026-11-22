@@ -170,7 +170,7 @@ class AsyncCatalog(AsyncResource):
         library_id: str | None = None,
         **filters: Unpack[SearchFilters],
     ) -> AsyncIterator[m.WorkLight]:
-        """Every work a search finds, fetching pages of `page_size` as needed."""
+        """Every work a search finds in `catalogue`, fetching pages of `page_size` as needed."""
         offset = 0
         while max_results is None or offset < max_results:
             limit = page_size if max_results is None else min(page_size, max_results - offset)
@@ -199,7 +199,7 @@ class AsyncCatalog(AsyncResource):
         library_id: str | None = None,
         **filters: Unpack[SearchFilters],
     ) -> m.Facets:
-        """The filter values a search has, with counts."""
+        """The filter values a search in `catalogue` has, with counts."""
         params = {"q": q, "type": by, "valuesLimit": values_limit, **_filters(filters)}
         return await self._client._get(
             m.Facets,
@@ -212,7 +212,7 @@ class AsyncCatalog(AsyncResource):
     async def suggest(
         self, q: str, library_id: str | None = None, *, catalogue: Catalogue = "digital"
     ) -> builtins.list[m.Link]:
-        """Search-as-you-type suggestions."""
+        """Search-as-you-type suggestions from `catalogue` (see `types.Catalogue`)."""
         return await self._client._get(
             list[m.Link],
             f"{LIB}/search/suggest",
@@ -227,7 +227,8 @@ class AsyncCatalog(AsyncResource):
         """A work and its `variations`: the records (editions) you borrow or reserve.
 
         Which editions it has depends on `catalogue`: printed books and CDs only show up
-        under "all" (see `types.Catalogue`)."""
+        under "all", which can also leave out a digital edition "digital" lists (see
+        `types.Catalogue`)."""
         return await self._client._get(
             m.Work,
             f"{LIB}/works/{{workId}}",
@@ -239,7 +240,8 @@ class AsyncCatalog(AsyncResource):
     async def availability(
         self, work_id: str, library_id: str | None = None, *, catalogue: Catalogue = "digital"
     ) -> builtins.list[m.MaterialTypeOverview]:
-        """Per material type (e-book, audiobook, book, ...): can it be borrowed or reserved."""
+        """Per material type (e-book, audiobook, book, ...): can it be borrowed or reserved.
+        Printed and CD types are listed under `catalogue="all"`."""
         return await self._client._get(
             list[m.MaterialTypeOverview],
             f"{LIB}/works/{{workId}}/material-type-status",
@@ -251,6 +253,7 @@ class AsyncCatalog(AsyncResource):
     async def recommendations(
         self, work_id: str, library_id: str | None = None, *, catalogue: Catalogue = "digital"
     ) -> builtins.list[m.WorkLight]:
+        """Works like this one, from `catalogue` (see `types.Catalogue`)."""
         return await self._client._get(
             list[m.WorkLight],
             f"{LIB}/works/{{workId}}/recommendations",
@@ -551,7 +554,9 @@ class AsyncFavorites(AsyncResource):
     """The user's saved works ("Huskeliste"). Not tied to a library."""
 
     async def list(self, *, catalogue: Catalogue = "digital") -> builtins.list[m.Work]:
-        """The saved works, each with the editions `catalogue` has (see `types.Catalogue`)."""
+        """The saved works, each with the editions `catalogue` has. The works are the same
+        under every catalogue; "all" adds printed editions but can leave out a digital one
+        (see `types.Catalogue`)."""
         return await self._client._get(
             list[m.Work],
             "/v1/user/favorites",
@@ -641,6 +646,7 @@ class AsyncContent(AsyncResource):
     async def page(
         self, page_id: str, library_id: str | None = None, *, catalogue: Catalogue = "digital"
     ) -> m.Page:
+        """A content page; its elements' works come from `catalogue` (see `types.Catalogue`)."""
         return await self._client._get(
             m.Page,
             f"{LIB}/content/pages/{{pageId}}",

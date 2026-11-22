@@ -9,7 +9,6 @@ import httpx
 import pytest
 
 from biblo import (
-    AppTypeNotAcceptedError,
     AsyncBiblo,
     AsyncMemoryTokenStorage,
     Biblo,
@@ -17,10 +16,12 @@ from biblo import (
     BibloError,
     NoLibraryError,
     NotLoggedInError,
+    UnknownCatalogueError,
     __version__,
 )
 from biblo._base import app_type, catalogue_app_type
 from biblo._constants import API_KEY, APP_VERSION
+from biblo.exceptions import AppTypeNotAcceptedError
 from biblo.types import Catalogue
 from tests.fake import LIBRARY, PAGE, FakeBiblo
 
@@ -171,17 +172,24 @@ async def test_catalogue_calls_ask_the_chosen_catalogue(
 
 @pytest.mark.parametrize(("path_part", "call"), CATALOGUE_CALLS, ids=CALL_IDS)
 async def test_catalogue_calls_ask_the_digital_catalogue_by_default(
-    biblo: AsyncBiblo, fake: FakeBiblo, path_part: str, call: Callable[..., Any]
+    biblo: AsyncBiblo,
+    sync_biblo: Biblo,
+    fake: FakeBiblo,
+    path_part: str,
+    call: Callable[..., Any],
 ) -> None:
     await call(biblo)
-    assert [r.headers["x-app-type"] for r in fake.api_requests(path_part)] == ["biblo"]
+    call(sync_biblo)
+    sent = [r.headers["x-app-type"] for r in fake.api_requests(path_part)]
+    assert sent == ["biblo", "biblo"]
 
 
 async def test_iter_search_asks_the_chosen_catalogue_for_every_page(
-    biblo: AsyncBiblo, fake: FakeBiblo
+    biblo: AsyncBiblo, sync_biblo: Biblo, fake: FakeBiblo
 ) -> None:
     works = [w async for w in biblo.catalog.iter_search("potter", page_size=5, catalogue="all")]
-    assert len(works) == 12
+    sync_works = list(sync_biblo.catalog.iter_search("potter", page_size=5, catalogue="all"))
+    assert len(works) == len(sync_works) == 12
     sent = {r.headers["x-app-type"] for r in fake.api_requests("/search/works")}
     assert sent == {"mybiblo"}
 
@@ -203,7 +211,7 @@ def test_a_catalogue_an_endpoint_refuses_raises_before_sending() -> None:
 async def test_an_unknown_catalogue_raises_before_sending(
     biblo: AsyncBiblo, fake: FakeBiblo
 ) -> None:
-    with pytest.raises(BibloError, match="nope"):
+    with pytest.raises(UnknownCatalogueError, match="nope"):
         await biblo.catalog.search("potter", catalogue="nope")  # ty: ignore[invalid-argument-type]
     assert not fake.api_requests()
 
