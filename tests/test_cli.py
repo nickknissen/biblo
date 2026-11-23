@@ -197,6 +197,62 @@ def test_reservations_and_loans_show_physical_items(
     assert ids == ["p-loan-1", "TestLoan000000000002", "TestLoan000000000003", DIGITAL_LOAN_ID]
 
 
+@pytest.fixture
+def physical_loans(fake: FakeBiblo) -> None:
+    """p-loan-1 can be renewed; p-loan-2 can't, so the API leaves it out of its answer."""
+    refused: dict[str, Any] = json.loads(json.dumps(PHYSICAL_LOAN))
+    refused.update(id="p-loan-2", isRenewable=False)
+    refused["record"]["title"] = "En anden bog"
+    fake.loans["mybiblo"] += [PHYSICAL_LOAN, refused]
+
+
+@pytest.mark.usefixtures("physical_loans")
+def test_renew_judges_each_loan_by_whether_the_answer_lists_it(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    fake.renewal_status = []
+    code, _, err = run("renew", "p-loan-1", "p-loan-2")
+    assert code == 0, err
+    assert "En trykt bog: due 2027-01-07" in err
+    assert "p-loan-2: not renewed" in err
+
+
+@pytest.mark.usefixtures("physical_loans")
+def test_renew_prints_renewal_status_as_is(run: Run, fake: FakeBiblo, logged_in: None) -> None:
+    fake.renewal_status = ["SOMETHING_UNKNOWN"]
+    code, _, err = run("renew", "p-loan-1")
+    assert code == 0, err
+    assert "En trykt bog: due 2027-01-07" in err
+    assert "SOMETHING_UNKNOWN" in err
+
+
+@pytest.mark.usefixtures("physical_loans")
+def test_renew_fails_when_nothing_was_renewed(run: Run, logged_in: None) -> None:
+    code, out, err = run("renew", "p-loan-2", "--json")
+    assert code == 1
+    assert json.loads(out) == []
+    assert "p-loan-2: not renewed" in err
+    assert "No loans were renewed" in err
+
+
+@pytest.mark.usefixtures("physical_loans")
+def test_renew_all_renews_only_renewable_loans(run: Run, fake: FakeBiblo, logged_in: None) -> None:
+    code, _, err = run("renew", "--all")
+    assert code == 0, err
+    assert fake.api_requests("/renew")[-1].url.params.get_list("loanIds") == ["p-loan-1"]
+    assert "En trykt bog: due 2027-01-07" in err
+
+
+def test_renewing_a_digital_loan_says_digital_loans_cannot_be_renewed(
+    run: Run, logged_in: None
+) -> None:
+    code, _, err = run("renew", DIGITAL_LOAN_ID)
+    assert code == 1
+    assert "Digital loans can't be renewed" in err
+    assert "Støj" in err
+    assert "Could not resolve request" not in err
+
+
 def test_set_pickup_branch_by_part_of_its_name(run: Run, fake: FakeBiblo, logged_in: None) -> None:
     code, _, err = run("account", "set", "--pickup-branch", "børkop")
     assert code == 0, err

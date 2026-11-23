@@ -90,9 +90,17 @@ async def test_loans(logged_in: AsyncBiblo, fake: FakeBiblo) -> None:
         "recordId": "870970-basis:141629433"
     }
 
-    renewed = await logged_in.loans.renew(["1", "2"])
-    assert [r.loan_details.id for r in renewed] == ["1", "2"]
-    assert fake.api_requests("/renew")[-1].url.params.get_list("loanIds") == ["1", "2"]
+
+async def test_a_loan_left_out_of_the_renewal_answer_was_not_renewed(
+    logged_in: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    refused = {**PHYSICAL_LOAN, "id": "p-loan-2", "isRenewable": False}
+    fake.loans["mybiblo"] += [PHYSICAL_LOAN, refused]
+    renewed = await logged_in.loans.renew(["p-loan-1", "p-loan-2", "no-such-loan"])
+    assert [r.loan_details.id for r in renewed] == ["p-loan-1"]
+    assert renewed[0].loan_details.due_date.year == 2027
+    sent = fake.api_requests("/renew")[-1].url.params.get_list("loanIds")
+    assert sent == ["p-loan-1", "p-loan-2", "no-such-loan"]
 
 
 async def test_renewing_a_digital_loan_is_refused(logged_in: AsyncBiblo) -> None:

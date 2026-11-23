@@ -6,6 +6,16 @@ All notable changes to this project. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- `biblo renew` judges each loan by whether the API's answer lists it, as the apps do, instead
+  of by guessed `renewalStatus` values. A renewed loan shows its new due date (and any
+  `renewalStatus` as-is); a requested loan left out of the answer gets a "not renewed"
+  warning. The exit status is 1 when no loan was renewed (#27).
+- `biblo renew` with a digital loan says that digital loans can't be renewed, and names them,
+  instead of the API's "Could not resolve request" (#27).
+- `loans.renew()` documents that a loan missing from its result was not renewed (#27).
+
 ## [0.2.0] - 2026-11-23
 
 ### Added

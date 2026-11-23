@@ -416,6 +416,9 @@ class Loans(Resource):
     def renew(
         self, loan_ids: str | Iterable[str], library_id: str | None = None
     ) -> builtins.list[m.RenewedLoan]:
+        """Renew physical loans. A loan missing from the result was not renewed; the apps
+        judge by that alone, not by `renewal_status`, whose values are undocumented. A
+        digital loan id makes the API refuse the whole request (`BadRequestError`)."""
         return self._client._call(
             list[m.RenewedLoan],
             "POST",
