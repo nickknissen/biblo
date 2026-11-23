@@ -60,6 +60,19 @@ def test_search_table_and_json(run: Run) -> None:
     assert works[0]["title"]
 
 
+def test_search_format_flags_filter_by_material(run: Run, fake: FakeBiblo) -> None:
+    code, _, _ = run("search", "potter", "-l", LIBRARY, "--audiobook", "--magazine", "--json")
+    assert code == 0
+    params = fake.api_requests("/search/works")[-1].url.params
+    assert params.get_list("materialTypesSpecific") == ["lydbog (online)", "tidsskrift (online)"]
+
+
+def test_the_cli_has_no_facet_strings_of_its_own() -> None:
+    source = (Path(__file__).parents[1] / "src/biblo/cli/catalog.py").read_text()
+    for facet in ("e-bog", "lydbog (online)", "tidsskrift (online)"):
+        assert facet not in source
+
+
 def test_search_all_catalogues_finds_print(run: Run, fake: FakeBiblo) -> None:
     code, out, _ = run("search", "harry potter", "-l", LIBRARY, "--catalogue", "all", "--json")
     assert code == 0

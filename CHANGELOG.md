@@ -6,6 +6,16 @@ All notable changes to this project. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Filter searches by format without Biblo's Danish facet values: `catalog.search`,
+  `iter_search` and `facets` take `material="ebook" | "audiobook" | "podcast" | "magazine"`
+  (the new `biblo.Material` type), or a list of them to match any. It can be combined with
+  `material_types_specific=`, and both sets of values are sent. An unknown value raises the
+  new `UnknownMaterialError` (a `ValueError`) before anything is sent (#22).
+- `biblo search --magazine` finds only online magazines, next to `--ebook`, `--audiobook`
+  and `--podcast` (#22).
+
 ## [0.2.0] - 2026-11-23
 
 ### Added
