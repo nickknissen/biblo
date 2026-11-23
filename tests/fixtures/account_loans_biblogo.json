@@ -1,0 +1,49 @@
+{
+  "status": 200,
+  "body": {
+    "data": [
+      {
+        "id": "TestLoan000000000002",
+        "loanDate": "2026-11-21T15:06:01.822Z",
+        "dueDate": "2026-12-21T22:59:59.999Z",
+        "record": {
+          "recordId": "870970-basis:135153788",
+          "workId": "work-of:870970-basis:62978643",
+          "title": "Sallys far kan godt selv",
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/G7-z4vdrQhach9Hmd_10og/960px!AUdV4c8ybEKDZogHKN7BUL2ZR_gOmycwTCHKDQZVlMd2cg",
+          "author": "Thomas Brunstrøm",
+          "publishYear": "2022",
+          "materialType": {
+            "display": "lydbog (online)",
+            "displayWithPronoun": "Denne lydbog (online)",
+            "category": "AUDIO_BOOKS_ONLINE"
+          },
+          "blueTitle": true,
+          "isbn": "9788728435366",
+          "series": true
+        }
+      },
+      {
+        "id": "TestLoan000000000003",
+        "loanDate": "2026-11-21T15:21:39.872Z",
+        "dueDate": "2026-12-21T22:59:59.999Z",
+        "record": {
+          "recordId": "870970-basis:39098504",
+          "workId": "work-of:870970-basis:39098504",
+          "title": "Sallys far (10) – Sallys far bliver YouTuber",
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/UX_P6OFSTeq5u-uzSlwd_w/960px!AUcb0P-RurMnbwqt_D2E6fJg8nKkuqYZfMJlM_d-aYQHGw",
+          "author": "Thomas Brunstrøm",
+          "publishYear": "2021",
+          "materialType": {
+            "display": "lydbog (online)",
+            "displayWithPronoun": "Denne lydbog (online)",
+            "category": "AUDIO_BOOKS_ONLINE"
+          },
+          "blueTitle": true,
+          "isbn": "9788726845150",
+          "series": true
+        }
+      }
+    ]
+  }
+}

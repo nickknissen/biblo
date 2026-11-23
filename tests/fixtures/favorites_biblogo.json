@@ -1,0 +1,765 @@
+{
+  "status": 200,
+  "body": {
+    "data": [
+      {
+        "id": "work-of:870970-basis:52530466",
+        "title": "I kongens gård",
+        "creators": [
+          "Peter Gotthardt"
+        ],
+        "materialTypes": [
+          {
+            "display": "lydbog (online)",
+            "displayWithPronoun": "Denne lydbog (online)",
+            "category": "AUDIO_BOOKS_ONLINE"
+          },
+          {
+            "display": "e-bog",
+            "displayWithPronoun": "Denne e-bog",
+            "category": "EBOOKS"
+          }
+        ],
+        "coverUrl": "https://fbiinfo-present.dbc.dk/images/9OW10ecgQci3CV4PYs7WHw/960px!AUdSzhS5-hKiFSlQZGshPyq_Q7O9Pt5mGuJj6OBPLwEp9Q",
+        "abstract": "Kongens liv er i fare, hvis de onde finder sværdet Tyrfing først. Derfor drager Katla, Knøs, Hervør og Bjarke af sted for at finde det.",
+        "details": {
+          "languages": [
+            "dansk"
+          ],
+          "genre": [
+            "romaner",
+            "eventyrlige fortællinger"
+          ],
+          "edition": "2021",
+          "publisher": "Alvilda",
+          "year": "2010",
+          "contributors": [
+            "Lars Junker Thiesgaard"
+          ],
+          "audience": [
+            "7-9"
+          ],
+          "extent": "23 min."
+        },
+        "fictionNonfiction": "skønlitteratur",
+        "subjects": [
+          "overtro",
+          "mystik",
+          "vikingetiden",
+          "overnaturlige væsener",
+          "Norden",
+          "Børnebøger",
+          "Skolebøger",
+          "eventyrlige fortællinger"
+        ],
+        "related": [],
+        "series": [
+          {
+            "seriesId": "aa81317eafe5b16b815fa739a202e1d619d81d211b708763fc6441fe10cbeabc",
+            "title": "Jagten på sværdet",
+            "description": "Fantasyserie for 7-9-årige begynderlæsere om Bjarke, Hervør, Katla og Knøs, der sammen skal prøve at forhindre, at Kong Rolf bliver dræbt",
+            "numberInSeries": "Del 1",
+            "members": [
+              {
+                "workId": "work-of:870970-basis:52530466",
+                "title": "I kongens gård",
+                "numberInSeries": "Del 1",
+                "coverUrl": "https://fbiinfo-present.dbc.dk/images/9OW10ecgQci3CV4PYs7WHw/960px!AUdSzhS5-hKiFSlQZGshPyq_Q7O9Pt5mGuJj6OBPLwEp9Q"
+              },
+              {
+                "workId": "work-of:870970-basis:52530482",
+                "title": "Hos dværgene",
+                "numberInSeries": "Del 2",
+                "coverUrl": "https://fbiinfo-present.dbc.dk/images/9L0z-FyAQsmaF5nrPGLydg/960px!AUfPjOXmr3KihKuWujgd8cpIgG0X82MDJwUhuZ4nP4K6uw"
+              },
+              {
+                "workId": "work-of:870970-basis:52702216",
+                "title": "Hos alferne",
+                "numberInSeries": "Del 3",
+                "coverUrl": "https://fbiinfo-present.dbc.dk/images/uD0vdG1pSu-w_H3JkX6vqw/960px!AUehmurpWcKPPmopnvOJpd_dQmRsh7tnXLcIAB2OjSNbJQ"
+              },
+              {
+                "workId": "work-of:870970-basis:52874386",
+                "title": "Hos jætterne",
+                "numberInSeries": "Del 4",
+                "coverUrl": "https://fbiinfo-present.dbc.dk/images/mKzKkZoKRYGMQATuOFshwg/960px!AUer0F_0Psj5lZQR1y5OR_EGxxobmbqQoS6e4IP3TbwNrg"
+              },
+              {
+                "workId": "work-of:870970-basis:53343074",
+                "title": "Hos guderne",
+                "numberInSeries": "Del 5",
+                "coverUrl": "https://fbiinfo-present.dbc.dk/images/4l9BYppjRCyPZG_1vsyldg/960px!AUevtqOtw0XT5eLdKDzhhl4BF2DoRvBI-093H3wFeASAMw"
+              },
+              {
+                "workId": "work-of:870970-basis:53690084",
+                "title": "I dødsriget",
+                "numberInSeries": "Del 6",
+                "coverUrl": "https://fbiinfo-present.dbc.dk/images/2RLBUW6xRjCbRjHxalaeyw/960px!AUfNyyVXGGL6-kWCYrguJSGBlWsW92_AspI6Z9v94ZZl9Q"
+              },
+              {
+                "workId": "work-of:870970-basis:53894453",
+                "title": "På vej hjem",
+                "numberInSeries": "Del 7",
+                "coverUrl": "https://fbiinfo-present.dbc.dk/images/QlDuC6lhSSyAYqjNyu-XeQ/960px!AUeut7kX7_vr2oolky3tNiIdCDYCXOiJe6t8A0GVigoD_g"
+              },
+              {
+                "workId": "work-of:870970-basis:54346972",
+                "title": "Red kongen",
+                "numberInSeries": "Del 8",
+                "coverUrl": "https://fbiinfo-present.dbc.dk/images/h3FE8xtUR3qRqA69S-6_pg/960px!AUfq_wBYOfJMr5Y19q2qTCtGYNuZByG-9Bbs28F8FaITiw"
+              }
+            ]
+          }
+        ],
+        "variations": [
+          {
+            "recordId": "870970-basis:38772643",
+            "workId": "work-of:870970-basis:52530466",
+            "title": "I kongens gård",
+            "creators": [
+              "Peter Gotthardt"
+            ],
+            "coverUrl": "https://fbiinfo-present.dbc.dk/images/9OW10ecgQci3CV4PYs7WHw/960px!AUdSzhS5-hKiFSlQZGshPyq_Q7O9Pt5mGuJj6OBPLwEp9Q",
+            "languages": [
+              "dansk"
+            ],
+            "edition": "2021",
+            "genre": [
+              "eventyrlige fortællinger",
+              "romaner"
+            ],
+            "series": true,
+            "isbn": "9788741517797",
+            "publisher": [
+              "Alvilda"
+            ],
+            "blueTitle": true,
+            "materialType": {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            },
+            "year": "2021",
+            "shelfmark": {
+              "name": "Gotthardt"
+            },
+            "contributors": [
+              {
+                "name": "Lars Junker Thiesgaard",
+                "roles": [
+                  "indlæser"
+                ]
+              }
+            ],
+            "audience": [
+              "7-9"
+            ],
+            "extent": "23 min.",
+            "notes": [
+              "Downloades i MP3-format",
+              "Gengivelse af bogen",
+              "Indlæst efter 1. udgave. 2016. ISBN: 9788771652987",
+              "Bogens originaludgave: 2010"
+            ],
+            "source": [
+              "eReolen"
+            ]
+          },
+          {
+            "recordId": "870970-basis:53908314",
+            "workId": "work-of:870970-basis:52530466",
+            "title": "I kongens gård",
+            "creators": [
+              "Peter Gotthardt"
+            ],
+            "coverUrl": "https://fbiinfo-present.dbc.dk/images/2XQq5V1qR6KQ6FhXRHT2QQ/960px!AUfpuZ6Vm2Cxe56uaarvJa_t5JxaDxsAJh4VBlxlCQ23Pw",
+            "languages": [
+              "dansk"
+            ],
+            "edition": "2018 (1. e-bogsudgave)",
+            "genre": [
+              "romaner",
+              "eventyrlige fortællinger"
+            ],
+            "series": true,
+            "isbn": "9788741504094",
+            "publisher": [
+              "Alvilda"
+            ],
+            "numberOfPages": 51,
+            "blueTitle": true,
+            "materialType": {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            "year": "2018",
+            "shelfmark": {
+              "name": "Gotthardt"
+            },
+            "contributors": [
+              {
+                "name": "Bodil Bang Heinemeier",
+                "roles": [
+                  "illustrator"
+                ]
+              },
+              {
+                "name": "Tommy Kinnerup",
+                "roles": [
+                  "illustrator"
+                ]
+              }
+            ],
+            "audience": [
+              "7-9"
+            ],
+            "extent": "51 sider, ill. i farver",
+            "notes": [
+              "Downloades i EPUB-format",
+              "Originaludgave: 2010",
+              "Forkortet og bearbejdet udgave af hans Kongens hal"
+            ],
+            "source": [
+              "eReolen"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "work-of:870970-basis:47215129",
+        "title": "Alt er f*cked",
+        "creators": [
+          "Mark Manson (f. 1984)"
+        ],
+        "materialTypes": [
+          {
+            "display": "lydbog (cd-mp3)",
+            "displayWithPronoun": "Denne lydbog (cd-mp3)",
+            "category": "AUDIO_BOOKS"
+          },
+          {
+            "display": "lydbog (online)",
+            "displayWithPronoun": "Denne lydbog (online)",
+            "category": "AUDIO_BOOKS_ONLINE"
+          },
+          {
+            "display": "bog",
+            "displayWithPronoun": "Denne bog",
+            "category": "BOOKS"
+          }
+        ],
+        "coverUrl": "https://fbiinfo-present.dbc.dk/images/aDHbore2QEmAjxT9CbdzSg/960px!AUfUqfts05qstii9q1rZTsm3ulAVAGOiyQT60N48May4Iw",
+        "abstract": "Refleksioner over en moderne livsstil, hvor stress og overfladiskhed skaber håbløshed. Håbet skal tilbage, men hvordan? Det skal ske udfra en ændring i den måde, hvorpå vi anskuer livet. Forfatteren trækker referencer til filosofi, religion og videnskab men også den moderne popkultur.",
+        "details": {
+          "languages": [
+            "dansk"
+          ],
+          "genre": [],
+          "edition": "2019 (1. udgave)",
+          "originalTitle": "Everything is f*cked",
+          "publisher": "Memoris",
+          "year": "2019",
+          "shelfmark": {
+            "display": "15.2",
+            "number": "15.2"
+          },
+          "contributors": [
+            "Peter Carstens"
+          ],
+          "audience": [],
+          "extent": "285 sider"
+        },
+        "fictionNonfiction": "faglitteratur",
+        "subjects": [
+          "håb",
+          "livsanskuelse",
+          "livsfilosofi",
+          "filosofi",
+          "personlig udvikling"
+        ],
+        "related": [],
+        "variations": [
+          {
+            "recordId": "870970-basis:47215129",
+            "workId": "work-of:870970-basis:47215129",
+            "title": "Alt er f*cked",
+            "creators": [
+              "Mark Manson (f. 1984)"
+            ],
+            "coverUrl": "https://fbiinfo-present.dbc.dk/images/aDHbore2QEmAjxT9CbdzSg/960px!AUfUqfts05qstii9q1rZTsm3ulAVAGOiyQT60N48May4Iw",
+            "languages": [
+              "dansk"
+            ],
+            "edition": "2019 (1. udgave)",
+            "originalTitle": "Everything is f*cked",
+            "genre": [],
+            "series": false,
+            "isbn": "9788793681675",
+            "publisher": [
+              "Memoris"
+            ],
+            "numberOfPages": 285,
+            "blueTitle": false,
+            "materialType": {
+              "display": "bog",
+              "displayWithPronoun": "Denne bog",
+              "category": "BOOKS"
+            },
+            "year": "2019",
+            "shelfmark": {
+              "display": "15.2",
+              "name": "Manson",
+              "number": "15.2"
+            },
+            "contributors": [
+              {
+                "name": "Peter Carstens",
+                "roles": [
+                  "oversætter"
+                ]
+              }
+            ],
+            "audience": [],
+            "extent": "285 sider",
+            "notes": [],
+            "source": [
+              "Bibliotekskatalog"
+            ]
+          },
+          {
+            "recordId": "870970-basis:47583152",
+            "workId": "work-of:870970-basis:47215129",
+            "title": "Alt er f*cked",
+            "creators": [
+              "Mark Manson (f. 1984)"
+            ],
+            "coverUrl": "https://fbiinfo-present.dbc.dk/images/iQe8mRVATOabJexs2TkCpQ/960px!AUewXEhe7ilUtnx6ckvfSmJ732SsqHFuVHhXNg7Mz44jBg",
+            "languages": [
+              "dansk"
+            ],
+            "edition": "2019",
+            "originalTitle": "Everything is f*cked",
+            "genre": [],
+            "series": false,
+            "isbn": "9788793681699",
+            "publisher": [
+              "Memoris"
+            ],
+            "blueTitle": false,
+            "materialType": {
+              "display": "lydbog (online)",
+              "displayWithPronoun": "Denne lydbog (online)",
+              "category": "AUDIO_BOOKS_ONLINE"
+            },
+            "year": "2019",
+            "shelfmark": {
+              "display": "15.2",
+              "name": "Manson",
+              "number": "15.2"
+            },
+            "contributors": [
+              {
+                "name": "Thomas Gulstad",
+                "roles": [
+                  "indlæser"
+                ]
+              },
+              {
+                "name": "Peter Carstens",
+                "roles": [
+                  "oversætter"
+                ]
+              }
+            ],
+            "audience": [],
+            "extent": "8 t., 32 min.",
+            "notes": [
+              "Downloades i MP3-format",
+              "Gengivelse af bogen",
+              "Indlæst efter 1. udgave. 2019. ISBN: 9788793681675"
+            ],
+            "source": [
+              "eReolen"
+            ]
+          },
+          {
+            "recordId": "870970-basis:47415055",
+            "workId": "work-of:870970-basis:47215129",
+            "title": "Alt er f*cked (mp3)",
+            "creators": [
+              "Mark Manson (f. 1984)"
+            ],
+            "coverUrl": "https://fbiinfo-present.dbc.dk/images/y7HAw_bTT-KeNeoyAa22Lw/960px!AUfSqKipZ8Az6dkLdB_ItdQ7pdCHbRzzYc1NFzpVAmZWLQ",
+            "languages": [
+              "dansk"
+            ],
+            "edition": "2019",
+            "originalTitle": "Everything is f*cked",
+            "genre": [],
+            "series": false,
+            "isbn": "9788793681705",
+            "publisher": [
+              "Memoris"
+            ],
+            "blueTitle": false,
+            "materialType": {
+              "display": "lydbog (cd-mp3)",
+              "displayWithPronoun": "Denne lydbog (cd-mp3)",
+              "category": "AUDIO_BOOKS"
+            },
+            "year": "2019",
+            "shelfmark": {
+              "display": "15.2",
+              "name": "Manson",
+              "number": "15.2"
+            },
+            "contributors": [
+              {
+                "name": "Thomas Gulstad",
+                "roles": [
+                  "indlæser"
+                ]
+              },
+              {
+                "name": "Peter Carstens",
+                "roles": [
+                  "oversætter"
+                ]
+              }
+            ],
+            "audience": [],
+            "extent": "1 cd i 1 mappe (mp3, 8 t., 32 min.)",
+            "notes": [
+              "Gengivelse af bogen",
+              "Indlæst efter 1. udgave. 2019. ISBN: 9788793681675"
+            ],
+            "source": [
+              "Bibliotekskatalog"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "work-of:870970-basis:47416205",
+        "title": "Everything is f*cked",
+        "creators": [
+          "Mark Manson (f. 1984)"
+        ],
+        "materialTypes": [
+          {
+            "display": "bog",
+            "displayWithPronoun": "Denne bog",
+            "category": "BOOKS"
+          }
+        ],
+        "coverUrl": "https://fbiinfo-present.dbc.dk/images/rbX3jiMjRvq7K7YTy_JWvQ/960px!AUc_l6eWqP373H-GqAQO0X4_gy-kcBTB0_FMDixMf3yWAw",
+        "abstract": "Drawing from the pool of psychological research on these topics, as well as the timeless wisdom of philosophers such as Plato, Nietzsche, and Tom Waits, Mark Manson dissects religion and politics and the ways they have come to resemble one another.",
+        "details": {
+          "languages": [
+            "engelsk"
+          ],
+          "genre": [],
+          "edition": "2019 (1. edition)",
+          "publisher": "Harper",
+          "year": "2019",
+          "shelfmark": {
+            "display": "15.2",
+            "number": "15.2"
+          },
+          "contributors": [],
+          "audience": [],
+          "extent": "273 sider"
+        },
+        "fictionNonfiction": "faglitteratur",
+        "subjects": [
+          "Hope",
+          "Self-actualization (Psychology)",
+          "Conduct of life",
+          "Happiness",
+          "Nonfiction",
+          "SELF-HELP -- Motivational & Inspirational",
+          "SELF-HELP -- Personal Growth -- Happiness",
+          "SELF-HELP -- Personal Growth -- Success",
+          "Self-help publications",
+          "Despair",
+          "Self-realization",
+          "håb",
+          "lykke",
+          "livsfilosofi",
+          "livsanskuelse",
+          "personlig udvikling",
+          "filosofi"
+        ],
+        "related": [],
+        "variations": [
+          {
+            "recordId": "870970-basis:47416205",
+            "workId": "work-of:870970-basis:47416205",
+            "title": "Everything is f*cked",
+            "creators": [
+              "Mark Manson (f. 1984)"
+            ],
+            "coverUrl": "https://fbiinfo-present.dbc.dk/images/rbX3jiMjRvq7K7YTy_JWvQ/960px!AUc_l6eWqP373H-GqAQO0X4_gy-kcBTB0_FMDixMf3yWAw",
+            "languages": [
+              "engelsk"
+            ],
+            "edition": "2019 (1. edition)",
+            "genre": [],
+            "series": false,
+            "isbn": "9780062888433",
+            "publisher": [
+              "Harper"
+            ],
+            "numberOfPages": 273,
+            "blueTitle": false,
+            "materialType": {
+              "display": "bog",
+              "displayWithPronoun": "Denne bog",
+              "category": "BOOKS"
+            },
+            "year": "2019",
+            "shelfmark": {
+              "display": "15.2",
+              "name": "Manson",
+              "number": "15.2"
+            },
+            "contributors": [],
+            "audience": [],
+            "extent": "273 sider",
+            "notes": [
+              "Med litteraturhenvisninger og links"
+            ],
+            "source": [
+              "Bibliotekskatalog"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "work-of:870970-basis:137353571",
+        "title": "Den fantastiske bus",
+        "creators": [
+          "Jakob Martin Strid"
+        ],
+        "materialTypes": [
+          {
+            "display": "e-bog",
+            "displayWithPronoun": "Denne e-bog",
+            "category": "EBOOKS"
+          },
+          {
+            "display": "bog",
+            "displayWithPronoun": "Denne bog",
+            "category": "BOOKS"
+          }
+        ],
+        "coverUrl": "https://fbiinfo-present.dbc.dk/images/RCg9CtfmRaWJGK0vqP2aow/960px!AUcTdNCwo94CcOVKIS3wZq0EEfBbCEanSOaO_CApnSn_VQ",
+        "abstract": "Tag på en eventyrlig rejse med den fantastiske bus. I Ahnstarr City er dyrene desperate. Huse rives ned, og lille Timo er alvorligt syg. En myte fortæller om en blomst med helbredende kræfter, der vokser i sagnlandet Balanka. Dyrene bygger sammen en kæmpe bus og rejser afsted. Billedfortælling i stort format for børn fra 5 år og deres voksne.",
+        "details": {
+          "languages": [
+            "dansk"
+          ],
+          "genre": [
+            "eventyrlige fortællinger",
+            "billedbøger"
+          ],
+          "edition": "2026 (2. udgave)",
+          "publisher": "Gyldendal",
+          "year": "2023",
+          "contributors": [],
+          "audience": [
+            "5-16"
+          ],
+          "extent": "202 sider, alle ill. i farver, 24×31 cm"
+        },
+        "fictionNonfiction": "skønlitteratur",
+        "subjects": [
+          "dansk skønlitteratur",
+          "børnebog",
+          "Børnebøger",
+          "fællesskab",
+          "venner",
+          "samarbejde",
+          "omsorg",
+          "helbredelse",
+          "sygdom",
+          "fattigdom",
+          "samfundsforhold",
+          "busser",
+          "rejser",
+          "illustration",
+          "billedbøger",
+          "tegneserier",
+          "Danmark",
+          "2000-2050",
+          "2020-2030"
+        ],
+        "related": [],
+        "variations": [
+          {
+            "recordId": "870970-basis:143762297",
+            "workId": "work-of:870970-basis:137353571",
+            "title": "Den fantastiske bus",
+            "creators": [
+              "Jakob Martin Strid"
+            ],
+            "coverUrl": "https://fbiinfo-present.dbc.dk/images/RCg9CtfmRaWJGK0vqP2aow/960px!AUcTdNCwo94CcOVKIS3wZq0EEfBbCEanSOaO_CApnSn_VQ",
+            "languages": [
+              "dansk"
+            ],
+            "edition": "2026 (2. udgave)",
+            "genre": [
+              "eventyrlige fortællinger"
+            ],
+            "series": false,
+            "isbn": "9788702463859",
+            "publisher": [
+              "Gyldendal"
+            ],
+            "numberOfPages": 202,
+            "blueTitle": false,
+            "materialType": {
+              "display": "bog",
+              "displayWithPronoun": "Denne bog",
+              "category": "BOOKS"
+            },
+            "year": "2026",
+            "shelfmark": {
+              "name": "Strid"
+            },
+            "contributors": [],
+            "audience": [
+              "5-16"
+            ],
+            "extent": "202 sider, alle ill. i farver, 24×31 cm",
+            "notes": [
+              "Originaludgave: 2023"
+            ],
+            "source": [
+              "Bibliotekskatalog"
+            ]
+          },
+          {
+            "recordId": "870970-basis:137353571",
+            "workId": "work-of:870970-basis:137353571",
+            "title": "Den fantastiske bus",
+            "creators": [
+              "Jakob Martin Strid"
+            ],
+            "coverUrl": "https://fbiinfo-present.dbc.dk/images/T2znlfraSqK4Omk-Xt0jRQ/960px!AUczYMd6cqKL1t-3e85ZCZtHOvziEBhow1xlfVCNd7VJmQ",
+            "languages": [
+              "dansk"
+            ],
+            "edition": "2023 (1. udgave)",
+            "genre": [
+              "eventyrlige fortællinger"
+            ],
+            "series": false,
+            "isbn": "9788702152098",
+            "publisher": [
+              "Gyldendal"
+            ],
+            "numberOfPages": 202,
+            "blueTitle": false,
+            "materialType": {
+              "display": "bog",
+              "displayWithPronoun": "Denne bog",
+              "category": "BOOKS"
+            },
+            "year": "2023",
+            "shelfmark": {
+              "name": "Strid"
+            },
+            "contributors": [],
+            "audience": [
+              "5-16"
+            ],
+            "extent": "202 sider, alle ill. i farver, 31×39 cm",
+            "notes": [
+              "Originaludgave: 2023"
+            ],
+            "source": [
+              "Bibliotekskatalog"
+            ]
+          },
+          {
+            "recordId": "870970-basis:142817314",
+            "workId": "work-of:870970-basis:137353571",
+            "title": "Den fantastiske bus",
+            "creators": [],
+            "coverUrl": "https://fbiinfo-present.dbc.dk/images/VhklrP_YRruruOdbpZ1z8Q/960px!AUd8cHkY7voiP008NFgYAep4ejyFkMehLWS-SAAfpbHfsA",
+            "languages": [],
+            "edition": "Årstal ukendt",
+            "genre": [],
+            "series": false,
+            "isbn": "9788702426878",
+            "publisher": [
+              "Gyldendal"
+            ],
+            "blueTitle": false,
+            "materialType": {
+              "display": "bog",
+              "displayWithPronoun": "Denne bog",
+              "category": "BOOKS"
+            },
+            "year": "Årstal ukendt",
+            "shelfmark": {
+              "name": "NY TITEL"
+            },
+            "contributors": [],
+            "audience": [],
+            "notes": [],
+            "source": [
+              "Bibliotekskatalog"
+            ]
+          },
+          {
+            "recordId": "874310-katalog:DBB0509215",
+            "workId": "work-of:870970-basis:137353571",
+            "title": "Den fantastiske bus",
+            "creators": [
+              "Jakob Martin Strid"
+            ],
+            "coverUrl": "https://default-forsider.dbc.dk/large/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aXRsZSI6IkRlbiBmYW50YXN0aXNrZSBidXMiLCJtYXRlcmlhbFR5cGUiOiJFQk9PS1MifQ.iAePH2hQIIZeyvqpDncJdyg_mxy5Q5oOeTa7njU19nk",
+            "languages": [
+              "dansk"
+            ],
+            "edition": "2025",
+            "genre": [
+              "eventyrlige fortællinger"
+            ],
+            "series": false,
+            "publisher": [
+              "Nota"
+            ],
+            "blueTitle": false,
+            "materialType": {
+              "display": "e-bog",
+              "displayWithPronoun": "Denne e-bog",
+              "category": "EBOOKS"
+            },
+            "year": "2025",
+            "shelfmark": {
+              "name": "Strid"
+            },
+            "contributors": [],
+            "audience": [
+              "5-16"
+            ],
+            "extent": "220411902 bytes + Antal tegn: 31024",
+            "notes": [
+              "Format: EPUB3 og PDF",
+              "Med illustrationer",
+              "Uden figurbeskrivelser",
+              "Digital version af udgaven: Kbh. : Gyldendal, 2023"
+            ],
+            "source": [
+              "Nota"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

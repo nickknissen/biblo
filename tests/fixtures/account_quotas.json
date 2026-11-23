@@ -1,0 +1,23 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "totalLoanQuotas": {
+        "audiobook": 6,
+        "ebook": 6
+      },
+      "totalReservationQuotas": {
+        "audiobook": 3,
+        "ebook": 3
+      },
+      "remainingLoanQuotas": {
+        "audiobook": 6,
+        "ebook": 6
+      },
+      "remainingReservationQuotas": {
+        "audiobook": 3,
+        "ebook": 3
+      }
+    }
+  }
+}

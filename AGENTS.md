@@ -48,8 +48,9 @@ Users never see these as errors: `Lenient` keeps the raw value and logs at DEBUG
 - `uv run python scripts/check.py` runs what CI runs (ruff format, ruff, ty, generate
   --check, pytest on the newest Python and on 3.12).
 - `tests/fake.py` serves recorded responses (`tests/fixtures/`, refreshed by
-  `scripts/capture_fixtures.py`) and a fake login.bib.dk. Account data there is shaped by
-  the spec: nobody has recorded a real account's responses yet.
+  `scripts/capture_fixtures.py`) and a fake login.bib.dk. Its account answers are still
+  shaped by the spec. Anonymised real account responses are recorded in `tests/fixtures/`
+  (see its README) but not served yet (#7).
 - `uv run pytest -m live`: read-only anonymous calls to the real API.
 - Never borrow, reserve or change anything on a real account from tests or scripts.
 

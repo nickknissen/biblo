@@ -1,0 +1,8 @@
+{
+  "status": 404,
+  "body": {
+    "id": 4000,
+    "type": "NOT_FOUND",
+    "message": "Not found"
+  }
+}

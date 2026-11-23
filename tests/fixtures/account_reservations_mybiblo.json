@@ -1,0 +1,82 @@
+{
+  "status": 200,
+  "body": {
+    "data": [
+      {
+        "id": "900000001",
+        "reservationDate": "2026-11-20T13:37:50.905Z",
+        "state": "READY_FOR_PICKUP",
+        "claim": {
+          "id": "Xxx001",
+          "availableUntil": "2026-12-01T22:59:00.000Z"
+        },
+        "physical": {
+          "expiryDate": "2027-11-20",
+          "pickupBranch": "DK-763004"
+        },
+        "details": {
+          "recordId": "870970-basis:142848996",
+          "workId": "work-of:870970-basis:142848996",
+          "title": "Eddie vil have et kæledyr",
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/mJ5MpIsOSNGT-tgwV0Yv-A/960px!AUdFctOieIqknsGU9PtN4IhNgZjUdNRtfOO6mA6Aals9ow",
+          "author": "Thomas Brunstrøm",
+          "publishYear": "2026",
+          "materialType": {
+            "display": "billedbog",
+            "displayWithPronoun": "Denne billedbog",
+            "category": "BOOKS"
+          },
+          "blueTitle": false
+        }
+      },
+      {
+        "id": "900000002",
+        "reservationDate": "2026-11-20T13:37:52.050Z",
+        "state": "RESERVED",
+        "physical": {
+          "expiryDate": "2027-11-20",
+          "pickupBranch": "DK-763004",
+          "numberInQueue": 1
+        },
+        "details": {
+          "recordId": "870970-basis:141080725",
+          "workId": "work-of:870970-basis:141080725",
+          "title": "Eddie bliver forelsket",
+          "coverUrl": "https://fbiinfo-present.dbc.dk/images/6CYJjoZISjCNcXPp5oOiSQ/960px!AUdzLlG5gBE4iH7yAmbLvB4o_pGL1izKp5LhH1sDDW0xWQ",
+          "author": "Thomas Brunstrøm",
+          "publishYear": "2025",
+          "materialType": {
+            "display": "billedbog",
+            "displayWithPronoun": "Denne billedbog",
+            "category": "BOOKS"
+          },
+          "blueTitle": false
+        }
+      },
+      {
+        "id": "900000003",
+        "reservationDate": "2026-11-20T13:22:34.151Z",
+        "state": "RESERVED",
+        "physical": {
+          "expiryDate": "2027-11-20",
+          "pickupBranch": "DK-763004",
+          "numberInQueue": 2
+        },
+        "details": {
+          "recordId": "870970-basis:140093173",
+          "workId": "work-of:870970-basis:140093173",
+          "title": "Thinking in Systems",
+          "coverUrl": "https://default-forsider.dbc.dk/large/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0aXRsZSI6IlRoaW5raW5nIGluIFN5c3RlbXMiLCJtYXRlcmlhbFR5cGUiOiJCT09LUyJ9.-GPofMk1Xfm0Z5B_xNQ2bQkIirfCX8Re581UrGtKxL4",
+          "author": "Donella H. Meadows",
+          "publishYear": "2017",
+          "materialType": {
+            "display": "bog",
+            "displayWithPronoun": "Denne bog",
+            "category": "BOOKS"
+          },
+          "blueTitle": false
+        }
+      }
+    ]
+  }
+}
