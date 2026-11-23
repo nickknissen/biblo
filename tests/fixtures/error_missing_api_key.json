@@ -1,0 +1,8 @@
+{
+  "status": 401,
+  "body": {
+    "id": 4101,
+    "type": "UNAUTHORIZED",
+    "message": "Missing API key"
+  }
+}

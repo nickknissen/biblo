@@ -1,0 +1,8 @@
+{
+  "status": 403,
+  "body": {
+    "id": 4205,
+    "type": "FORBIDDEN",
+    "message": "This endpoint is available to app-type(s): biblo, biblogo. Received: mybiblo."
+  }
+}

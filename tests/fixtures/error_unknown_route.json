@@ -1,0 +1,8 @@
+{
+  "status": 404,
+  "body": {
+    "id": 4000,
+    "type": "NOT_FOUND",
+    "message": "Cannot find any route matching [GET] http://api.detdigitalefolkebibliotek.dk/v1/no-such-route"
+  }
+}

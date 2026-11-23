@@ -56,6 +56,30 @@ ids, titles, dates, and the library's message texts.
 - `account_quotas`: 6 of 6 loans and 3 of 3 reservations left, for both e-books and
   audiobooks, even with 3 digital loans out. Blue titles do not count against the quota.
 
+## Second account capture (2026-11-23, same account and day)
+
+- `auth_token_refresh.json`: `POST auth/token-refresh`, made through `Biblo.refresh()`. The
+  body is the plain token object, with no `data` wrapper. Both tokens are replaced by
+  placeholders (the real access token was 545 characters, the refresh token 64).
+  `expires_in` is the real value: 2678399 seconds, so an access token lasts 31 days.
+- `error_renew_digital.json`: `POST account/loans/renew?loanIds=<the Støj loan>`, under
+  `biblo`. Per the spec, `loanIds` takes "Only physical loan IDs". A digital loan id is
+  refused as a whole request, with 400 `VALIDATION` "Could not resolve request" and no
+  per-loan `renewalStatus`. The loan's due date did not change. (The library's `renew --all`
+  already skips loans without `isRenewable`, which digital loans don't have.)
+- Read-only error shapes. The fake API's own versions differ in `id` and `message`:
+  - `error_invalid_token.json`: `GET account` with a made-up bearer token. 401 `4104`
+    "Invalid bearer token" (the fake answers 4103).
+  - `error_missing_api_key.json`: the same request without `x-api-key`. 401 `4101` "Missing
+    API key" (the fake answers 4100, "Missing api key").
+  - `error_unknown_route.json`: `GET /v1/no-such-route`. 404 `4000`, whose message names the
+    method and the full URL, with `http://`.
+  - `error_forbidden_app_type_account.json`: `GET account/quotas` under `mybiblo`. 403
+    `4205`, naming the accepted app types.
+
+These were checked against the session file's values, the loan id and `never-commit.txt`.
+All parse strictly as `AuthTokens` or `AppErrorResponse`.
+
 ## Hand-recorded errors
 
 - `error_borrow_external.json`: `POST account/loans` for `150061-netlydbog:ODN0002766628`,
