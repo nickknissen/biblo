@@ -6,6 +6,8 @@ All notable changes to this project. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-23
+
 ### Added
 
 - Search and browse the children's catalogue or the whole library, print and CDs too. A
@@ -96,5 +98,6 @@ libraries' app for e-books, audiobooks and podcasts.
   downloaded.
 - Not affiliated with Det Digitale Folkebibliotek or the libraries.
 
-[Unreleased]: https://github.com/nickknissen/biblo/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/nickknissen/biblo/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/nickknissen/biblo/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/nickknissen/biblo/releases/tag/v0.1.0
