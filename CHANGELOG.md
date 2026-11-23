@@ -30,6 +30,11 @@ All notable changes to this project. The format follows
   reservation's pickup branch (an id or part of a name, as for
   `biblo account set --pickup-branch`) or expiry. `biblo reservations` is now a group;
   without a subcommand it lists your reservations as before (#10).
+- `biblo.helpers`, typed functions for what integrations compute from the models:
+  `days_until_due(loan)` and `is_overdue(loan)` count by the due date in Danish time,
+  whatever the machine's time zone; `is_ready_for_pickup(reservation)`;
+  `edition(work, "AUDIO_BOOKS_ONLINE")` picks a work's first edition in a material category;
+  `work_url(work_id)` gives the work's page on bibliotek.dk (#24).
 
 ### Changed
 
@@ -42,6 +47,8 @@ All notable changes to this project. The format follows
 - `biblo reserve --days N` checks `N` against the expiry intervals the library's
   configuration offers, and with any other number exits with status 2, listing them, without
   reserving. The configuration is fetched only when `--days` is given (#10).
+- The CLI shows due dates and other dates in Danish time instead of the machine's time zone
+  (#24).
 
 ### Fixed
 

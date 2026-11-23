@@ -11,6 +11,7 @@ from ..exceptions import (
     NotLoggedInError,
     PickupBranchRequiredError,
 )
+from ..helpers import is_ready_for_pickup
 from ._output import console, day, due, join, print_json, success, table, warn
 from ._state import JsonOption, LibraryOption, UsageError, client, resolve_branch
 
@@ -96,9 +97,7 @@ def loans(library: LibraryOption = None, as_json: JsonOption = False) -> None:
     for loan in found:
         r = loan.record
         renew = "" if loan.is_renewable is not False else " [dim](not renewable)[/dim]"
-        t.add_row(
-            r.title, r.author or "", r.material_type.display, due(loan.due_date) + renew, loan.id
-        )
+        t.add_row(r.title, r.author or "", r.material_type.display, due(loan) + renew, loan.id)
     console.print(t)
 
 
@@ -113,7 +112,7 @@ def borrow(
     if as_json:
         print_json(loan)
         return
-    success(f"Borrowed {loan.record.title}, due {due(loan.due_date)}")
+    success(f"Borrowed {loan.record.title}, due {due(loan)}")
 
 
 def renew(
@@ -147,7 +146,7 @@ def renew(
         for item in renewed:
             loan = item.loan_details
             status = f" [dim]({join(item.renewal_status)})[/dim]" if item.renewal_status else ""
-            success(f"{loan.record.title}: due {due(loan.due_date)}{status}")
+            success(f"{loan.record.title}: due {due(loan)}{status}")
     for loan_id in loan_ids:
         if loan_id not in returned:
             title = titles.get(loan_id)
@@ -205,16 +204,14 @@ def reservations_list(
         # Only a ready reservation shows its pickup branch. The reservations are the login
         # library's, so its branches are the pickup branches.
         names = {}
-        if any(
-            r.state == "READY_FOR_PICKUP" and r.physical and r.physical.pickup_branch for r in found
-        ):
+        if any(is_ready_for_pickup(r) and r.physical and r.physical.pickup_branch for r in found):
             names = biblo.libraries.branch_names(library_id=biblo.login_library_id())
     if not found:
         console.print("No reservations.")
         return
     t = table("Title", "Format", "Status", "Reservation id")
     for r in found:
-        if r.state == "READY_FOR_PICKUP":
+        if is_ready_for_pickup(r):
             status = "[green]ready[/green]"
             if r.physical and r.physical.pickup_branch:
                 status += f" at {names.get(r.physical.pickup_branch, r.physical.pickup_branch)}"

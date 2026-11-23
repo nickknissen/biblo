@@ -10,6 +10,7 @@ import pytest
 
 from biblo import Biblo, __version__
 from biblo.cli import _state, main
+from tests.conftest import machine_time_zone
 from tests.fake import (
     DIGITAL_LOAN_ID,
     LIBRARY,
@@ -307,6 +308,16 @@ def test_renewing_a_digital_loan_says_digital_loans_cannot_be_renewed(
     assert "Digital loans can't be renewed" in err
     assert "Støj" in err
     assert "Could not resolve request" not in err
+
+
+def test_loans_show_the_due_date_in_danish_time(run: Run, fake: FakeBiblo, logged_in: None) -> None:
+    # 23:30Z on the 23rd is 00:30 on the 24th in Copenhagen; the machine runs on UTC.
+    fake.loans["biblo"] = [{**fake.loans["biblo"][0], "dueDate": "2026-12-23T23:30:00.000Z"}]
+    with machine_time_zone("UTC"):
+        code, out, err = run("loans")
+    assert code == 0, err
+    assert "2026-12-24" in out
+    assert "2026-12-23" not in out
 
 
 def test_set_pickup_branch_by_part_of_its_name(run: Run, fake: FakeBiblo, logged_in: None) -> None:

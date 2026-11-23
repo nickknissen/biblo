@@ -117,6 +117,11 @@ spec doesn't know yet are kept rather than rejected, and if the API sends someth
 doesn't allow (it sometimes sends `null` for a promised string), that one value is passed
 through as sent and logged at DEBUG on the `biblo` logger instead of failing the whole call.
 
+**Helpers.** `biblo.helpers` has small functions for what most integrations work out from
+the models: `days_until_due(loan)` and `is_overdue(loan)` (by the due date in Danish time),
+`is_ready_for_pickup(reservation)`, `edition(work, "EBOOKS")` (a work's first edition in a
+material category) and `work_url(work_id)` (its page on bibliotek.dk).
+
 **Libraries.** Calls default to the library given to the client; account calls default to
 the library you logged in at. Every method also takes `library_id=`.
 
