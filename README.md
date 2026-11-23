@@ -130,7 +130,22 @@ digital edition under `"digital"` that it leaves out under `"all"`.
 **Sessions.** Give the client a `storage` and it saves the tokens after login and every
 refresh: `FileTokenStorage`, `MemoryTokenStorage`, or your own `TokenStorage`
 (`AsyncTokenStorage` for `AsyncBiblo`) with `load()` and `save()`. Access tokens are
-refreshed before they expire and once more if the API answers 401.
+refreshed before they expire and once more if the API answers 401. Before refreshing, the
+client looks in its storage again and uses tokens another process saved there, so several
+processes can share one session.
+
+**Reuse the CLI's login.** Log in once with `biblo auth login` and point your code at the
+same session file; `biblo.default_session_path()` says where it is:
+
+```python
+from biblo import AsyncBiblo, AsyncFileTokenStorage
+
+async with AsyncBiblo(storage=AsyncFileTokenStorage.default()) as biblo:
+    for loan in await biblo.loans.list():
+        print(loan.record.title, loan.due_date)
+```
+
+`FileTokenStorage.default()` does the same for `Biblo`. Neither needs the `cli` extra.
 
 **Home Assistant and other frameworks.** Pass your own `httpx` client with `http_client=`
 (the client then leaves closing it to you) and a `AsyncTokenStorage` backed by the
