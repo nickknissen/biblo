@@ -13,6 +13,7 @@ import json
 import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs
@@ -312,6 +313,8 @@ class FakeBiblo:
             return httpx.Response(200, json={"data": [RESERVATION]})
         if (method, path) == ("DELETE", f"{base}/reservations"):
             return httpx.Response(204)
+        if method == "PATCH" and (match := re.fullmatch(f"{base}/reservations/([^/]+)", path)):
+            return self._update_reservation(match.group(1), json.loads(request.content))
         if (method, path) == ("GET", "/v1/user/favorites"):
             return httpx.Response(200, json={"data": self.favorites[app_type]})
         if method in ("PUT", "DELETE") and path.startswith("/v1/user/favorites"):
@@ -319,6 +322,22 @@ class FakeBiblo:
         if (method, path) == ("GET", "/v1/user/messages"):
             return httpx.Response(200, json={"data": {"messages": self.messages[app_type]}})
         return _error(404, 4000, "NOT_FOUND", f"No fake for [{method}] {path}")
+
+    def _update_reservation(self, reservation_id: str, body: dict[str, Any]) -> httpx.Response:
+        """Change a physical reservation. Made up: no update has been recorded yet (#8), so
+        the new expiry date (the reservation date plus `expiryInterval` days) is a guess."""
+        found = [r for r in self.reservations["mybiblo"] if r["id"] == reservation_id]
+        if not found or not found[0].get("physical"):
+            message = f"Reservation {reservation_id} not found"
+            return _error(404, 4000, "NOT_FOUND", message)
+        reservation = found[0]
+        physical = reservation["physical"]
+        if (branch_id := body.get("pickupBranch")) is not None:
+            physical["pickupBranch"] = branch_id
+        if (days := body.get("expiryInterval")) is not None:
+            reserved = datetime.fromisoformat(reservation["reservationDate"]).date()
+            physical["expiryDate"] = (reserved + timedelta(days=days)).isoformat()
+        return httpx.Response(200, json={"data": reservation})
 
     def _check_client_auth(self, request: httpx.Request) -> None:
         expected = base64.b64encode(f"{CLIENT_ID}:{CLIENT_SECRET}".encode()).decode()
