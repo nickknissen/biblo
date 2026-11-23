@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My library</title>
+<style>
+  /* Fallbacks; the host's own style variables replace them (MCP Apps hostContext.styles). */
+  :root {
+    color-scheme: light dark;
+    --color-background-primary: light-dark(#ffffff, #1c1c1c);
+    --color-background-secondary: light-dark(#f4f3ef, #262626);
+    --color-text-primary: light-dark(#1f1f1f, #ececec);
+    --color-text-secondary: light-dark(#5f5f5f, #a3a3a3);
+    --color-border-primary: light-dark(#e2e0da, #383838);
+    --color-text-danger: light-dark(#b42318, #ff8a80);
+    --color-background-danger: light-dark(#fdecea, #3a1f1d);
+    --color-text-success: light-dark(#1e6b3a, #7fd49b);
+    --color-background-success: light-dark(#e7f4ec, #1d3326);
+    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --border-radius-md: 8px;
+  }
+  :root[data-theme="light"] { color-scheme: light; }
+  :root[data-theme="dark"] { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font: 14px/1.45 var(--font-sans);
+    color: var(--color-text-primary);
+    background: var(--color-background-primary);
+    padding: 16px;
+  }
+  header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  h1 { font-size: 16px; margin: 0; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em;
+       color: var(--color-text-secondary); margin: 20px 0 8px; }
+  .muted { color: var(--color-text-secondary); font-size: 12px; }
+  button.refresh {
+    font: inherit; font-size: 12px; cursor: pointer; padding: 4px 10px;
+    color: var(--color-text-primary); background: var(--color-background-secondary);
+    border: 1px solid var(--color-border-primary); border-radius: var(--border-radius-md);
+  }
+  button.refresh:disabled { opacity: .6; cursor: progress; }
+  .stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .stat {
+    background: var(--color-background-secondary); border-radius: var(--border-radius-md);
+    padding: 8px 12px; min-width: 96px;
+  }
+  .stat b { display: block; font-size: 18px; }
+  .stat.alert { background: var(--color-background-danger); color: var(--color-text-danger); }
+  .stat.good { background: var(--color-background-success); color: var(--color-text-success); }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li {
+    display: flex; gap: 12px; align-items: flex-start; padding: 10px 0;
+    border-top: 1px solid var(--color-border-primary);
+  }
+  li:first-child { border-top: 0; }
+  .cover {
+    flex: none; width: 40px; height: 58px; border-radius: 4px; object-fit: cover;
+    background: var(--color-background-secondary); display: grid; place-items: center;
+    font-weight: 600; color: var(--color-text-secondary);
+  }
+  .body { flex: 1; min-width: 0; }
+  .title {
+    font: inherit; font-weight: 600; text-align: left; padding: 0; border: 0;
+    background: none; color: inherit; cursor: pointer;
+  }
+  .title:hover { text-decoration: underline; }
+  .meta { color: var(--color-text-secondary); font-size: 12px; }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 7px;
+    border-radius: 999px; margin-top: 4px;
+    background: var(--color-background-secondary); color: var(--color-text-secondary);
+  }
+  .badge.alert { background: var(--color-background-danger); color: var(--color-text-danger); }
+  .badge.good { background: var(--color-background-success); color: var(--color-text-success); }
+  .empty { color: var(--color-text-secondary); padding: 8px 0; }
+  .error { color: var(--color-text-danger); margin-top: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>My library</h1>
+  <button class="refresh" id="refresh" type="button" hidden>Refresh</button>
+</header>
+<div class="muted" id="as-of">Loading…</div>
+<div class="stats" id="stats"></div>
+<div class="error" id="error" hidden></div>
+<h2>Reservations</h2>
+<ul id="reservations"></ul>
+<h2>Loans</h2>
+<ul id="loans"></ul>
+
+<script>
+"use strict";
+// The MCP Apps view protocol (SEP-1865, 2026-01-26): JSON-RPC 2.0 over postMessage with
+// the host. Plain JS on purpose, so the example has no build step.
+const TOOL = "show_my_library";
+let nextId = 1;
+const pending = new Map();
+let hostCapabilities = {};
+let locale = navigator.language;
+
+function send(message) { window.parent.postMessage({ jsonrpc: "2.0", ...message }, "*"); }
+function notify(method, params) { send({ method, params }); }
+function request(method, params) {
+  const id = nextId++;
+  send({ id, method, params });
+  return new Promise((resolve, reject) => pending.set(id, { resolve, reject }));
+}
+
+window.addEventListener("message", (event) => {
+  if (event.source !== window.parent) return;
+  const msg = event.data;
+  if (!msg || msg.jsonrpc !== "2.0") return;
+  if (msg.id !== undefined && !msg.method) {          // a response to one of our requests
+    const waiting = pending.get(msg.id);
+    if (!waiting) return;
+    pending.delete(msg.id);
+    msg.error ? waiting.reject(new Error(msg.error.message)) : waiting.resolve(msg.result);
+    return;
+  }
+  switch (msg.method) {
+    case "ui/notifications/tool-result": render(msg.params); break;
+    case "ui/notifications/host-context-changed": applyHostContext(msg.params); break;
+    case "ui/resource-teardown": send({ id: msg.id, result: {} }); break;
+    default:
+      if (msg.id !== undefined) {                     // a request we don't handle
+        send({ id: msg.id, error: { code: -32601, message: "Method not found" } });
+      }
+  }
+});
+
+function applyHostContext(context) {
+  if (!context) return;
+  if (context.theme) document.documentElement.dataset.theme = context.theme;
+  if (context.locale) locale = context.locale;
+  const variables = context.styles && context.styles.variables;
+  if (variables) {
+    for (const [name, value] of Object.entries(variables)) {
+      if (value) document.documentElement.style.setProperty(name, value);
+    }
+  }
+}
+
+// Tell the host how tall we are, so the frame fits the content.
+new ResizeObserver(() => {
+  const el = document.documentElement;
+  notify("ui/notifications/size-changed", { width: el.scrollWidth, height: el.scrollHeight });
+}).observe(document.documentElement);
+
+// ---------------------------------------------------------------- rendering
+
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined && text !== null) node.textContent = text;
+  return node;
+}
+
+function formatDate(iso) {
+  return new Date(iso).toLocaleDateString(locale, { day: "numeric", month: "short" });
+}
+
+function daysFromNow(iso) {
+  const day = 24 * 60 * 60 * 1000;
+  const start = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  return Math.round((start(new Date(iso)) - start(new Date())) / day);
+}
+
+function dueBadge(loan) {
+  const days = daysFromNow(loan.due);
+  if (loan.overdue) return el("span", "badge alert", `Overdue since ${formatDate(loan.due)}`);
+  const when = days === 0 ? "today" : days === 1 ? "tomorrow" : `in ${days} days`;
+  return el("span", days <= 3 ? "badge alert" : "badge", `Due ${when} · ${formatDate(loan.due)}`);
+}
+
+function cover(item) {
+  const fallback = el("div", "cover", (item.title || "?").charAt(0).toUpperCase());
+  if (!item.cover_url) return fallback;
+  const img = el("img", "cover");
+  img.alt = "";
+  img.loading = "lazy";
+  img.src = item.cover_url;
+  img.addEventListener("error", () => img.replaceWith(fallback));
+  return img;
+}
+
+function titleLink(item) {
+  const button = el("button", "title", item.title);
+  button.type = "button";
+  button.title = "Open on bibliotek.dk";
+  button.addEventListener("click", () => {
+    if (hostCapabilities.openLinks) request("ui/open-link", { url: item.web_page }).catch(() => {});
+  });
+  return button;
+}
+
+function row(item, badges) {
+  const li = el("li");
+  const body = el("div", "body");
+  body.append(titleLink(item));
+  body.append(el("div", "meta", [item.author, item.format].filter(Boolean).join(" · ")));
+  for (const badge of badges) body.append(badge, " ");
+  li.append(cover(item), body);
+  return li;
+}
+
+function fillList(id, items, badgesFor, emptyText) {
+  const list = document.getElementById(id);
+  list.replaceChildren();
+  if (!items.length) { list.append(el("li", "empty", emptyText)); return; }
+  for (const item of items) list.append(row(item, badgesFor(item)));
+}
+
+function stat(label, value, kind) {
+  const box = el("div", "stat" + (kind ? " " + kind : ""));
+  box.append(el("b", null, value), el("span", null, label));
+  return box;
+}
+
+function render(result) {
+  const error = document.getElementById("error");
+  if (!result || result.isError) {
+    const text = result && result.content && result.content[0] && result.content[0].text;
+    error.textContent = text || "Could not load your library.";
+    error.hidden = false;
+    return;
+  }
+  const data = result.structuredContent;
+  if (!data) return;
+  error.hidden = true;
+
+  const overdue = data.loans.filter((l) => l.overdue).length;
+  const ready = data.reservations.filter((r) => r.ready_for_pickup).length;
+  const left = data.loans_left_this_period;
+  const per = data.loans_per_period;
+  document.getElementById("stats").replaceChildren(
+    stat("loans", String(data.loans.length)),
+    stat("overdue", String(overdue), overdue ? "alert" : null),
+    stat("ready for pickup", String(ready), ready ? "good" : null),
+    stat("e-books left", `${left.ebook} / ${per.ebook}`),
+    stat("audiobooks left", `${left.audiobook} / ${per.audiobook}`),
+  );
+
+  fillList("loans", data.loans, (loan) => {
+    const badges = [dueBadge(loan)];
+    if (loan.renewable) badges.push(el("span", "badge", "Renewable"));
+    return badges;
+  }, "No loans.");
+
+  fillList("reservations", data.reservations, (r) => {
+    if (r.ready_for_pickup) {
+      const by = r.pickup_by ? ` by ${formatDate(r.pickup_by)}` : "";
+      const where = r.pickup_branch ? ` at ${r.pickup_branch}` : "";
+      return [el("span", "badge good", `Ready, pick up${by}${where}`)];
+    }
+    const badges = [];
+    if (r.queue_position) badges.push(el("span", "badge", `No. ${r.queue_position} in queue`));
+    if (r.pickup_branch) badges.push(el("span", "badge", r.pickup_branch));
+    return badges.length ? badges : [el("span", "badge", "Reserved")];
+  }, "No reservations.");
+
+  const asOf = new Date(data.as_of).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
+  document.getElementById("as-of").textContent = `As of ${asOf}`;
+}
+
+// ---------------------------------------------------------------- start
+
+const refresh = document.getElementById("refresh");
+refresh.addEventListener("click", async () => {
+  refresh.disabled = true;
+  try {
+    render(await request("tools/call", { name: TOOL, arguments: {} }));
+  } catch (err) {
+    render({ isError: true, content: [{ type: "text", text: err.message }] });
+  } finally {
+    refresh.disabled = false;
+  }
+});
+
+request("ui/initialize", {
+  protocolVersion: "2026-01-26",
+  appInfo: { name: "biblo-my-library", version: "0.1.0" },
+  appCapabilities: { availableDisplayModes: ["inline"] },
+}).then((result) => {
+  hostCapabilities = (result && result.hostCapabilities) || {};
+  applyHostContext(result && result.hostContext);
+  // A host that proxies tool calls lets the view refresh itself.
+  refresh.hidden = !hostCapabilities.serverTools;
+  notify("ui/notifications/initialized", {});
+}).catch(() => {
+  document.getElementById("as-of").textContent = "This view needs a host with MCP Apps.";
+});
+</script>
+</body>
+</html>
