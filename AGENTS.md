@@ -39,6 +39,8 @@ Tests parse strictly (`tests/conftest.py`). For real-world mismatches:
 1. `uv run python scripts/find_drift.py` crawls the live API read-only and prints each
    mismatch with a suggested `spec/patches.json` entry (keys are generated class and Python
    field names). Pass `--session` with a logged-in session file to include account endpoints.
+   It calls each endpoint under every `x-app-type` it accepts (`--app-types biblo,mybiblo`
+   limits them) and lists apart, without failing, where the answers differ.
 2. Add the patch with a dated reason, regenerate, rerun.
 
 Users never see these as errors: `Lenient` keeps the raw value and logs at DEBUG.
