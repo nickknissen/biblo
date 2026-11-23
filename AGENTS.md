@@ -47,10 +47,18 @@ Users never see these as errors: `Lenient` keeps the raw value and logs at DEBUG
 
 - `uv run python scripts/check.py` runs what CI runs (ruff format, ruff, ty, generate
   --check, pytest on the newest Python and on 3.12).
-- `tests/fake.py` serves recorded responses (`tests/fixtures/`, refreshed by
-  `scripts/capture_fixtures.py`) and a fake login.bib.dk. Its account answers are still
-  shaped by the spec. Anonymised real account responses are recorded in `tests/fixtures/`
-  (see its README) but not served yet (#7).
+- `tests/fake.py` serves recorded responses (`tests/fixtures/`, see its README) and a fake
+  login.bib.dk. Account endpoints answer with a real account's anonymised responses, each as
+  the asking `x-app-type` saw it; the few items that account lacked are made up in `fake.py`.
+- `scripts/capture_fixtures.py` refreshes the anonymous fixtures. With `--session
+  ~/.config/biblo/session.json` it records the account's GET endpoints under each app type
+  instead: GETs only (an expiring session is not refreshed), personal fields replaced by
+  placeholders, and nothing written if a real value is left. Only the maintainer runs it, on
+  their own account; review `git diff tests/fixtures` before committing. Agents test it
+  against the fake API only.
+- `tests/test_fixture_privacy.py` fails if a fixture holds a line of
+  `~/.config/aula/never-commit.txt` (or `$BIBLO_NEVER_COMMIT`), the real values that must
+  never be committed. Without the file, as in CI, it is skipped.
 - `uv run pytest -m live`: read-only anonymous calls to the real API.
 - Never borrow, reserve or change anything on a real account from tests or scripts.
 

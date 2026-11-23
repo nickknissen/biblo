@@ -21,7 +21,16 @@ from biblo import (
 )
 from biblo.models import _lenient
 from biblo.models._lenient import record_drift
-from tests.fake import LIBRARY, LOAN, PHYSICAL_RECORD, RESERVATION, FakeBiblo, fixture
+from tests.fake import (
+    DIGITAL_LOAN_ID,
+    LIBRARY,
+    PHYSICAL_LOAN,
+    PHYSICAL_RECORD,
+    RESERVATION,
+    RESERVATION_IDS,
+    FakeBiblo,
+    fixture,
+)
 
 
 async def test_catalogue(biblo: AsyncBiblo) -> None:
@@ -71,11 +80,12 @@ async def test_libraries(biblo: AsyncBiblo) -> None:
 
 async def test_loans(logged_in: AsyncBiblo, fake: FakeBiblo) -> None:
     loans = await logged_in.loans.list()
-    assert loans[0].record.title.startswith("Harry Potter")
+    assert loans[0].id == DIGITAL_LOAN_ID
+    assert loans[0].record.title.startswith("Støj")
     assert loans[0].due_date.tzinfo is not None
 
     loan = await logged_in.loans.borrow("870970-basis:141629433")
-    assert loan.id == "new-loan"
+    assert loan.record.record_id == "870970-basis:141629433"
     assert json.loads(fake.api_requests("/account/loans")[-1].content) == {
         "recordId": "870970-basis:141629433"
     }
@@ -83,6 +93,12 @@ async def test_loans(logged_in: AsyncBiblo, fake: FakeBiblo) -> None:
     renewed = await logged_in.loans.renew(["1", "2"])
     assert [r.loan_details.id for r in renewed] == ["1", "2"]
     assert fake.api_requests("/renew")[-1].url.params.get_list("loanIds") == ["1", "2"]
+
+
+async def test_renewing_a_digital_loan_is_refused(logged_in: AsyncBiblo) -> None:
+    """The API renews only physical loans, and refuses the whole request (recorded)."""
+    with pytest.raises(BadRequestError, match="Could not resolve request"):
+        await logged_in.loans.renew([DIGITAL_LOAN_ID])
 
 
 async def test_reservations(logged_in: AsyncBiblo, fake: FakeBiblo) -> None:
@@ -128,27 +144,43 @@ async def test_the_old_periodical_parameters_are_gone(logged_in: AsyncBiblo) -> 
         await logged_in.reservations.create("870970-basis:141661116", volume_number="2")  # ty: ignore[unknown-argument]
 
 
-async def test_account_listings_include_physical_items(logged_in: AsyncBiblo) -> None:
+DIGITAL_LOAN_IDS = [DIGITAL_LOAN_ID, "TestLoan000000000002", "TestLoan000000000003"]
+
+
+async def test_account_listings_include_physical_items(
+    logged_in: AsyncBiblo, fake: FakeBiblo
+) -> None:
     """The API hides physical items unless asked as Mit Biblo (#3)."""
     reservations = await logged_in.reservations.list()
-    assert [(r.id, r.physical is not None) for r in reservations] == [("r-1", False), ("p-1", True)]
+    assert [r.id for r in reservations] == RESERVATION_IDS  # recorded under "mybiblo" only
+    assert all(r.physical is not None for r in reservations)
+    assert reservations[0].claim is not None
+
+    fake.reservations["biblo"].append(RESERVATION)
+    fake.loans["mybiblo"].append(PHYSICAL_LOAN)
+    reservations = await logged_in.reservations.list()
+    assert [(r.id, r.physical is not None) for r in reservations][:2] == [
+        ("r-1", False),
+        (RESERVATION_IDS[0], True),
+    ]
     loans = await logged_in.loans.list()
-    assert [loan.id for loan in loans] == ["123456", "p-loan-1"]
+    assert [loan.id for loan in loans] == [*DIGITAL_LOAN_IDS, "p-loan-1"]
 
 
 async def test_an_item_listed_under_both_app_types_appears_once(
     logged_in: AsyncBiblo, fake: FakeBiblo
 ) -> None:
-    fake.physical_reservations.insert(0, RESERVATION)
-    fake.physical_loans.append(LOAN)
-    assert [r.id for r in await logged_in.reservations.list()] == ["r-1", "p-1"]
-    assert [loan.id for loan in await logged_in.loans.list()] == ["123456", "p-loan-1"]
+    fake.reservations["biblo"].append(fake.reservations["mybiblo"][0])
+    fake.loans["mybiblo"].append(fake.loans["biblo"][0])
+    assert [r.id for r in await logged_in.reservations.list()] == RESERVATION_IDS
+    assert [loan.id for loan in await logged_in.loans.list()] == DIGITAL_LOAN_IDS
 
 
-def test_sync_account_listings_include_physical_items(sync_biblo: Biblo) -> None:
+def test_sync_account_listings_include_physical_items(sync_biblo: Biblo, fake: FakeBiblo) -> None:
+    fake.loans["mybiblo"].append(PHYSICAL_LOAN)
     sync_biblo.login("0102031234", "1234")
-    assert [r.id for r in sync_biblo.reservations.list()] == ["r-1", "p-1"]
-    assert [loan.id for loan in sync_biblo.loans.list()] == ["123456", "p-loan-1"]
+    assert [r.id for r in sync_biblo.reservations.list()] == RESERVATION_IDS
+    assert [loan.id for loan in sync_biblo.loans.list()] == [*DIGITAL_LOAN_IDS, "p-loan-1"]
 
 
 async def test_a_reservation_with_a_pickup_branch_is_made_as_mit_biblo(
@@ -195,13 +227,14 @@ def test_sync_client_reserves_a_periodical_issue(sync_biblo: Biblo, fake: FakeBi
 
 async def test_account_favorites_and_messages(logged_in: AsyncBiblo, fake: FakeBiblo) -> None:
     quotas = await logged_in.account.quotas()
-    assert quotas.remaining_loan_quotas.ebook == 4
+    assert quotas.remaining_loan_quotas.ebook == 6
     assert await logged_in.account.fees() == []
     favorites = await logged_in.favorites.list()
+    assert len(favorites) == 4
     assert favorites[0].title
     await logged_in.favorites.add("work-of:1")
     assert json.loads(fake.api_requests("/favorites")[-1].content) == {"workId": "work-of:1"}
-    assert await logged_in.messages.list() == []
+    assert await logged_in.messages.list() == []  # the recorded message is Mit Biblo's
 
 
 async def test_raw_request_for_uncovered_endpoints(biblo: AsyncBiblo) -> None:
@@ -260,5 +293,5 @@ def test_sync_client_mirrors_the_async_one(sync_biblo: Biblo, fake: FakeBiblo) -
     works = list(sync_biblo.catalog.iter_search("potter", page_size=5, max_results=6))
     assert len(works) == 6
     sync_biblo.login("0102031234", "1234")
-    assert sync_biblo.loans.list()[0].id == "123456"
+    assert sync_biblo.loans.list()[0].id == DIGITAL_LOAN_ID
     assert fake.api_requests("/account/loans")[-1].headers["authorization"] == "Bearer access-1"
