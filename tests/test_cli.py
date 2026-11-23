@@ -167,6 +167,28 @@ def logged_in(run: Run, monkeypatch: pytest.MonkeyPatch) -> None:
     assert code == 0, err
 
 
+def test_a_pickup_branch_missing_from_the_branches_shows_its_id(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    ready = fake.reservations["mybiblo"][0]
+    ready["claim"] = None
+    ready["physical"]["pickupBranch"] = "DK-999999"  # e.g. a branch closed since
+    code, out, err = run("reservations")
+    assert code == 0, err
+    assert "ready at DK-999999 until 2027-11-20" in out
+
+
+def test_reservations_without_a_pickup_branch_fetch_no_branches(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    fake.reservations["mybiblo"] = []
+    fake.reservations["biblo"].append(RESERVATION)
+    code, out, err = run("reservations")
+    assert code == 0, err
+    assert "reserved" in out
+    assert not fake.api_requests("/branches")
+
+
 def test_reservations_and_loans_show_physical_items(
     run: Run, fake: FakeBiblo, logged_in: None
 ) -> None:
@@ -176,8 +198,9 @@ def test_reservations_and_loans_show_physical_items(
     assert code == 0, err
     assert "Harry Potter" in out
     assert "Eddie vil have et kæledyr" in out
-    assert "ready until 2026-12-01" in out
+    assert "ready at Børkop Bibliotek until 2026-12-01" in out
     assert "number 2 in queue" in out
+    assert len(fake.api_requests("/branches")) == 1
 
     code, out, err = run("reservations", "--json")
     assert code == 0, err

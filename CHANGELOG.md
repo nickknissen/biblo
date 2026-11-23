@@ -6,6 +6,18 @@ All notable changes to this project. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `libraries.branch_names()` maps each branch id to its name, from one `branches()` request,
+  to show a physical reservation's `pickup_branch` (an id) by name. A branch missing from it,
+  such as one closed since, is best shown by its id: `names.get(branch_id, branch_id)` (#23).
+
+### Changed
+
+- `biblo reservations` shows a ready physical reservation's pickup branch by name, or by id
+  if the library no longer lists the branch. It asks for the branches only when a listed
+  reservation is ready with a pickup branch; `--json` still gives the id (#23).
+
 ### Fixed
 
 - `biblo renew` judges each loan by whether the API's answer lists it, as the apps do, instead

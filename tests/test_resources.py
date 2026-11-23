@@ -78,6 +78,19 @@ async def test_libraries(biblo: AsyncBiblo) -> None:
     assert await biblo.content.categories()
 
 
+async def test_branch_names_maps_each_branch_id_to_its_name(
+    biblo: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    names = await biblo.libraries.branch_names()
+    assert names["DK-763004"] == "Børkop Bibliotek"
+    assert names == {b["id"]: b["name"] for b in fixture("branches")["data"]}
+    assert len(fake.api_requests("/branches")) == 1
+
+
+def test_branch_names_in_the_sync_client(sync_biblo: Biblo) -> None:
+    assert sync_biblo.libraries.branch_names(library_id=LIBRARY)["DK-763007"].startswith("Vejle")
+
+
 async def test_loans(logged_in: AsyncBiblo, fake: FakeBiblo) -> None:
     loans = await logged_in.loans.list()
     assert loans[0].id == DIGITAL_LOAN_ID
