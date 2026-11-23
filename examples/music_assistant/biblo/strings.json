@@ -1,0 +1,16 @@
+{
+  "config_entries": {
+    "library_id": {
+      "label": "Library",
+      "description": "Your public library. Search and previews use its catalogue."
+    },
+    "user_id": {
+      "label": "Card number or CPR",
+      "description": "Optional. Log in to see your favorites and loans as your library."
+    },
+    "pincode": {
+      "label": "Pincode",
+      "description": "Optional. The pincode for the card number or CPR above."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Log ind{% endblock %}
+{% block content %}
+<section class="narrow">
+  <h1>Log ind</h1>
+  <p class="muted">Med lånerkort eller CPR og pinkode hos {{ library.name if library else "dit bibliotek" }}.
+    Pinkoden gemmes ikke; sessionen lever kun i serverens hukommelse.</p>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form action="/login" method="post" class="stack">
+    <input type="hidden" name="back" value="{{ back }}">
+    <label>Lånernummer eller CPR <input name="user" autocomplete="username" required></label>
+    <label>Pinkode <input name="pincode" type="password" autocomplete="current-password" required></label>
+    <button>Log ind</button>
+  </form>
+</section>
+{% endblock %}

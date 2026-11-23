@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Min side{% endblock %}
+{% block content %}
+<h1>Hej {{ me.name or "" }}</h1>
+{% if notice %}<p class="notice">{{ notice }} ✓</p>{% endif %}
+
+<h2>Lån ({{ loans|length }})</h2>
+<table class="holdings wide">
+  <thead><tr><th>Titel</th><th>Type</th><th>Afleveres</th></tr></thead>
+  <tbody>
+  {% for l in loans %}
+    <tr>
+      <td><a href="/work/{{ l.record.work_id }}">{{ l.record.title }}</a><br><span class="muted">{{ l.record.author or "" }}</span></td>
+      <td>{{ l.record.material_type.display }}</td>
+      <td>{{ l.due_date.strftime("%d.%m.%Y") }}</td>
+    </tr>
+  {% else %}<tr><td colspan="3" class="muted">Ingen lån.</td></tr>{% endfor %}
+  </tbody>
+</table>
+
+<h2>Reservationer ({{ reservations|length }})</h2>
+<table class="holdings wide">
+  <thead><tr><th>Titel</th><th>Type</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for r in reservations %}
+    <tr>
+      <td><a href="/work/{{ r.details.work_id }}">{{ r.details.title }}</a><br><span class="muted">{{ r.details.author or "" }}</span></td>
+      <td>{{ r.details.material_type.display }}</td>
+      <td>
+        {% if r.state == "READY_FOR_PICKUP" %}<span class="ok">Klar til afhentning</span>
+        {% else %}Reserveret{% endif %}
+        {% if r.physical %}
+          <br><span class="muted">{{ branch_names.get(r.physical.pickup_branch, r.physical.pickup_branch) }}{% if r.physical.number_in_queue %} · nr. {{ r.physical.number_in_queue }} i kø{% endif %}</span>
+        {% endif %}
+      </td>
+    </tr>
+  {% else %}<tr><td colspan="3" class="muted">Ingen reservationer.</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

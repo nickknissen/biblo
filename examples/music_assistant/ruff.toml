@@ -1,0 +1,7 @@
+# The provider is written for Music Assistant's tree, where `music_assistant` is first-party
+# and `biblo` a dependency; sort imports the way its linter does.
+extend = "../../pyproject.toml"
+
+[lint.isort]
+known-first-party = ["music_assistant"]
+known-third-party = ["biblo"]

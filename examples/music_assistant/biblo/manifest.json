@@ -1,0 +1,11 @@
+{
+  "type": "music",
+  "domain": "biblo",
+  "stage": "experimental",
+  "name": "Biblo (Danish public libraries)",
+  "description": "Browse the Danish public libraries' audiobooks and podcasts from Biblo, and play the publishers' free previews. Full titles play in the Biblo app.",
+  "codeowners": ["@nickknissen"],
+  "provides": ["audiobook", "podcast"],
+  "requirements": ["biblo==0.2.0"],
+  "documentation": "https://github.com/nickknissen/biblo/tree/main/examples/music_assistant"
+}

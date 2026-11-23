@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Hylde{% endblock %} · Hylde</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-row">
+    <a class="logo" href="/">Hylde<span>.</span></a>
+    <form class="searchbar" action="/search" method="get" autocomplete="off">
+      <input name="q" list="suggestions" placeholder="Søg efter titel, forfatter, emne …"
+             value="{{ q or '' }}" aria-label="Søg">
+      <datalist id="suggestions"></datalist>
+      <button>Søg</button>
+    </form>
+    <nav class="user">
+      {% if logged_in %}
+        <a href="/account">Min side</a>
+        <form action="/logout" method="post"><button class="link">Log ud</button></form>
+      {% else %}
+        <a href="/login?back={{ request.url.path }}">Log ind</a>
+      {% endif %}
+    </nav>
+  </div>
+  <div class="wrap libbar">
+    <form action="/library" method="post">
+      <input type="hidden" name="back" value="{{ request.url.path }}{% if request.url.query %}?{{ request.url.query }}{% endif %}">
+      <label>Dit bibliotek
+        <select name="library" onchange="this.form.submit()">
+          {% for a in agencies %}
+            <option value="{{ a.id }}" {% if library and a.id == library.id %}selected{% endif %}>{{ a.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <noscript><button>Skift</button></noscript>
+    </form>
+  </div>
+</header>
+<main class="wrap">
+{% block content %}{% endblock %}
+</main>
+<footer class="wrap foot">
+  Proof of concept bygget på Biblo-API'et med <code>biblo</code>-biblioteket. Ikke tilknyttet
+  bibliotek.dk, DBC eller Det Digitale Folkebibliotek.
+</footer>
+<script>
+  const input = document.querySelector('.searchbar input');
+  const list = document.getElementById('suggestions');
+  let timer;
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(async () => {
+      if (input.value.length < 2) return;
+      const res = await fetch('/suggest?q=' + encodeURIComponent(input.value));
+      const items = await res.json();
+      list.replaceChildren(...items.map(t => Object.assign(document.createElement('option'), {value: t})));
+    }, 180);
+  });
+</script>
+</body>
+</html>

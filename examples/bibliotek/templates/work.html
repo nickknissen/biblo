@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %}{{ work.title }}{% endblock %}
+{% block content %}
+<article class="work">
+  <div class="work-cover">
+    {% if work.cover_url %}<img src="{{ work.cover_url }}" alt="">{% else %}<span class="nocover big">{{ work.title[:1] }}</span>{% endif %}
+  </div>
+  <div class="work-main">
+    <p class="kicker">{{ work.fiction_nonfiction or "" }}</p>
+    <h1>{{ work.title }}</h1>
+    <p class="by">
+      {% for c in work.creators %}<a href="/search?q={{ c|urlencode }}&by=creator">{{ c }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
+    </p>
+    {% if work.series %}
+      {% for s in work.series %}
+        <p class="series">{% if s.number_in_series %}Nr. {{ s.number_in_series }} i {% else %}Del af {% endif %}serien <strong>{{ s.title }}</strong></p>
+      {% endfor %}
+    {% endif %}
+    {% if work.abstract %}<p class="abstract">{{ work.abstract }}</p>{% endif %}
+
+    <h2>Udgaver og tilgængelighed</h2>
+    <div class="avail">
+      {% for type, records in by_type.items() %}
+        {% set st = status.get(type) %}
+        <section class="mtype">
+          <header>
+            <h3>{{ type }}</h3>
+            {% if st %}
+              {% if st.available %}<span class="ok">● Kan lånes{% if is_physical(type) %} hjemme{% endif %}</span>
+              {% elif st.reservable %}<span class="wait">● Udlånt, kan reserveres</span>
+              {% else %}<span class="no">● Ikke tilgængelig</span>{% endif %}
+            {% endif %}
+          </header>
+          {% for r in records %}
+            {% set h = holdings.get(r.record_id) %}
+            <details class="record" {% if loop.first and is_physical(type) %}open{% endif %}>
+              <summary>
+                <span>{{ r.edition or r.year or "" }}{% if r.publisher %} · {{ r.publisher|join(", ") }}{% endif %}{% if r.extent %} · {{ r.extent }}{% endif %}</span>
+                {% if h %}
+                  <span class="count {{ 'ok' if h.available_materials else 'wait' }}">{{ h.available_materials }} hjemme{% if h.reservations %} · {{ h.reservations }} i kø{% endif %}</span>
+                {% endif %}
+              </summary>
+              {% if h and h.holdings %}
+                <table class="holdings">
+                  <thead><tr><th>Filial</th><th>Placering</th><th>Hjemme</th></tr></thead>
+                  <tbody>
+                  {% for item in h.holdings|sort(attribute="available_materials", reverse=True) %}
+                    <tr>
+                      <td>{{ item.branch.title }}</td>
+                      <td class="placement">{{ item.placement|join(" › ") }}</td>
+                      <td>{{ item.available_materials }} af {{ item.materials|length }}</td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              {% elif is_physical(type) %}
+                <p class="muted">Dit bibliotek har ikke denne udgave.</p>
+              {% endif %}
+              <dl class="meta">
+                {% if r.isbn %}<dt>ISBN</dt><dd>{{ r.isbn }}</dd>{% endif %}
+                {% if r.languages %}<dt>Sprog</dt><dd>{{ r.languages|join(", ") }}</dd>{% endif %}
+                {% if r.contributors %}<dt>Medvirkende</dt><dd>{% for c in r.contributors %}{{ c.name }}{% if c.roles %} ({{ c.roles|join(", ") }}){% endif %}{% if not loop.last %}, {% endif %}{% endfor %}</dd>{% endif %}
+              </dl>
+              <div class="actions">
+                {% if is_physical(type) %}
+                  <form action="/reserve" method="post">
+                    <input type="hidden" name="record_id" value="{{ r.record_id }}">
+                    <input type="hidden" name="work_id" value="{{ work.id }}">
+                    {% if logged_in %}
+                      <label>Afhent på
+                        <select name="pickup_branch_id">
+                          {% for b in branches %}<option value="{{ b.id }}">{{ b.name }}</option>{% endfor %}
+                        </select>
+                      </label>
+                    {% endif %}
+                    <button>Bestil</button>
+                  </form>
+                {% elif st and st.available %}
+                  <form action="/borrow" method="post">
+                    <input type="hidden" name="record_id" value="{{ r.record_id }}">
+                    <input type="hidden" name="work_id" value="{{ work.id }}">
+                    <button>Lån {{ type }}</button>
+                  </form>
+                {% elif st and st.reservable %}
+                  <form action="/reserve" method="post">
+                    <input type="hidden" name="record_id" value="{{ r.record_id }}">
+                    <input type="hidden" name="work_id" value="{{ work.id }}">
+                    <button>Reservér {{ type }}</button>
+                  </form>
+                {% endif %}
+              </div>
+            </details>
+          {% endfor %}
+        </section>
+      {% endfor %}
+    </div>
+    {% if physical_ids %}
+      <p><a class="button ghost" href="/work/{{ work.id }}/libraries">Se hvilke andre biblioteker der har den hjemme →</a></p>
+    {% endif %}
+
+    {% if work.subjects %}
+      <h2>Emner</h2>
+      <p class="tags">{% for s in work.subjects %}<a href="/search?q={{ s|urlencode }}&by=subject">{{ s }}</a>{% endfor %}</p>
+    {% endif %}
+
+    <h2>Detaljer</h2>
+    <dl class="meta">
+      {% set d = work.details %}
+      {% if d.original_title %}<dt>Originaltitel</dt><dd>{{ d.original_title }}</dd>{% endif %}
+      {% if d.genre %}<dt>Genre</dt><dd>{{ d.genre|join(", ") }}</dd>{% endif %}
+      {% if d.languages %}<dt>Sprog</dt><dd>{{ d.languages|join(", ") }}</dd>{% endif %}
+      {% if d.audience %}<dt>Målgruppe</dt><dd>{{ d.audience|join(", ") }}</dd>{% endif %}
+      {% if d.shelfmark %}<dt>Opstilling</dt><dd>{{ d.shelfmark.display }}</dd>{% endif %}
+      {% if d.contributors %}<dt>Bidrag</dt><dd>{{ d.contributors|join(", ") }}</dd>{% endif %}
+    </dl>
+
+    {% if reviews %}
+      <h2>Anmeldelser</h2>
+      {% for rv in reviews %}
+        <blockquote class="review">
+          {% for item in rv.reviews %}
+            {% if item.heading %}<strong>{{ item.heading }}</strong>{% endif %}
+            {% if item.content %}<p>{{ item.content }}</p>{% endif %}
+          {% endfor %}
+          <cite>{{ rv.creators|join(", ") }}{% if rv.host_publication %}, {{ rv.host_publication }}{% endif %}{% if rv.rating %} · {{ rv.rating }}{% endif %}</cite>
+        </blockquote>
+      {% endfor %}
+    {% endif %}
+  </div>
+</article>
+
+{% if work.series %}
+  {% for s in work.series %}
+    <h2>Serien: {{ s.title }}</h2>
+    <div class="strip">
+      {% for m in s.members %}
+        <a href="/work/{{ m.work_id }}" class="tile {% if m.work_id == work.id %}current{% endif %}">
+          {% if m.cover_url %}<img src="{{ m.cover_url }}" alt="" loading="lazy">{% else %}<span class="nocover">{{ m.title[:1] }}</span>{% endif %}
+          <span>{% if m.number_in_series %}{{ m.number_in_series }}. {% endif %}{{ m.title }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  {% endfor %}
+{% endif %}
+
+{% if recommendations %}
+  <h2>Andre lånte også</h2>
+  <div class="strip">
+    {% for w in recommendations %}
+      <a href="/work/{{ w.id }}" class="tile">
+        {% if w.cover_url %}<img src="{{ w.cover_url }}" alt="" loading="lazy">{% else %}<span class="nocover">{{ w.title[:1] }}</span>{% endif %}
+        <span>{{ w.title }}</span>
+      </a>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}

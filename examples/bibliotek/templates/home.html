@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Søg i bibliotekets materialer{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Find bøger, film, musik og meget mere</h1>
+  <p>Søg i hele samlingen hos {{ library.name if library else "dit bibliotek" }}, både på hylden og
+    online, se hvor materialet står, og bestil det hjem til din filial.</p>
+  <form action="/search" method="get" class="bigsearch">
+    <input name="q" placeholder="Fx Tove Ditlevsen, krimi, Harry Potter" autofocus>
+    <button>Søg</button>
+  </form>
+  <p class="examples">Prøv:
+    {% for s in ["Tove Ditlevsen", "Harry Potter", "strikning", "Matador", "brætspil"] %}
+      <a href="/search?q={{ s|urlencode }}">{{ s }}</a>{% if not loop.last %} · {% endif %}
+    {% endfor %}
+  </p>
+</section>
+{% endblock %}

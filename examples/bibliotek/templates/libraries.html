@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ work.title }} på andre biblioteker{% endblock %}
+{% block content %}
+<p><a href="/work/{{ work.id }}">← {{ work.title }}</a></p>
+<h1>Hvor findes “{{ work.title }}”?</h1>
+<p class="muted">Fysiske eksemplarer på {{ rows|length }} biblioteker. Du kan bestille gennem dit eget bibliotek,
+  eller vælge et andet bibliotek øverst på siden.</p>
+<table class="holdings wide">
+  <thead><tr><th>Bibliotek</th><th>Hjemme nu</th><th>Eksemplarer i alt</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+    <tr class="{{ 'mine' if r.agency.id == current }}">
+      <td>
+        <form action="/library" method="post" class="inline">
+          <input type="hidden" name="library" value="{{ r.agency.id }}">
+          <input type="hidden" name="back" value="/work/{{ work.id }}">
+          <button class="link">{{ r.agency.name }}</button>
+        </form>
+        {% if r.agency.id == current %}<span class="badge">dit bibliotek</span>{% endif %}
+      </td>
+      <td>
+        {% if r.home_total %}
+          <span class="ok">{{ r.home_total }}</span>
+          <span class="muted">({% for k, n in r.home.items() if n %}{{ n }} {{ k }}{% if not loop.last %}, {% endif %}{% endfor %})</span>
+        {% else %}<span class="wait">0</span>{% endif %}
+      </td>
+      <td>{{ r.total }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="3">Ingen biblioteker har fysiske eksemplarer.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

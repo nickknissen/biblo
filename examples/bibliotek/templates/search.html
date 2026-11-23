@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}{{ q }}{% endblock %}
+{% block content %}
+<div class="search-head">
+  <h1>{{ "{:,}".format(result.hitcount).replace(",", ".") }} resultater for “{{ q }}”</h1>
+  <nav class="tabs">
+    {% for key, label in [("all", "Alt"), ("title", "Titel"), ("creator", "Forfatter"), ("subject", "Emne")] %}
+      <a href="{{ url(by=key, page=None) }}" class="{{ 'on' if by == key }}">{{ label }}</a>
+    {% endfor %}
+  </nav>
+</div>
+<div class="search-layout">
+  <aside class="facets">
+    {% for facet in facets %}
+      <details {% if facet.id in chosen or loop.index <= 3 %}open{% endif %}>
+        <summary>{{ facet.name }}</summary>
+        <ul>
+          {% for v in facet.values %}
+            {% set on = v.key in chosen.get(facet.id, []) %}
+            <li><a href="{{ toggle(facet.id, v.key) }}" class="{{ 'on' if on }}">
+              <span class="box">{% if on %}✓{% endif %}</span>{{ v.term }}</a></li>
+          {% endfor %}
+        </ul>
+      </details>
+    {% endfor %}
+  </aside>
+  <section>
+    {% if chosen %}
+      <p class="chips">
+        {% for fid, values in chosen.items() %}{% for v in values %}
+          <a class="chip" href="{{ toggle(fid, v) }}">{{ v }} ✕</a>
+        {% endfor %}{% endfor %}
+      </p>
+    {% endif %}
+    <ol class="results">
+      {% for w in result.works %}
+        <li>
+          <a class="cover" href="/work/{{ w.id }}">
+            {% if w.cover_url %}<img src="{{ w.cover_url }}" alt="" loading="lazy">{% else %}<span class="nocover">{{ w.title[:1] }}</span>{% endif %}
+          </a>
+          <div>
+            <h2><a href="/work/{{ w.id }}">{{ w.title }}</a></h2>
+            <p class="by">{{ w.creators|join(", ") }}{% if w.work_year %} · {{ w.work_year }}{% endif %}</p>
+            <p class="types">
+              {% for t in w.material_types %}<span class="badge {{ t.category|lower }}">{{ t.display }}</span>{% endfor %}
+            </p>
+          </div>
+        </li>
+      {% else %}
+        <li class="empty">Ingen resultater. Prøv færre filtre eller andre ord.</li>
+      {% endfor %}
+    </ol>
+    {% if pages > 1 %}
+      <nav class="pager">
+        {% if page > 1 %}<a href="{{ url(page=page - 1) }}">← Forrige</a>{% endif %}
+        <span>Side {{ page }} af {{ pages }}</span>
+        {% if page < pages %}<a href="{{ url(page=page + 1) }}">Næste →</a>{% endif %}
+      </nav>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}
