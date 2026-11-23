@@ -1,0 +1,8 @@
+{
+  "status": 401,
+  "body": {
+    "id": 4104,
+    "type": "UNAUTHORIZED",
+    "message": "Invalid bearer token"
+  }
+}

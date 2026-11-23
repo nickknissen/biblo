@@ -1,0 +1,27 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "id": "TestLoan000000000001",
+      "loanDate": "2026-11-23T20:03:04.277Z",
+      "dueDate": "2026-12-23T22:59:59.999Z",
+      "record": {
+        "workId": "work-of:870970-basis:39105268",
+        "recordId": "870970-basis:39283662",
+        "title": "Støj - Sådan træffer du bedre beslutninger",
+        "coverUrl": "https://fbiinfo-present.dbc.dk/images/_mCGD3A1RkmueboM4BEMAQ/960px!AUensSQDWzZmts0IRmA5oF619Xi36tp-ugeXch2WhbOPMg",
+        "author": "Olivier Sibony",
+        "publishYear": "2021",
+        "materialType": {
+          "display": "lydbog (online)",
+          "displayWithPronoun": "Denne lydbog (online)",
+          "category": "AUDIO_BOOKS_ONLINE"
+        },
+        "blueTitle": true,
+        "isbn": "9788726955521",
+        "series": false,
+        "shelfmark": "13.16"
+      }
+    }
+  }
+}

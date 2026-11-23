@@ -1,0 +1,8 @@
+{
+  "status": 400,
+  "body": {
+    "id": 1000,
+    "type": "VALIDATION",
+    "message": "Could not resolve request"
+  }
+}

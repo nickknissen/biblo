@@ -1,0 +1,9 @@
+{
+  "status": 200,
+  "body": {
+    "access_token": "access-token-placeholder",
+    "token_type": "Bearer",
+    "expires_in": 2678399,
+    "refresh_token": "refresh-token-placeholder"
+  }
+}

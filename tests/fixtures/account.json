@@ -1,0 +1,21 @@
+{
+  "status": 200,
+  "body": {
+    "data": {
+      "accountType": "AdgangsPlatformen",
+      "name": "Test Låner",
+      "email": {
+        "emailAddress": "laaner1@example.com",
+        "receiveNotification": true
+      },
+      "phoneNumber": {
+        "phoneNumber": "12345671",
+        "receiveNotification": false
+      },
+      "preferredPickupBranch": {
+        "id": "DK-763004",
+        "name": "Børkop Bibliotek"
+      }
+    }
+  }
+}
