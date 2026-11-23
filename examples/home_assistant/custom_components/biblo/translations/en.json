@@ -1,0 +1,43 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Log in to your library",
+        "description": "The same login as in the Biblo app and on the library's website.",
+        "data": {
+          "library_id": "Library",
+          "user_id": "Card number or CPR",
+          "pincode": "Pincode"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Log in again",
+        "description": "{library} refused the stored login. Enter your pincode again.",
+        "data": {
+          "pincode": "Pincode"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "The library refused the card number/CPR or pincode.",
+      "cannot_connect": "Could not reach Biblo. Try again later."
+    },
+    "abort": {
+      "already_configured": "This login is already set up.",
+      "cannot_connect": "Could not reach Biblo to list the libraries. Try again later.",
+      "reauth_successful": "Logged in again."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "loans": { "name": "Loans" },
+      "next_due": { "name": "Next due" },
+      "overdue": { "name": "Overdue loans" },
+      "reservations": { "name": "Reservations" },
+      "ready_for_pickup": { "name": "Ready for pickup" },
+      "ebook_loans_left": { "name": "E-book loans left" },
+      "audiobook_loans_left": { "name": "Audiobook loans left" },
+      "fees": { "name": "Fees" }
+    }
+  }
+}

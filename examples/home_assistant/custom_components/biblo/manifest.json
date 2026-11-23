@@ -1,0 +1,13 @@
+{
+  "domain": "biblo",
+  "name": "Biblo (Danish public libraries)",
+  "codeowners": ["@nickknissen"],
+  "config_flow": true,
+  "documentation": "https://github.com/nickknissen/biblo/tree/main/examples/home_assistant",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/nickknissen/biblo/issues",
+  "loggers": ["biblo"],
+  "requirements": ["biblo==0.2.0"],
+  "version": "0.1.0"
+}

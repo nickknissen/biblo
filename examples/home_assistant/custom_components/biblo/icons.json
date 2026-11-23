@@ -1,0 +1,14 @@
+{
+  "entity": {
+    "sensor": {
+      "loans": { "default": "mdi:book-open-variant" },
+      "next_due": { "default": "mdi:calendar-clock" },
+      "overdue": { "default": "mdi:book-alert" },
+      "reservations": { "default": "mdi:bookmark-multiple" },
+      "ready_for_pickup": { "default": "mdi:bookshelf" },
+      "ebook_loans_left": { "default": "mdi:tablet" },
+      "audiobook_loans_left": { "default": "mdi:headphones" },
+      "fees": { "default": "mdi:cash" }
+    }
+  }
+}

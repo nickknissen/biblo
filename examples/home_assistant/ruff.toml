@@ -1,0 +1,7 @@
+# The integration is written to live in a Home Assistant config, where `biblo` is a
+# dependency; sort imports that way.
+extend = "../../pyproject.toml"
+
+[lint.isort]
+known-first-party = ["custom_components"]
+known-third-party = ["biblo"]
