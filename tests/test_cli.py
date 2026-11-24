@@ -144,6 +144,26 @@ def test_wrong_pincode(run: Run, monkeypatch: pytest.MonkeyPatch) -> None:
     assert "Login refused" in err
 
 
+def test_a_failed_refresh_exits_with_4_and_the_login_hint(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    fake.revoked.add("access-1")
+    fake.refresh_works = False
+    code, _, err = run("loans")
+    assert code == 4
+    assert "biblo auth login" in err
+
+
+def test_a_lingering_401_exits_with_4_and_the_login_hint(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    fake.revoked.update({"access-1", "access-2"})  # refreshed, and still refused
+    code, _, err = run("loans")
+    assert code == 4
+    assert "biblo auth login" in err
+    assert "Login refused" not in err
+
+
 def test_api_command_fills_in_the_library(run: Run) -> None:
     code, out, _ = run("api", "v1/agencies/{agencyId}/search/works", "-p", "q=x", "-l", LIBRARY)
     assert code == 0
