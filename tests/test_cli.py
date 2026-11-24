@@ -447,3 +447,112 @@ def test_bad_filter_is_a_usage_error(run: Run) -> None:
     code, _, err = run("search", "x", "-l", LIBRARY, "-f", "colour=red")
     assert code == 2
     assert "material_types_specific" in err
+
+
+def patched_with(fake: FakeBiblo) -> list[dict[str, Any]]:
+    return [
+        json.loads(r.content)
+        for r in fake.api_requests("/account/reservations/")
+        if r.method == "PATCH"
+    ]
+
+
+def test_update_reservation_branch_by_id(run: Run, fake: FakeBiblo, logged_in: None) -> None:
+    code, _, err = run("reservations", "update", RESERVATION_IDS[1], "--branch", "dk-763007")
+    assert code == 0, err
+    assert patched_with(fake) == [{"pickupBranch": "DK-763007"}]
+    assert "Vejle Bibliotek - Spinderiet" in err
+    [patch] = [r for r in fake.api_requests("/account/reservations/") if r.method == "PATCH"]
+    assert patch.headers["x-app-type"] == "mybiblo"
+    assert not fake.api_requests("/configuration")
+
+
+def test_update_reservation_branch_by_part_of_its_name(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    code, out, err = run(
+        "reservations", "update", RESERVATION_IDS[1], "--branch", "børkop", "--json"
+    )
+    assert code == 0, err
+    assert patched_with(fake) == [{"pickupBranch": "DK-763004"}]
+    updated = json.loads(out)
+    assert updated["id"] == RESERVATION_IDS[1]
+    assert updated["physical"]["pickup_branch"] == "DK-763004"
+
+    code, out, err = run("reservations", "--json")
+    assert code == 0, err
+    [listed] = [r for r in json.loads(out) if r["id"] == RESERVATION_IDS[1]]
+    assert listed["physical"]["pickup_branch"] == "DK-763004"
+
+
+def test_update_reservation_days(run: Run, fake: FakeBiblo, logged_in: None) -> None:
+    code, _, err = run("reservations", "update", RESERVATION_IDS[0], "--days", "60")
+    assert code == 0, err
+    assert patched_with(fake) == [{"expiryInterval": 60}]
+    assert "Eddie vil have et kæledyr" in err
+    assert "2027-01-19" in err  # the fake's expiry: reserved 2026-11-20, plus 60 days
+
+
+def test_update_reservation_branch_and_days(run: Run, fake: FakeBiblo, logged_in: None) -> None:
+    code, _, err = run(
+        "reservations", "update", RESERVATION_IDS[1], "--branch", "DK-763004", "--days", "31"
+    )
+    assert code == 0, err
+    assert patched_with(fake) == [{"pickupBranch": "DK-763004", "expiryInterval": 31}]
+
+
+def test_update_reservation_with_nothing_to_change_is_a_usage_error(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    before = len(fake.requests)
+    code, _, err = run("reservations", "update", RESERVATION_IDS[1])
+    assert code == 2
+    assert "--branch" in err
+    assert "--days" in err
+    assert len(fake.requests) == before
+
+
+def test_update_reservation_days_the_library_does_not_offer(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    code, _, err = run("reservations", "update", RESERVATION_IDS[1], "--days", "999")
+    assert code == 2
+    assert "999" in err
+    assert "31 (1 måned)" in err
+    assert "365 (1 år)" in err
+    assert not patched_with(fake)
+
+
+def test_update_unknown_reservation(run: Run, logged_in: None) -> None:
+    code, _, err = run("reservations", "update", "no-such-reservation", "--branch", "DK-763004")
+    assert code == 1
+    assert "no-such-reservation" in err
+
+
+def test_update_reservation_needs_login(run: Run) -> None:
+    code, _, err = run("reservations", "update", RESERVATION_IDS[1], "--days", "60")
+    assert code == 4
+    assert "biblo auth login" in err
+
+
+def test_reserve_days_the_library_does_not_offer(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    code, _, err = run("reserve", "870970-basis:141661116", "--days", "999")
+    assert code == 2
+    assert "60 (2 måneder)" in err
+    assert not [r for r in fake.api_requests("/account/reservations") if r.method == "POST"]
+
+
+def test_reserve_days_the_library_offers(run: Run, fake: FakeBiblo, logged_in: None) -> None:
+    code, _, err = run("reserve", "870970-basis:141661116", "--days", "90")
+    assert code == 0, err
+    assert reserved_with(fake)["expiryInterval"] == 90
+
+
+def test_reserve_without_days_fetches_no_configuration(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    code, _, err = run("reserve", "870970-basis:141661116")
+    assert code == 0, err
+    assert not fake.api_requests("/configuration")

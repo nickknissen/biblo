@@ -26,6 +26,10 @@ All notable changes to this project. The format follows
 - `libraries.branch_names()` maps each branch id to its name, from one `branches()` request,
   to show a physical reservation's `pickup_branch` (an id) by name. A branch missing from it,
   such as one closed since, is best shown by its id: `names.get(branch_id, branch_id)` (#23).
+- `biblo reservations update ID [--branch BRANCH] [--days N]` changes a physical
+  reservation's pickup branch (an id or part of a name, as for
+  `biblo account set --pickup-branch`) or expiry. `biblo reservations` is now a group;
+  without a subcommand it lists your reservations as before (#10).
 
 ### Changed
 
@@ -35,6 +39,9 @@ All notable changes to this project. The format follows
 - `biblo reservations` shows a ready physical reservation's pickup branch by name, or by id
   if the library no longer lists the branch. It asks for the branches only when a listed
   reservation is ready with a pickup branch; `--json` still gives the id (#23).
+- `biblo reserve --days N` checks `N` against the expiry intervals the library's
+  configuration offers, and with any other number exits with status 2, listing them, without
+  reserving. The configuration is fetched only when `--days` is given (#10).
 
 ### Fixed
 

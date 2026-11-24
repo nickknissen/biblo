@@ -5,7 +5,12 @@ from typing import Annotated
 import typer
 
 from .._sync import Biblo
-from ..exceptions import BadRequestError, BibloError, PickupBranchRequiredError
+from ..exceptions import (
+    BadRequestError,
+    BibloError,
+    NotLoggedInError,
+    PickupBranchRequiredError,
+)
 from ._output import console, day, due, join, print_json, success, table, warn
 from ._state import JsonOption, LibraryOption, UsageError, client, resolve_branch
 
@@ -171,8 +176,27 @@ def _renew_refused(biblo: Biblo, loan_ids: list[str]) -> str:
     return message
 
 
-def reservations(library: LibraryOption = None, as_json: JsonOption = False) -> None:
+DaysOption = Annotated[
+    int | None,
+    typer.Option(
+        help="Give up after this many days. The library sets the choices; "
+        "a number it doesn't offer lists them.",
+        show_default=False,
+    ),
+]
+
+reservations = typer.Typer(
+    help="List your reservations, or change one with `update`.", invoke_without_command=True
+)
+
+
+@reservations.callback()
+def reservations_list(
+    ctx: typer.Context, library: LibraryOption = None, as_json: JsonOption = False
+) -> None:
     """List your reservations."""
+    if ctx.invoked_subcommand is not None:
+        return
     with client(library) as biblo:
         found = biblo.reservations.list()
         if as_json:
@@ -206,6 +230,54 @@ def reservations(library: LibraryOption = None, as_json: JsonOption = False) -> 
     console.print(t)
 
 
+@reservations.command("update")
+def reservations_update(
+    reservation_id: Annotated[
+        str, typer.Argument(help="A physical reservation's id (biblo reservations).")
+    ],
+    branch: Annotated[
+        str | None,
+        typer.Option(
+            help="New pickup branch: a branch id or part of its name (biblo branches).",
+            show_default=False,
+        ),
+    ] = None,
+    days: DaysOption = None,
+    library: LibraryOption = None,
+    as_json: JsonOption = False,
+) -> None:
+    """Change a physical reservation's pickup branch or how long it waits."""
+    if branch is None and days is None:
+        raise UsageError("Nothing to change: pass --branch or --days")
+    with client(library) as biblo:
+        if days is not None:
+            check_days(biblo, days)
+        pickup = resolve_branch(biblo, branch) if branch is not None else None
+        updated = biblo.reservations.update(
+            reservation_id, pickup_branch_id=pickup.id if pickup else None, expiry_days=days
+        )
+    if as_json:
+        print_json(updated)
+        return
+    changes = []
+    if pickup is not None:
+        changes.append(f"pick up at {pickup.name}")
+    if days is not None and updated.physical and updated.physical.expiry_date:
+        changes.append(f"expires {day(updated.physical.expiry_date)}")
+    success(join([updated.details.title, join(changes)], ": "))
+
+
+def check_days(biblo: Biblo, days: int) -> None:
+    """Refuse an expiry the login library doesn't offer, listing those it does."""
+    if not biblo.is_logged_in():
+        raise NotLoggedInError("Not logged in")
+    config = biblo.libraries.configuration(library_id=biblo.login_library_id())
+    offered = config.reservations.expiry_intervals
+    if days not in {interval.value for interval in offered}:
+        choices = join(f"{interval.value} ({interval.label})" for interval in offered)
+        raise UsageError(f"--days {days} isn't one the library offers: {choices}")
+
+
 def reserve(
     record_ids: Annotated[list[str], typer.Argument(help="Record ids from `biblo work`.")],
     branch: Annotated[
@@ -216,17 +288,14 @@ def reserve(
             show_default=False,
         ),
     ] = None,
-    days: Annotated[
-        int | None,
-        typer.Option(
-            help="Give up after this many days (the library sets the choices).", show_default=False
-        ),
-    ] = None,
+    days: DaysOption = None,
     library: LibraryOption = None,
     as_json: JsonOption = False,
 ) -> None:
     """Reserve records that are out, and get them when it's your turn."""
     with client(library) as biblo:
+        if days is not None:
+            check_days(biblo, days)
         if branch is None and (preferred := biblo.account.get().preferred_pickup_branch):
             branch = preferred.id
         try:
