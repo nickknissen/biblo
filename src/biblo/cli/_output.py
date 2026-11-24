@@ -12,6 +12,9 @@ from pydantic_core import to_jsonable_python
 from rich.console import Console
 from rich.table import Table
 
+from ..helpers import _danish_date, days_until_due
+from ..models import Loan
+
 console = Console(highlight=False)
 err = Console(stderr=True, highlight=False)
 
@@ -42,18 +45,15 @@ def join(values: Iterable[str | None], sep: str = ", ") -> str:
     return sep.join(v for v in values if v)
 
 
-def _local_date(value: date | datetime) -> date:
-    return value.astimezone().date() if isinstance(value, datetime) else value
-
-
 def day(value: date | datetime | None) -> str:
-    return "" if value is None else _local_date(value).isoformat()
+    """The date in Danish time, as the library means it."""
+    return "" if value is None else _danish_date(value).isoformat()
 
 
-def due(value: datetime | date) -> str:
+def due(loan: Loan) -> str:
     """'2026-12-01 (in 11 days)', red when overdue, yellow within three days."""
-    target = _local_date(value)
-    days = (target - date.today()).days
+    target = _danish_date(loan.due_date)
+    days = days_until_due(loan)
     if days < 0:
         return f"[red]{target} ({-days} days overdue)[/red]"
     text = {0: "today", 1: "tomorrow"}.get(days, f"in {days} days")

@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from collections.abc import AsyncIterator, Iterator
+import os
+import time
+from collections.abc import AsyncIterator, Generator, Iterator
+from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 
 import httpx
@@ -10,6 +13,22 @@ from biblo import AsyncBiblo, AsyncMemoryTokenStorage, Biblo, MemoryTokenStorage
 from biblo._base import Session, Tokens
 from biblo.models._lenient import strict
 from tests.fake import LIBRARY, FakeBiblo
+
+
+@contextmanager
+def machine_time_zone(name: str) -> Generator[None]:
+    """Run as if the machine's local time zone were `name` (POSIX only)."""
+    before = os.environ.get("TZ")
+    os.environ["TZ"] = name
+    time.tzset()
+    try:
+        yield
+    finally:
+        if before is None:
+            del os.environ["TZ"]
+        else:
+            os.environ["TZ"] = before
+        time.tzset()
 
 
 @pytest.fixture(autouse=True)
