@@ -17,6 +17,7 @@ from biblo import (
     NoLibraryError,
     NotLoggedInError,
     UnknownCatalogueError,
+    UnknownMaterialError,
     __version__,
 )
 from biblo._base import app_type, catalogue_app_type
@@ -236,6 +237,45 @@ async def test_list_parameters_repeat_the_key(biblo: AsyncBiblo, fake: FakeBiblo
     assert params.get_list("mainLanguages") == ["dan"]
     assert params["limit"] == "3"
     assert "offset" not in params  # unset parameters are left out
+
+
+async def test_material_sends_the_catalogues_facet_value(
+    biblo: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    await biblo.catalog.search("harry potter", material="audiobook")
+    params = fake.api_requests("/search/works")[-1].url.params
+    assert params.get_list("materialTypesSpecific") == ["lydbog (online)"]
+
+
+async def test_several_materials_and_raw_facet_values_are_all_sent(
+    biblo: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    await biblo.catalog.search("potter", material=["ebook", "audiobook"])
+    params = fake.api_requests("/search/works")[-1].url.params
+    assert params.get_list("materialTypesSpecific") == ["e-bog", "lydbog (online)"]
+
+    await biblo.catalog.facets("potter", material="magazine", material_types_specific="podcast")
+    params = fake.api_requests("/search/facets")[-1].url.params
+    assert sorted(params.get_list("materialTypesSpecific")) == ["podcast", "tidsskrift (online)"]
+
+    works = [
+        w async for w in biblo.catalog.iter_search("potter", material="podcast", max_results=1)
+    ]
+    assert works
+    params = fake.api_requests("/search/works")[-1].url.params
+    assert params.get_list("materialTypesSpecific") == ["podcast"]
+
+
+@pytest.mark.parametrize("material", ["vinyl", ["ebook", "vinyl"]])
+async def test_an_unknown_material_raises_before_sending(
+    biblo: AsyncBiblo, fake: FakeBiblo, material: Any
+) -> None:
+    with pytest.raises(UnknownMaterialError, match="vinyl") as raised:
+        await biblo.catalog.search("potter", material=material)
+    assert isinstance(raised.value, ValueError)
+    with pytest.raises(UnknownMaterialError):
+        await biblo.catalog.facets("potter", material=material)
+    assert not fake.api_requests()
 
 
 async def test_unknown_search_filter_is_refused(biblo: AsyncBiblo) -> None:

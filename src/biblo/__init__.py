@@ -13,7 +13,7 @@ podcasts (Det Digitale Folkebibliotek).
 from . import models, types
 from ._async import AsyncBiblo, AsyncFileTokenStorage, AsyncMemoryTokenStorage, AsyncTokenStorage
 from ._base import VERSION as __version__
-from ._base import Tokens, authorize_url, code_from_redirect
+from ._base import Tokens, authorize_url, code_from_redirect, default_session_path
 from ._sync import Biblo, FileTokenStorage, MemoryTokenStorage, TokenStorage
 from .exceptions import (
     APIError,
@@ -25,6 +25,7 @@ from .exceptions import (
     InvalidCredentialsError,
     LoginError,
     LoginFlowError,
+    LoginRequiredError,
     NoLibraryError,
     NotFoundError,
     NotLoggedInError,
@@ -34,8 +35,9 @@ from .exceptions import (
     ResponseValidationError,
     ServerError,
     UnknownCatalogueError,
+    UnknownMaterialError,
 )
-from .types import Catalogue
+from .types import Catalogue, Material
 
 __all__ = [
     "APIError",
@@ -54,6 +56,8 @@ __all__ = [
     "InvalidCredentialsError",
     "LoginError",
     "LoginFlowError",
+    "LoginRequiredError",
+    "Material",
     "MemoryTokenStorage",
     "NoLibraryError",
     "NotFoundError",
@@ -66,9 +70,11 @@ __all__ = [
     "TokenStorage",
     "Tokens",
     "UnknownCatalogueError",
+    "UnknownMaterialError",
     "__version__",
     "authorize_url",
     "code_from_redirect",
+    "default_session_path",
     "models",
     "types",
 ]

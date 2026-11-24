@@ -7,13 +7,20 @@ Every method that belongs to a library takes `library_id`, defaulting to the cli
 from __future__ import annotations
 
 import builtins
-from collections.abc import AsyncIterator, Iterable
+from collections.abc import AsyncIterator, Iterable, Sequence
 from typing import TYPE_CHECKING, Any, Unpack, cast
 
 from .. import models as m
-from .._base import catalogue_app_type, ids
+from .._base import catalogue_app_type, ids, material_facets
 from ..exceptions import BadRequestError, PickupBranchRequiredError
-from ..types import SEARCH_FILTER_PARAMS, Catalogue, SampleFormat, SearchBy, SearchFilters
+from ..types import (
+    SEARCH_FILTER_PARAMS,
+    Catalogue,
+    Material,
+    SampleFormat,
+    SearchBy,
+    SearchFilters,
+)
 
 if TYPE_CHECKING:
     from .client import AsyncBiblo
@@ -143,14 +150,22 @@ class AsyncCatalog(AsyncResource):
         offset: int | None = None,
         limit: int | None = None,
         catalogue: Catalogue = "digital",
+        material: Material | Sequence[Material] | None = None,
         library_id: str | None = None,
         **filters: Unpack[SearchFilters],
     ) -> m.WorkSearchResult:
         """Search the library's catalogue. `.hitcount` is the total, `.works` this page.
 
         `catalogue` picks the digital one (the default), the children's, or all material
-        including print (see `types.Catalogue`)."""
-        params = {"q": q, "type": by, "offset": offset, "limit": limit, **_filters(filters)}
+        including print (see `types.Catalogue`). `material` keeps only e-books, audiobooks,
+        podcasts or magazines; given several, any of them matches (see `types.Material`)."""
+        params = {
+            "q": q,
+            "type": by,
+            "offset": offset,
+            "limit": limit,
+            **_filters(filters, material),
+        }
         return await self._client._get(
             m.WorkSearchResult,
             f"{LIB}/search/works",
@@ -167,6 +182,7 @@ class AsyncCatalog(AsyncResource):
         page_size: int = 50,
         max_results: int | None = None,
         catalogue: Catalogue = "digital",
+        material: Material | Sequence[Material] | None = None,
         library_id: str | None = None,
         **filters: Unpack[SearchFilters],
     ) -> AsyncIterator[m.WorkLight]:
@@ -180,6 +196,7 @@ class AsyncCatalog(AsyncResource):
                 offset=offset,
                 limit=limit,
                 catalogue=catalogue,
+                material=material,
                 library_id=library_id,
                 **filters,
             )
@@ -196,11 +213,17 @@ class AsyncCatalog(AsyncResource):
         by: SearchBy | None = None,
         values_limit: int | None = None,
         catalogue: Catalogue = "digital",
+        material: Material | Sequence[Material] | None = None,
         library_id: str | None = None,
         **filters: Unpack[SearchFilters],
     ) -> m.Facets:
-        """The filter values a search in `catalogue` has, with counts."""
-        params = {"q": q, "type": by, "valuesLimit": values_limit, **_filters(filters)}
+        """The filter values a search in `catalogue` (and `material`) has, with counts."""
+        params = {
+            "q": q,
+            "type": by,
+            "valuesLimit": values_limit,
+            **_filters(filters, material),
+        }
         return await self._client._get(
             m.Facets,
             f"{LIB}/search/facets",
@@ -689,13 +712,20 @@ class AsyncDevices(AsyncResource):
         await self._client._call(None, "DELETE", "/v1/user/device", auth=True)
 
 
-def _filters(filters: SearchFilters) -> dict[str, list[str]]:
-    """The filters as the API's query parameters: camelCase names, list values."""
+def _filters(
+    filters: SearchFilters, material: Material | Sequence[Material] | None = None
+) -> dict[str, list[str]]:
+    """The filters as the API's query parameters: camelCase names, list values. `material`'s
+    facet values are sent after any `material_types_specific` given."""
     # Every SearchFilters value is `str | list[str]`; iterating a TypedDict loses that.
     values = cast(dict[str, str | list[str]], filters)
     if unknown := values.keys() - SEARCH_FILTER_PARAMS.keys():
         raise TypeError(f"Unknown search filter: {', '.join(sorted(unknown))}")
-    return {SEARCH_FILTER_PARAMS[name]: ids(value) for name, value in values.items()}
+    params = {SEARCH_FILTER_PARAMS[name]: ids(value) for name, value in values.items()}
+    if facets := material_facets(material):
+        key = SEARCH_FILTER_PARAMS["material_types_specific"]
+        params[key] = params.get(key, []) + facets
+    return params
 
 
 def _without_none(**fields: Any) -> dict[str, Any]:

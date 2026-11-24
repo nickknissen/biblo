@@ -70,6 +70,19 @@ def test_search_table_and_json(run: Run) -> None:
     assert works[0]["title"]
 
 
+def test_search_format_flags_filter_by_material(run: Run, fake: FakeBiblo) -> None:
+    code, _, _ = run("search", "potter", "-l", LIBRARY, "--audiobook", "--magazine", "--json")
+    assert code == 0
+    params = fake.api_requests("/search/works")[-1].url.params
+    assert params.get_list("materialTypesSpecific") == ["lydbog (online)", "tidsskrift (online)"]
+
+
+def test_the_cli_has_no_facet_strings_of_its_own() -> None:
+    source = (Path(__file__).parents[1] / "src/biblo/cli/catalog.py").read_text()
+    for facet in ("e-bog", "lydbog (online)", "tidsskrift (online)"):
+        assert facet not in source
+
+
 def test_search_all_catalogues_finds_print(run: Run, fake: FakeBiblo) -> None:
     code, out, _ = run("search", "harry potter", "-l", LIBRARY, "--catalogue", "all", "--json")
     assert code == 0
@@ -152,6 +165,26 @@ def test_wrong_pincode(run: Run, monkeypatch: pytest.MonkeyPatch) -> None:
     code, _, err = run("auth", "login", "-l", LIBRARY, "--user", USER)
     assert code == 1
     assert "Login refused" in err
+
+
+def test_a_failed_refresh_exits_with_4_and_the_login_hint(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    fake.revoked.add("access-1")
+    fake.refresh_works = False
+    code, _, err = run("loans")
+    assert code == 4
+    assert "biblo auth login" in err
+
+
+def test_a_lingering_401_exits_with_4_and_the_login_hint(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    fake.revoked.update({"access-1", "access-2"})  # refreshed, and still refused
+    code, _, err = run("loans")
+    assert code == 4
+    assert "biblo auth login" in err
+    assert "Login refused" not in err
 
 
 def test_api_command_fills_in_the_library(run: Run) -> None:
