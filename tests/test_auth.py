@@ -186,7 +186,7 @@ async def test_a_client_adopts_tokens_another_client_refreshed(
 
         account = await b.account.get()
 
-    assert account.name == "Test Testesen"
+    assert account.name == "Test Låner"
     assert fake.api_requests("/account")[-1].headers["authorization"] == "Bearer access-2"
     assert [r.url.path for r in fake.api_requests("/token-refresh")] == ["/v1/auth/token-refresh"]
     assert storage.data is not None
@@ -209,7 +209,7 @@ async def test_a_refused_refresh_adopts_tokens_saved_meanwhile(
 
     account = await logged_in.account.get()
 
-    assert account.name == "Test Testesen"
+    assert account.name == "Test Låner"
     assert fake.api_requests("/account")[-1].headers["authorization"] == "Bearer access-2"
     assert storage.data is not None
     assert storage.data["tokens"]["access_token"] == "access-2"  # not wiped
