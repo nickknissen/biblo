@@ -146,6 +146,9 @@ mobile browser's `User-Agent`.
 login, `NotLoggedInError` when a session is missing or can no longer be refreshed,
 `BibloConnectionError`, and `APIError` subclasses by status (`NotFoundError`,
 `ConflictError`, `RateLimitError`, ...) carrying the API's `code`, `type` and `message`.
+To ask the user for a new login, catch `biblo.LoginRequiredError`: the one base of a refused
+login, a missing or expired session, and a 401 the API keeps answering after a refresh. A
+`LoginFlowError` (login.bib.dk changed) is not one, as logging in again won't fix it.
 
 ## How it works
 

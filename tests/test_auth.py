@@ -8,12 +8,20 @@ import httpx
 import pytest
 
 from biblo import (
+    APIError,
     AsyncBiblo,
     AsyncMemoryTokenStorage,
+    AuthenticationError,
     BibloConnectionError,
+    BibloError,
     InvalidCredentialsError,
+    LoginError,
     LoginFlowError,
+    LoginRequiredError,
+    NotFoundError,
     NotLoggedInError,
+    PermissionDeniedError,
+    ServerError,
     code_from_redirect,
 )
 from tests.conftest import saved_session
@@ -178,6 +186,96 @@ async def test_a_session_from_another_version_is_ignored(fake: FakeBiblo) -> Non
     async with AsyncBiblo(storage=storage, http_client=http) as client:
         assert not await client.is_logged_in()
     await http.aclose()
+
+
+# ------------------------------------------------------- LoginRequiredError (#20)
+
+
+async def test_a_refused_pincode_is_login_required(biblo: AsyncBiblo) -> None:
+    with pytest.raises(LoginRequiredError) as caught:
+        await biblo.login(USER, "9999")
+    assert isinstance(caught.value, InvalidCredentialsError)
+    assert isinstance(caught.value, LoginError)
+
+
+async def test_no_session_is_login_required(biblo: AsyncBiblo) -> None:
+    with pytest.raises(LoginRequiredError) as caught:
+        await biblo.loans.list()
+    assert isinstance(caught.value, NotLoggedInError)
+
+
+async def test_a_failed_refresh_is_login_required(logged_in: AsyncBiblo, fake: FakeBiblo) -> None:
+    fake.revoked.add("access-1")
+    fake.refresh_works = False
+    with pytest.raises(LoginRequiredError) as caught:
+        await logged_in.loans.list()
+    assert isinstance(caught.value, NotLoggedInError)
+
+
+async def test_a_401_after_a_refresh_is_login_required(
+    logged_in: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    fake.revoked.update({"access-1", "access-2"})  # the refreshed token is refused too
+    with pytest.raises(LoginRequiredError) as caught:
+        await logged_in.loans.list()
+    assert isinstance(caught.value, AuthenticationError)
+    assert isinstance(caught.value, APIError)
+    assert caught.value.status_code == 401
+    assert fake.api_requests("/v1/auth/token-refresh")  # it did refresh first
+
+
+async def test_a_changed_login_page_is_not_login_required(
+    biblo: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    original = fake._login
+
+    def redesigned(request: httpx.Request) -> httpx.Response:
+        if request.url.path == "/login":
+            return httpx.Response(200, text="<html><form id='new-login'></form></html>")
+        return original(request)
+
+    fake._login = redesigned  # type: ignore[method-assign]
+    with pytest.raises(LoginFlowError) as caught:
+        await biblo.login(USER, PIN)
+    assert not isinstance(caught.value, LoginRequiredError)
+
+
+async def test_an_unreachable_api_is_not_login_required(fake: FakeBiblo) -> None:
+    def unreachable(request: httpx.Request) -> httpx.Response:
+        raise httpx.ConnectError("boom")
+
+    async with (
+        httpx.AsyncClient(transport=httpx.MockTransport(unreachable)) as http,
+        AsyncBiblo(LIBRARY, http_client=http) as biblo,
+    ):
+        with pytest.raises(BibloConnectionError) as caught:
+            await biblo.catalog.search("x")
+    assert not isinstance(caught.value, LoginRequiredError)
+
+
+@pytest.mark.parametrize(
+    ("status", "error"),
+    [(404, NotFoundError), (403, PermissionDeniedError), (500, ServerError), (418, APIError)],
+)
+async def test_other_api_errors_are_not_login_required(
+    logged_in: AsyncBiblo, fake: FakeBiblo, status: int, error: type[APIError]
+) -> None:
+    fake.overrides["GET", f"/v1/agencies/{LIBRARY}/account"] = lambda _: httpx.Response(
+        status, json={"id": 4000, "type": "ERROR", "message": "nope"}
+    )
+    with pytest.raises(BibloError) as caught:
+        await logged_in.account.get()
+    assert type(caught.value) is error
+    assert not isinstance(caught.value, LoginRequiredError)
+
+
+def test_login_required_keeps_the_old_bases() -> None:
+    assert issubclass(LoginRequiredError, BibloError)
+    assert issubclass(InvalidCredentialsError, LoginError)
+    assert issubclass(NotLoggedInError, BibloError)
+    assert issubclass(AuthenticationError, APIError)
+    assert not issubclass(LoginFlowError, LoginRequiredError)
+    assert not issubclass(LoginError, LoginRequiredError)  # LoginFlowError's base
 
 
 def test_tokens_stay_out_of_reprs() -> None:

@@ -6,6 +6,19 @@ All notable changes to this project. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `biblo.LoginRequiredError`, one class to catch when the user has to log in (again). It is
+  a base of `InvalidCredentialsError`, `NotLoggedInError` and `AuthenticationError` (a 401
+  that persists after refreshing the session), which keep their other bases, so existing
+  `except` clauses catch what they did. `LoginFlowError` is not one (#20).
+
+### Changed
+
+- The CLI exits with code 4 and the "Log in with: biblo auth login" hint on a 401 that
+  persists after refreshing the session, as it already did without a session. A refused
+  pincode still exits with code 1 and "Login refused" (#20).
+
 ## [0.2.0] - 2026-11-23
 
 ### Added
