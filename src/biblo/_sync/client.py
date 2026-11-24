@@ -178,20 +178,40 @@ class Biblo:
         self._save()
 
     def refresh(self) -> None:
-        """Get new tokens with the refresh token. Happens on its own before they expire."""
+        """Get new tokens with the refresh token. Happens on its own before they expire.
+
+        With a storage, tokens another client (or process) saved there since are used
+        instead when they are still fresh, so clients sharing a session file don't log each
+        other out.
+        """
         session = self._loaded()
         if session.tokens is None:
             raise NotLoggedInError("Not logged in")
+        if self._adopt_stored_tokens(session) and not session.tokens.expires_soon:
+            return
+        tried = session.tokens
         try:
             data = self._token_request(
-                "/v1/auth/token-refresh", {"refresh_token": session.tokens.refresh_token}
+                "/v1/auth/token-refresh", {"refresh_token": tried.refresh_token}
             )
         except (AuthenticationError, BadRequestError) as err:
+            if self._adopt_stored_tokens(session):
+                return  # refreshed elsewhere meanwhile; the refresh token we sent was spent
             session.tokens = None
             self._save()
             raise NotLoggedInError("The session has expired; log in again") from err
         session.tokens = Tokens.from_response(data)
         self._save()
+
+    def _adopt_stored_tokens(self, session: Session) -> bool:
+        """Take the tokens in storage if they differ from `session`'s. True if it did."""
+        if self._storage is None:
+            return False
+        stored = Session.from_dict(self._storage.load())
+        if stored is None or stored.tokens is None or stored.tokens == session.tokens:
+            return False
+        session.tokens = stored.tokens
+        return True
 
     def logout(self) -> None:
         """End the session at the API and forget the tokens. The library is remembered."""

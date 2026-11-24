@@ -25,7 +25,7 @@ from biblo import (
     code_from_redirect,
 )
 from tests.conftest import saved_session
-from tests.fake import LIBRARY, PIN, USER, FakeBiblo
+from tests.fake import LIBRARY, PIN, USER, FakeBiblo, _error
 
 
 async def test_login_with_card_number_and_pincode(
@@ -168,6 +168,51 @@ async def test_a_refused_refresh_logs_out(
     assert storage.data is not None
     assert storage.data["tokens"] is None
     assert storage.data["library_id"] == LIBRARY  # the library is remembered
+
+
+async def test_a_client_adopts_tokens_another_client_refreshed(
+    fake: FakeBiblo, storage: AsyncMemoryTokenStorage
+) -> None:
+    """Two processes sharing one session file, e.g. the CLI and a long-running server."""
+    fake.token_number = 1
+    storage.data = saved_session(access="access-1", refresh="refresh-1")
+    http = httpx.AsyncClient(transport=httpx.MockTransport(fake.handle))
+    async with (
+        AsyncBiblo(storage=storage, http_client=http) as a,
+        AsyncBiblo(storage=storage, http_client=http) as b,
+    ):
+        assert await b.is_logged_in()  # b holds access-1 and refresh-1
+        await a.refresh()  # the API now accepts only access-2 and refresh-2
+
+        account = await b.account.get()
+
+    assert account.name == "Test Testesen"
+    assert fake.api_requests("/account")[-1].headers["authorization"] == "Bearer access-2"
+    assert [r.url.path for r in fake.api_requests("/token-refresh")] == ["/v1/auth/token-refresh"]
+    assert storage.data is not None
+    assert storage.data["tokens"]["refresh_token"] == "refresh-2"
+    await http.aclose()
+
+
+async def test_a_refused_refresh_adopts_tokens_saved_meanwhile(
+    logged_in: AsyncBiblo, fake: FakeBiblo, storage: AsyncMemoryTokenStorage
+) -> None:
+    """Another process refreshes between this client's look at storage and its refresh."""
+    fake.revoked.add("access-1")
+
+    def another_process_refreshes_first(request: httpx.Request) -> httpx.Response:
+        fake._new_tokens()
+        storage.data = saved_session(access="access-2", refresh="refresh-2")
+        return _error(401, 4103, "UNAUTHORIZED", "Invalid refresh token")
+
+    fake.overrides[("POST", "/v1/auth/token-refresh")] = another_process_refreshes_first
+
+    account = await logged_in.account.get()
+
+    assert account.name == "Test Testesen"
+    assert fake.api_requests("/account")[-1].headers["authorization"] == "Bearer access-2"
+    assert storage.data is not None
+    assert storage.data["tokens"]["access_token"] == "access-2"  # not wiped
 
 
 async def test_logout_forgets_tokens(

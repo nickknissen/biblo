@@ -12,12 +12,23 @@ All notable changes to this project. The format follows
   a base of `InvalidCredentialsError`, `NotLoggedInError` and `AuthenticationError` (a 401
   that persists after refreshing the session), which keep their other bases, so existing
   `except` clauses catch what they did. `LoginFlowError` is not one (#20).
+- `biblo.default_session_path()` returns the session file `biblo auth login` saves to
+  (`$BIBLO_CONFIG_DIR/session.json`, else the platform's config folder), and
+  `AsyncFileTokenStorage.default()` / `FileTokenStorage.default()` make a storage for it, so
+  scripts and servers can reuse the CLI's login. Neither imports typer or click (#21).
 
 ### Changed
 
 - The CLI exits with code 4 and the "Log in with: biblo auth login" hint on a 401 that
   persists after refreshing the session, as it already did without a session. A refused
   pincode still exits with code 1 and "Login refused" (#20).
+
+### Fixed
+
+- Clients sharing a session, e.g. the CLI and a long-running server, no longer log each other
+  out. Before refreshing, a client re-reads its storage and uses tokens another client saved
+  there; if the API refuses its refresh token, it takes newer tokens from storage and retries
+  instead of saving an empty session over them (#21).
 
 ## [0.2.0] - 2026-11-23
 
