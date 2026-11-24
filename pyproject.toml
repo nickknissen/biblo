@@ -1,6 +1,6 @@
 [project]
 name = "biblo"
-version = "0.2.0"
+version = "0.3.0"
 description = "Unofficial async client and CLI for Biblo, the Danish public libraries' app."
 readme = "README.md"
 authors = [
