@@ -40,7 +40,7 @@ async def test_login_with_card_number_and_pincode(
     form = next(r for r in fake.requests if r.method == "POST" and "borchk" in r.url.path)
     assert b"agency=763000" in form.content
     account = await biblo.account.get()
-    assert account.name == "Test Testesen"
+    assert account.name == "Test Låner"
     assert fake.api_requests("/account")[-1].headers["authorization"] == "Bearer access-1"
 
 
@@ -152,7 +152,7 @@ async def test_tokens_about_to_expire_are_refreshed_first(
 async def test_a_401_refreshes_once_and_retries(logged_in: AsyncBiblo, fake: FakeBiblo) -> None:
     fake.revoked.add("access-1")
     account = await logged_in.account.get()
-    assert account.name == "Test Testesen"
+    assert account.name == "Test Låner"
     paths = [r.url.path for r in fake.api_requests()]
     assert paths.count("/v1/auth/token-refresh") == 1
     assert fake.api_requests("/account")[-1].headers["authorization"] == "Bearer access-2"
@@ -186,7 +186,7 @@ async def test_a_client_adopts_tokens_another_client_refreshed(
 
         account = await b.account.get()
 
-    assert account.name == "Test Testesen"
+    assert account.name == "Test Låner"
     assert fake.api_requests("/account")[-1].headers["authorization"] == "Bearer access-2"
     assert [r.url.path for r in fake.api_requests("/token-refresh")] == ["/v1/auth/token-refresh"]
     assert storage.data is not None
@@ -209,7 +209,7 @@ async def test_a_refused_refresh_adopts_tokens_saved_meanwhile(
 
     account = await logged_in.account.get()
 
-    assert account.name == "Test Testesen"
+    assert account.name == "Test Låner"
     assert fake.api_requests("/account")[-1].headers["authorization"] == "Bearer access-2"
     assert storage.data is not None
     assert storage.data["tokens"]["access_token"] == "access-2"  # not wiped

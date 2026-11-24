@@ -11,16 +11,23 @@ says which request each one is. `*_all` is the same request under `x-app-type: m
 ## Account captures
 
 These come from a real account at library 763000 (Vejle), captured by hand on 2026-11-23
-with the CLI's saved session (#7, #8). They are not written by `capture_fixtures.py`, and the
-fake API does not serve them yet. Each file is named after its endpoint. A file without a
+with the CLI's saved session (#7, #8). `capture_fixtures.py --session PATH` now records the
+same files the same way, GETs only (see its docstring); run against these recordings it
+reproduces them unchanged. The fake API (`tests/fake.py`) serves them, each to the app type
+it was recorded under. Each file is named after its endpoint. A file without a
 suffix was captured under `x-app-type: biblo`. A `_biblogo` or `_mybiblo` suffix marks
 answers that differ under that app type. Where an app type's answer was identical to `biblo`'s,
 it was not kept: `account`, `account_fees` and `account_reservations` (also empty under
 `biblogo`), and `account_quotas`, which `mybiblo` does not accept.
 
+`account_borrow.json`, `error_renew_digital.json`, `error_invalid_token.json` and
+`error_missing_api_key.json` are served too, as the answers to a borrow, a renewal of a
+digital loan, a bad bearer token and a missing API key.
+
 **Anonymised.** Personal fields were replaced by field name. One real value always got the
 same placeholder, so the same item links up across files. The capture was then checked for
-every real value and every line of the maintainer's `never-commit.txt`:
+every real value and every line of the maintainer's `never-commit.txt`, which
+`tests/test_fixture_privacy.py` repeats whenever that file exists:
 
 | Field | Placeholder |
 | --- | --- |
@@ -67,11 +74,11 @@ ids, titles, dates, and the library's message texts.
   refused as a whole request, with 400 `VALIDATION` "Could not resolve request" and no
   per-loan `renewalStatus`. The loan's due date did not change. (The library's `renew --all`
   already skips loans without `isRenewable`, which digital loans don't have.)
-- Read-only error shapes. The fake API's own versions differ in `id` and `message`:
+- Read-only error shapes. The fake API answers with the first two:
   - `error_invalid_token.json`: `GET account` with a made-up bearer token. 401 `4104`
-    "Invalid bearer token" (the fake answers 4103).
+    "Invalid bearer token".
   - `error_missing_api_key.json`: the same request without `x-api-key`. 401 `4101` "Missing
-    API key" (the fake answers 4100, "Missing api key").
+    API key".
   - `error_unknown_route.json`: `GET /v1/no-such-route`. 404 `4000`, whose message names the
     method and the full URL, with `http://`.
   - `error_forbidden_app_type_account.json`: `GET account/quotas` under `mybiblo`. 403

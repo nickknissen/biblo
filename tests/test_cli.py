@@ -10,7 +10,17 @@ import pytest
 
 from biblo import Biblo, __version__
 from biblo.cli import _state, main
-from tests.fake import LIBRARY, PHYSICAL_RECORD, PIN, USER, FakeBiblo
+from tests.fake import (
+    DIGITAL_LOAN_ID,
+    LIBRARY,
+    PHYSICAL_LOAN,
+    PHYSICAL_RECORD,
+    PIN,
+    RESERVATION,
+    RESERVATION_IDS,
+    USER,
+    FakeBiblo,
+)
 
 Run = Callable[..., tuple[int, str, str]]
 
@@ -140,7 +150,7 @@ def test_login_then_loans_then_logout(
 
     code, out, _ = run("loans")
     assert code == 0
-    assert "Harry Potter" in out
+    assert "Støj" in out
 
     code, out, _ = run("auth", "status", "--json")
     assert json.loads(out)["logged_in"] is True
@@ -190,27 +200,34 @@ def logged_in(run: Run, monkeypatch: pytest.MonkeyPatch) -> None:
     assert code == 0, err
 
 
-def test_reservations_and_loans_show_physical_items(run: Run, logged_in: None) -> None:
+def test_reservations_and_loans_show_physical_items(
+    run: Run, fake: FakeBiblo, logged_in: None
+) -> None:
+    fake.reservations["biblo"].append(RESERVATION)
+    fake.loans["mybiblo"].append(PHYSICAL_LOAN)
     code, out, err = run("reservations")
     assert code == 0, err
     assert "Harry Potter" in out
-    assert "En trykt bog" in out
-    assert "number 3 in queue" in out
+    assert "Eddie vil have et kæledyr" in out
+    assert "ready until 2026-12-01" in out
+    assert "number 2 in queue" in out
 
     code, out, err = run("reservations", "--json")
     assert code == 0, err
     listed = json.loads(out)
-    assert [r["id"] for r in listed] == ["r-1", "p-1"]
+    assert [r["id"] for r in listed] == ["r-1", *RESERVATION_IDS]
     assert listed[1]["physical"]["pickup_branch"] == "DK-763004"
+    assert listed[1]["claim"]["id"] == "Xxx001"
 
     code, out, err = run("loans")
     assert code == 0, err
-    assert "Harry Potter" in out
+    assert "Støj" in out
     assert "En trykt bog" in out
 
     code, out, err = run("loans", "--json")
     assert code == 0, err
-    assert [loan["id"] for loan in json.loads(out)] == ["123456", "p-loan-1"]
+    ids = [loan["id"] for loan in json.loads(out)]  # by due date
+    assert ids == ["p-loan-1", "TestLoan000000000002", "TestLoan000000000003", DIGITAL_LOAN_ID]
 
 
 def test_set_pickup_branch_by_part_of_its_name(run: Run, fake: FakeBiblo, logged_in: None) -> None:
@@ -256,10 +273,17 @@ def test_set_pickup_branch_needs_login(run: Run) -> None:
     assert "biblo auth login" in err
 
 
+@pytest.fixture
+def no_pickup_branch(fake: FakeBiblo) -> None:
+    """The recorded account has one; these tests need an account without."""
+    del fake.account["preferredPickupBranch"]
+
+
+@pytest.mark.usefixtures("no_pickup_branch")
 def test_account_without_a_subcommand_still_shows_it(run: Run, logged_in: None) -> None:
     code, out, _ = run("account")
     assert code == 0
-    assert "Test Testesen" in out
+    assert "Test Låner" in out
     assert "Digital quota" in out
     assert "Pickup branch" not in out
 
@@ -290,12 +314,14 @@ def test_reserve_branch_option_wins_over_the_preferred_branch(
     assert reserved_with(fake)["pickupBranchId"] == "DK-763007"
 
 
+@pytest.mark.usefixtures("no_pickup_branch")
 def test_reserve_without_any_branch_sends_none(run: Run, fake: FakeBiblo, logged_in: None) -> None:
     code, _, err = run("reserve", "870970-basis:141661116")
     assert code == 0, err
     assert "pickupBranchId" not in reserved_with(fake)
 
 
+@pytest.mark.usefixtures("no_pickup_branch")
 def test_rejected_reservation_without_a_branch_says_how_to_give_one(
     run: Run, logged_in: None
 ) -> None:
@@ -317,6 +343,7 @@ def test_reserve_with_a_branch_reserves_a_physical_record(
     assert post.headers["x-app-type"] == "mybiblo"
 
 
+@pytest.mark.usefixtures("no_pickup_branch")
 def test_login_hints_at_setting_a_pickup_branch_only_when_there_is_none(
     run: Run, fake: FakeBiblo, monkeypatch: pytest.MonkeyPatch
 ) -> None:

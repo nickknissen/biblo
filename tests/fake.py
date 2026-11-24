@@ -1,7 +1,9 @@
 """A fake Biblo API and login.bib.dk, served through httpx.MockTransport.
 
 Catalogue endpoints answer with real responses recorded by scripts/capture_fixtures.py.
-Account endpoints answer with data shaped by the spec (we can't record a real user's).
+Account endpoints start from a real account's anonymised responses (tests/fixtures/README.md),
+each as the asking app type saw it. What that account didn't hold (a digital reservation, a
+physical loan) is made up below, shaped like what the real API returned (#3), for tests to add.
 """
 
 from __future__ import annotations
@@ -17,6 +19,7 @@ from urllib.parse import parse_qs
 
 import httpx
 
+from biblo._base import _accepted_app_types
 from biblo._constants import API_KEY, CLIENT_ID, CLIENT_SECRET
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -25,32 +28,31 @@ LOGIN = "login.bib.dk"
 USER, PIN = "0102031234", "1234"
 LIBRARY = "763000"
 PAGE = "2cc7760a-33ff-4268-b07a-d0d283dc88f4"  # the recorded content page
+APP_TYPES = ("biblo", "biblogo", "mybiblo")
 
 
 def fixture(name: str) -> Any:
     return json.loads((FIXTURES / f"{name}.json").read_text())["body"]
 
 
-LOAN: dict[str, Any] = {
-    "id": "123456",
-    "loanDate": "2026-11-10T10:00:00.000Z",
-    "dueDate": "2026-12-10T10:00:00.000Z",
-    "isRenewable": True,
-    "record": {
-        "recordId": "870970-basis:141629433",
-        "workId": "work-of:870970-basis:22252852",
-        "title": "Harry Potter og De Vises Sten",
-        "author": "Joanne K. Rowling",
-        "publishYear": "2025",
-        "materialType": {
-            "display": "e-bog",
-            "displayWithPronoun": "Denne e-bog",
-            "category": "EBOOKS",
-        },
-        "blueTitle": False,
-        "series": True,
-    },
-}
+def recorded(name: str, app_type: str) -> Any:
+    """An account fixture as `app_type` saw it: `<name>_<app type>` where that app type's
+    answer differed from Biblo's, else `<name>` (see tests/fixtures/README.md)."""
+    variant = f"{name}_{app_type}"
+    return fixture(variant if (FIXTURES / f"{variant}.json").exists() else name)
+
+
+def recorded_per_app_type(name: str) -> dict[str, list[dict[str, Any]]]:
+    return {app_type: recorded(name, app_type)["data"] for app_type in APP_TYPES}
+
+
+# The recorded account (tests/fixtures/README.md): 3 digital loans listed under "biblo",
+# 2 of them under "biblogo", none under "mybiblo"; 3 physical reservations, only under
+# "mybiblo", the first ready for pickup.
+DIGITAL_LOAN_ID = "TestLoan000000000001"  # Støj, borrowed under "biblo"
+RESERVATION_IDS = ["900000001", "900000002", "900000003"]
+
+# Made up: the recorded account had no digital reservation and no physical loan.
 RESERVATION = {
     "id": "r-1",
     "reservationDate": "2026-11-01T10:00:00.000Z",
@@ -70,23 +72,7 @@ RESERVATION = {
 PRINTED_BOOK = {"display": "bog", "displayWithPronoun": "Denne bog", "category": "BOOKS"}
 # A made-up printed book: fixtures carry no real account's ids (#3).
 PHYSICAL_RECORD = "870970-basis:99999901"
-# Physical items, as `x-app-type: mybiblo` lists them (shape recorded 2026-11-20, #3).
-PHYSICAL_RESERVATION = {
-    "id": "p-1",
-    "reservationDate": "2026-11-15T10:00:00.000Z",
-    "state": "RESERVED",
-    "physical": {"expiryDate": "2027-05-15", "pickupBranch": "DK-763004", "numberInQueue": 3},
-    "details": {
-        "recordId": PHYSICAL_RECORD,
-        "workId": "work-of:870970-basis:99999901",
-        "title": "En trykt bog",
-        "coverUrl": None,
-        "author": "En Forfatter",
-        "publishYear": "2024",
-        "materialType": PRINTED_BOOK,
-        "blueTitle": False,
-    },
-}
+# A physical loan, as `x-app-type: mybiblo` lists them (shape recorded 2026-11-20, #3).
 PHYSICAL_LOAN = {
     "id": "p-loan-1",
     "loanDate": "2026-11-12T10:00:00.000Z",
@@ -103,31 +89,36 @@ PHYSICAL_LOAN = {
         "series": False,
     },
 }
-ACCOUNT = {"accountType": "AdgangsPlatformen", "name": "Test Testesen", "email": None}
-QUOTAS = {
-    "totalLoanQuotas": {"ebook": 5, "audiobook": 5},
-    "totalReservationQuotas": {"ebook": 3, "audiobook": 3},
-    "remainingLoanQuotas": {"ebook": 4, "audiobook": 5},
-    "remainingReservationQuotas": {"ebook": 3, "audiobook": 2},
-}
 
 Handler = Callable[[httpx.Request], httpx.Response]
 
 
 @dataclass
 class FakeBiblo:
+    """`loans`, `reservations`, `favorites` and `messages` are what each app type lists."""
+
     requests: list[httpx.Request] = field(default_factory=list)
     token_number: int = 0
     refresh_works: bool = True
     revoked: set[str] = field(default_factory=set)
     overrides: dict[tuple[str, str], Handler] = field(default_factory=dict)
-    loans: list[dict[str, Any]] = field(default_factory=lambda: [LOAN])
-    physical_loans: list[dict[str, Any]] = field(default_factory=lambda: [PHYSICAL_LOAN])
-    reservations: list[dict[str, Any]] = field(default_factory=lambda: [RESERVATION])
-    physical_reservations: list[dict[str, Any]] = field(
-        default_factory=lambda: [PHYSICAL_RESERVATION]
+    loans: dict[str, list[dict[str, Any]]] = field(
+        default_factory=lambda: recorded_per_app_type("account_loans")
     )
-    account: dict[str, Any] = field(default_factory=lambda: dict(ACCOUNT))
+    reservations: dict[str, list[dict[str, Any]]] = field(
+        default_factory=lambda: recorded_per_app_type("account_reservations")
+    )
+    favorites: dict[str, list[dict[str, Any]]] = field(
+        default_factory=lambda: recorded_per_app_type("favorites")
+    )
+    messages: dict[str, list[dict[str, Any]]] = field(
+        default_factory=lambda: {
+            t: recorded("messages", t)["data"]["messages"] for t in ("biblo", "mybiblo")
+        }
+    )
+    account: dict[str, Any] = field(default_factory=lambda: fixture("account")["data"])
+    quotas: dict[str, Any] = field(default_factory=lambda: fixture("account_quotas")["data"])
+    fees: list[dict[str, Any]] = field(default_factory=lambda: fixture("account_fees")["data"])
 
     @property
     def access_token(self) -> str:
@@ -178,7 +169,7 @@ class FakeBiblo:
 
     def _api(self, request: httpx.Request) -> httpx.Response:
         if request.headers.get("x-api-key") != API_KEY:
-            return _error(401, 4100, "UNAUTHORIZED", "Missing api key")
+            return _recorded_error("error_missing_api_key")
         path = request.url.path
         method = request.method
 
@@ -196,9 +187,13 @@ class FakeBiblo:
         if path == "/v1/auth/logout":
             return httpx.Response(204)
 
-        mybiblo_only = "/branches" in path or "/openstatus" in path
-        if mybiblo_only and request.headers["x-app-type"] != "mybiblo":
-            return httpx.Response(403, json=fixture("error_forbidden_app_type"))
+        sent = request.headers["x-app-type"]
+        accepted = _accepted_app_types(method, path)
+        if accepted is not None and sent not in accepted:
+            # As recorded in error_forbidden_app_type*.json.
+            listed = ", ".join(accepted)
+            message = f"This endpoint is available to app-type(s): {listed}. Received: {sent}."
+            return _error(403, 4205, "FORBIDDEN", message)
 
         # Mit Biblo sees print and CDs too: where one was recorded, its own fixture (#1).
         mit_biblo = request.headers["x-app-type"] == "mybiblo"
@@ -250,9 +245,10 @@ class FakeBiblo:
 
     def _account(self, request: httpx.Request) -> httpx.Response:
         path, method = request.url.path, request.method
-        # The real API lists physical items only to Mit Biblo, and digital ones (as far as we
-        # know) only to the others (#3).
-        mit_biblo = request.headers["x-app-type"] == "mybiblo"
+        # The real API lists physical items only to Mit Biblo, and digital ones only to the
+        # others (#3); Biblo GO lists only the loans made in Biblo GO.
+        app_type = request.headers["x-app-type"]
+        mit_biblo = app_type == "mybiblo"
         base = f"/v1/agencies/{LIBRARY}/account"
         if (method, path) == ("GET", base):
             return httpx.Response(200, json={"data": self.account})
@@ -263,39 +259,37 @@ class FakeBiblo:
                 self.account["preferredPickupBranch"] = {"id": branch_id, "name": branch["name"]}
             return httpx.Response(200, json={"data": self.account})
         if (method, path) == ("GET", f"{base}/quotas"):
-            return httpx.Response(200, json={"data": QUOTAS})
+            return httpx.Response(200, json={"data": self.quotas})
         if (method, path) == ("GET", f"{base}/fees"):
-            return httpx.Response(200, json={"data": []})
+            return httpx.Response(200, json={"data": self.fees})
         if (method, path) == ("GET", f"{base}/loans"):
-            return httpx.Response(
-                200, json={"data": self.physical_loans if mit_biblo else self.loans}
-            )
+            return httpx.Response(200, json={"data": self.loans[app_type]})
         if (method, path) == ("POST", f"{base}/loans"):
             body = json.loads(request.content)
-            return httpx.Response(
-                200,
-                json={
-                    "data": {
-                        **LOAN,
-                        "id": "new-loan",
-                        "record": {**LOAN["record"], "recordId": body["recordId"]},
-                    }
-                },
-            )
+            loan = fixture("account_borrow")["data"]
+            loan["record"]["recordId"] = body["recordId"]
+            return httpx.Response(200, json={"data": loan})
         if (method, path) == ("POST", f"{base}/loans/renew"):
             ids = request.url.params.get_list("loanIds")
+            digital = {loan["id"] for t in ("biblo", "biblogo") for loan in self.loans[t]}
+            if digital.intersection(ids):
+                # The API takes "Only physical loan IDs" and refuses the whole request.
+                return _recorded_error("error_renew_digital")
+            physical = {loan["id"]: loan for loan in self.loans["mybiblo"]}
             return httpx.Response(
                 200,
                 json={
                     "data": [
-                        {"loanDetails": {**LOAN, "id": i}, "renewalStatus": ["renewed"]}
+                        {
+                            "loanDetails": physical.get(i, {**PHYSICAL_LOAN, "id": i}),
+                            "renewalStatus": ["renewed"],
+                        }
                         for i in ids
                     ]
                 },
             )
         if (method, path) == ("GET", f"{base}/reservations"):
-            listed = self.physical_reservations if mit_biblo else self.reservations
-            return httpx.Response(200, json={"data": listed})
+            return httpx.Response(200, json={"data": self.reservations[app_type]})
         if (method, path) == ("POST", f"{base}/reservations"):
             record_ids = json.loads(request.content)["recordIds"]
             if PHYSICAL_RECORD in record_ids and not mit_biblo:
@@ -306,12 +300,11 @@ class FakeBiblo:
         if (method, path) == ("DELETE", f"{base}/reservations"):
             return httpx.Response(204)
         if (method, path) == ("GET", "/v1/user/favorites"):
-            favorite = fixture("work_all" if mit_biblo else "work")["data"]
-            return httpx.Response(200, json={"data": [favorite]})
+            return httpx.Response(200, json={"data": self.favorites[app_type]})
         if method in ("PUT", "DELETE") and path.startswith("/v1/user/favorites"):
             return httpx.Response(204)
         if (method, path) == ("GET", "/v1/user/messages"):
-            return httpx.Response(200, json={"data": {"messages": []}})
+            return httpx.Response(200, json={"data": {"messages": self.messages[app_type]}})
         return _error(404, 4000, "NOT_FOUND", f"No fake for [{method}] {path}")
 
     def _check_client_auth(self, request: httpx.Request) -> None:
@@ -322,7 +315,7 @@ class FakeBiblo:
         header = request.headers.get("authorization", "")
         token = re.sub(r"^Bearer ", "", header)
         if not header.startswith("Bearer ") or token != self.access_token or token in self.revoked:
-            return _error(401, 4103, "UNAUTHORIZED", "Missing or invalid bearer token")
+            return _recorded_error("error_invalid_token")
         return None
 
     def _new_tokens(self) -> httpx.Response:
@@ -411,3 +404,8 @@ def _mismatch(value: Any, schema: dict[str, Any], where: str) -> str | None:
 
 def _error(status: int, code: int, kind: str, message: str) -> httpx.Response:
     return httpx.Response(status, json={"id": code, "type": kind, "message": message})
+
+
+def _recorded_error(name: str) -> httpx.Response:
+    recording = json.loads((FIXTURES / f"{name}.json").read_text())
+    return httpx.Response(recording["status"], json=recording["body"])
