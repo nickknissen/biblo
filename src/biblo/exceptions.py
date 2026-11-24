@@ -1,19 +1,21 @@
-"""Errors raised by biblo. Catch `BibloError` for all of them.
+"""Errors raised by biblo. Catch `BibloError` for all of them, and `LoginRequiredError` for
+the ones the user fixes by logging in (again): the classes marked * below.
 
 BibloError
+├── LoginRequiredError          the user has to log in (again); a base of each *
 ├── LoginError                  logging in did not work
-│   ├── InvalidCredentialsError     wrong card number/CPR or pincode
+│   ├── InvalidCredentialsError *   wrong card number/CPR or pincode
 │   └── LoginFlowError              login.bib.dk answered unexpectedly
 ├── NoLibraryError              no library given (also a ValueError)
 ├── UnknownCatalogueError       catalogue= not a types.Catalogue (also a ValueError)
 ├── UnknownMaterialError        material= not a types.Material (also a ValueError)
-├── NotLoggedInError            an account call without a (still valid) session
+├── NotLoggedInError *          an account call without a (still valid) session
 ├── BibloConnectionError        the API or login.bib.dk could not be reached
 ├── ResponseValidationError     the API sent data that doesn't match its spec
 └── APIError                    the API answered with an error status
     ├── BadRequestError             400, e.g. a validation error
     │   └── PickupBranchRequiredError   a physical record reserved without a branch
-    ├── AuthenticationError         401
+    ├── AuthenticationError *       401, still after refreshing the session
     ├── PermissionDeniedError       403
     ├── NotFoundError               404
     ├── ConflictError               409
@@ -32,11 +34,18 @@ class BibloError(Exception):
     """Base class for every error raised by biblo."""
 
 
+class LoginRequiredError(BibloError):
+    """The user has to log in (again): the login was refused, there is no session or it
+    can't be refreshed, or the API still refuses its token. Catch this to ask for a login.
+
+    `LoginFlowError` is not one: logging in again doesn't fix a changed login page."""
+
+
 class LoginError(BibloError):
     """Logging in through login.bib.dk did not work."""
 
 
-class InvalidCredentialsError(LoginError):
+class InvalidCredentialsError(LoginError, LoginRequiredError):
     """login.bib.dk refused the card number/CPR or pincode."""
 
 
@@ -61,7 +70,7 @@ class UnknownMaterialError(BibloError, ValueError):
     """`material=` was not one of `types.Material`; nothing was sent."""
 
 
-class NotLoggedInError(BibloError):
+class NotLoggedInError(LoginRequiredError):
     """The call needs a logged-in user, and there is no session or it can't be refreshed."""
 
 
@@ -118,8 +127,8 @@ class PickupBranchRequiredError(BadRequestError):
         )
 
 
-class AuthenticationError(APIError):
-    """401: missing, expired or revoked access token."""
+class AuthenticationError(APIError, LoginRequiredError):
+    """401: missing, expired or revoked access token, still refused after a refresh."""
 
 
 class PermissionDeniedError(APIError):

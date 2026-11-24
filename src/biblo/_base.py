@@ -3,13 +3,16 @@
 from __future__ import annotations
 
 import html
+import os
 import re
+import sys
 import uuid
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from functools import cache
 from importlib.metadata import PackageNotFoundError, version
+from pathlib import Path
 from typing import Any, cast, get_args
 from urllib.parse import parse_qs, quote, urlencode, urlparse
 
@@ -89,6 +92,29 @@ class Tokens:
 
     def __repr__(self) -> str:  # keep tokens out of logs and tracebacks
         return f"Tokens(expires_at={self.expires_at.isoformat()})"
+
+
+CONFIG_DIR_ENV = "BIBLO_CONFIG_DIR"
+
+
+def default_session_path() -> Path:
+    """The session file `biblo auth login` saves to: `$BIBLO_CONFIG_DIR/session.json`, else
+    `session.json` in the platform's config folder for biblo.
+
+    The folder is the one `click.get_app_dir("biblo")` gives (the CLI's), worked out here so
+    the library needs neither typer nor click: `%APPDATA%\\biblo` (else `~\\biblo`) on
+    Windows, `~/Library/Application Support/biblo` on macOS, and `$XDG_CONFIG_HOME/biblo`
+    (else `~/.config/biblo`) elsewhere.
+    """
+    if override := os.environ.get(CONFIG_DIR_ENV):
+        return Path(override) / "session.json"
+    if sys.platform.startswith("win"):
+        folder = os.environ.get("APPDATA", os.path.expanduser("~"))
+    elif sys.platform == "darwin":
+        folder = os.path.expanduser("~/Library/Application Support")
+    else:
+        folder = os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
+    return Path(folder, "biblo", "session.json")
 
 
 def _new_installation_id() -> str:

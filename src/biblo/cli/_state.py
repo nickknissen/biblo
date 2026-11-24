@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 from typing import Annotated, Protocol
 
 import typer
 
-from .._base import VERSION
+from .._base import VERSION, default_session_path
 from .._sync import Biblo, FileTokenStorage
 from ..exceptions import BibloError, NotLoggedInError
 from ..models import Branch
@@ -16,7 +15,6 @@ from ..models import Branch
 APP_NAME = "biblo"
 USER_AGENT = f"biblo-cli/{VERSION}"
 """Put before the library's own User-Agent on every API request the CLI makes."""
-CONFIG_DIR_ENV = "BIBLO_CONFIG_DIR"
 LIBRARY_ENV = "BIBLO_LIBRARY"
 
 EXIT_ERROR = 1
@@ -41,20 +39,14 @@ class UsageError(BibloError):
     """A problem with how the CLI was called; exits with status 2."""
 
 
-def config_dir() -> Path:
-    if override := os.environ.get(CONFIG_DIR_ENV):
-        return Path(override)
-    return Path(typer.get_app_dir(APP_NAME))
-
-
 def session_path() -> Path:
-    return config_dir() / "session.json"
+    return default_session_path()
 
 
 def client(library: str | None = None) -> Biblo:
     """A client with the saved session, defaulting to `library` (an id or a name)."""
     return Biblo(
-        resolve_library(library), storage=FileTokenStorage(session_path()), user_agent=USER_AGENT
+        resolve_library(library), storage=FileTokenStorage.default(), user_agent=USER_AGENT
     )
 
 
