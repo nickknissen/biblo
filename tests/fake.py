@@ -90,6 +90,11 @@ PHYSICAL_LOAN = {
     },
 }
 
+# Made up: no physical renewal has been recorded yet (#8). The spec gives `renewalStatus` no
+# values and the apps never read it (#27), so this value is invented, not the API's.
+INVENTED_RENEWAL_STATUS = ["INVENTED_BY_TESTS"]
+RENEWED_DUE_DATE = "2027-01-07T10:00:00.000Z"
+
 Handler = Callable[[httpx.Request], httpx.Response]
 
 
@@ -119,6 +124,7 @@ class FakeBiblo:
     account: dict[str, Any] = field(default_factory=lambda: fixture("account")["data"])
     quotas: dict[str, Any] = field(default_factory=lambda: fixture("account_quotas")["data"])
     fees: list[dict[str, Any]] = field(default_factory=lambda: fixture("account_fees")["data"])
+    renewal_status: list[str] = field(default_factory=lambda: list(INVENTED_RENEWAL_STATUS))
 
     @property
     def access_token(self) -> str:
@@ -275,16 +281,23 @@ class FakeBiblo:
             if digital.intersection(ids):
                 # The API takes "Only physical loan IDs" and refuses the whole request.
                 return _recorded_error("error_renew_digital")
-            physical = {loan["id"]: loan for loan in self.loans["mybiblo"]}
+            # A refused renewal is left out of `data`; the apps judge by that alone (#27).
+            # Refused here: an id Mit Biblo doesn't list, or a loan that isn't renewable.
+            renewable = {
+                loan["id"]: loan
+                for loan in self.loans["mybiblo"]
+                if loan.get("isRenewable") is not False
+            }
             return httpx.Response(
                 200,
                 json={
                     "data": [
                         {
-                            "loanDetails": physical.get(i, {**PHYSICAL_LOAN, "id": i}),
-                            "renewalStatus": ["renewed"],
+                            "loanDetails": {**renewable[i], "dueDate": RENEWED_DUE_DATE},
+                            "renewalStatus": self.renewal_status,
                         }
                         for i in ids
+                        if i in renewable
                     ]
                 },
             )

@@ -4,9 +4,12 @@ from typing import Annotated
 
 import typer
 
-from ..exceptions import BibloError, PickupBranchRequiredError
+from .._sync import Biblo
+from ..exceptions import BadRequestError, BibloError, PickupBranchRequiredError
 from ._output import console, day, due, join, print_json, success, table, warn
 from ._state import JsonOption, LibraryOption, UsageError, client, resolve_branch
+
+DIGITAL_CATEGORIES = ("EBOOKS", "AUDIO_BOOKS_ONLINE", "PODCASTS")
 
 account = typer.Typer(
     help="Show your details, digital loans left this period, and fees.",
@@ -116,24 +119,56 @@ def renew(
     library: LibraryOption = None,
     as_json: JsonOption = False,
 ) -> None:
-    """Renew loans."""
+    """Renew physical loans. Digital loans can't be renewed."""
+    titles: dict[str, str] = {}
     with client(library) as biblo:
         if all_loans:
-            loan_ids = [loan.id for loan in biblo.loans.list() if loan.is_renewable]
+            renewable = [loan for loan in biblo.loans.list() if loan.is_renewable]
+            titles = {loan.id: loan.record.title for loan in renewable}
+            loan_ids = list(titles)
         if not loan_ids:
             raise UsageError("Name loans to renew, or use --all")
-        renewed = biblo.loans.renew(loan_ids)
+        try:
+            renewed = biblo.loans.renew(loan_ids)
+        except BadRequestError as e:
+            if e.type != "VALIDATION":
+                raise
+            raise BibloError(_renew_refused(biblo, loan_ids)) from e
+    # Like the apps, judge by which loans come back: `renewalStatus` has no documented values.
+    returned = {item.loan_details.id for item in renewed}
     if as_json:
         print_json(renewed)
-        return
-    for item in renewed:
-        loan = item.loan_details
-        if item.renewal_status and any(
-            s.lower() not in ("renewed", "success") for s in item.renewal_status
-        ):
-            warn(f"{loan.record.title}: {join(item.renewal_status)}")
-        else:
-            success(f"{loan.record.title}: due {due(loan.due_date)}")
+    else:
+        for item in renewed:
+            loan = item.loan_details
+            status = f" [dim]({join(item.renewal_status)})[/dim]" if item.renewal_status else ""
+            success(f"{loan.record.title}: due {due(loan.due_date)}{status}")
+    for loan_id in loan_ids:
+        if loan_id not in returned:
+            title = titles.get(loan_id)
+            warn(f"{title} ({loan_id}): not renewed" if title else f"{loan_id}: not renewed")
+    if not returned:
+        raise BibloError("No loans were renewed")
+
+
+def _renew_refused(biblo: Biblo, loan_ids: list[str]) -> str:
+    """The message for the 400 the API answers when any requested loan is digital."""
+    message = (
+        "Digital loans can't be renewed, only physical ones, so the library refused the "
+        "whole request and nothing was renewed."
+    )
+    try:
+        listed = biblo.loans.list()
+    except BibloError:
+        return message
+    digital = [
+        loan
+        for loan in listed
+        if loan.id in loan_ids and loan.record.material_type.category in DIGITAL_CATEGORIES
+    ]
+    if digital:
+        message += " Digital: " + join(f"{loan.record.title} ({loan.id})" for loan in digital)
+    return message
 
 
 def reservations(library: LibraryOption = None, as_json: JsonOption = False) -> None:
