@@ -7,7 +7,9 @@ import os
 import tempfile
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
+
+from .._base import default_session_path
 
 
 class AsyncTokenStorage(ABC):
@@ -38,6 +40,11 @@ class AsyncFileTokenStorage(AsyncTokenStorage):
 
     def __init__(self, path: str | os.PathLike[str]) -> None:
         self.path = Path(path)
+
+    @classmethod
+    def default(cls) -> Self:
+        """The session file the CLI uses (`biblo.default_session_path()`), to reuse its login."""
+        return cls(default_session_path())
 
     async def load(self) -> dict[str, Any] | None:
         try:
