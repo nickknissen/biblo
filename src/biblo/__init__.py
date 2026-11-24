@@ -35,8 +35,9 @@ from .exceptions import (
     ResponseValidationError,
     ServerError,
     UnknownCatalogueError,
+    UnknownMaterialError,
 )
-from .types import Catalogue
+from .types import Catalogue, Material
 
 __all__ = [
     "APIError",
@@ -56,6 +57,7 @@ __all__ = [
     "LoginError",
     "LoginFlowError",
     "LoginRequiredError",
+    "Material",
     "MemoryTokenStorage",
     "NoLibraryError",
     "NotFoundError",
@@ -68,6 +70,7 @@ __all__ = [
     "TokenStorage",
     "Tokens",
     "UnknownCatalogueError",
+    "UnknownMaterialError",
     "__version__",
     "authorize_url",
     "code_from_redirect",

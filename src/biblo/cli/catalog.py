@@ -4,7 +4,7 @@ from typing import Annotated, cast, get_args
 
 import typer
 
-from ..types import SEARCH_FILTER_PARAMS, Catalogue, SearchBy, SearchFilters
+from ..types import SEARCH_FILTER_PARAMS, Catalogue, Material, SearchBy, SearchFilters
 from ._output import console, join, print_json, table
 from ._state import JsonOption, LibraryOption, UsageError, client
 
@@ -16,13 +16,6 @@ CatalogueOption = Annotated[
     ),
 ]
 
-FORMATS = {
-    "ebook": "e-bog",
-    "audiobook": "lydbog (online)",
-    "podcast": "podcast",
-    "magazine": "tidsskrift (online)",
-}
-
 
 def search(
     query: Annotated[str, typer.Argument(help="What to search for.")],
@@ -33,6 +26,7 @@ def search(
     ebook: Annotated[bool, typer.Option("--ebook", help="Only e-books.")] = False,
     audiobook: Annotated[bool, typer.Option("--audiobook", help="Only audiobooks.")] = False,
     podcast: Annotated[bool, typer.Option("--podcast", help="Only podcasts.")] = False,
+    magazine: Annotated[bool, typer.Option("--magazine", help="Only magazines.")] = False,
     language: Annotated[
         str | None,
         typer.Option(help="Only this language, as a code: dan, eng, ...", show_default=False),
@@ -56,9 +50,13 @@ def search(
         raise UsageError("--by must be title, creator or subject")
     chosen_catalogue = _catalogue(catalogue)
     chosen = _parse_filters(filters or [])
-    wanted = {"ebook": ebook, "audiobook": audiobook, "podcast": podcast}
-    if formats := [FORMATS[name] for name, on in wanted.items() if on]:
-        chosen["material_types_specific"] = formats
+    flags: dict[Material, bool] = {
+        "ebook": ebook,
+        "audiobook": audiobook,
+        "podcast": podcast,
+        "magazine": magazine,
+    }
+    materials = [material for material, on in flags.items() if on]
     if language:
         chosen["main_languages"] = language
 
@@ -69,6 +67,7 @@ def search(
                 by=cast(SearchBy | None, by),
                 max_results=limit,
                 catalogue=chosen_catalogue,
+                material=materials or None,
                 **chosen,
             )
         )

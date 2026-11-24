@@ -7,6 +7,8 @@ BibloError
 │   ├── InvalidCredentialsError *   wrong card number/CPR or pincode
 │   └── LoginFlowError              login.bib.dk answered unexpectedly
 ├── NoLibraryError              no library given (also a ValueError)
+├── UnknownCatalogueError       catalogue= not a types.Catalogue (also a ValueError)
+├── UnknownMaterialError        material= not a types.Material (also a ValueError)
 ├── NotLoggedInError *          an account call without a (still valid) session
 ├── BibloConnectionError        the API or login.bib.dk could not be reached
 ├── ResponseValidationError     the API sent data that doesn't match its spec
@@ -62,6 +64,10 @@ class AppTypeNotAcceptedError(BibloError, ValueError):
 
 class UnknownCatalogueError(BibloError, ValueError):
     """`catalogue=` was not one of `types.Catalogue`; nothing was sent."""
+
+
+class UnknownMaterialError(BibloError, ValueError):
+    """`material=` was not one of `types.Material`; nothing was sent."""
 
 
 class NotLoggedInError(LoginRequiredError):

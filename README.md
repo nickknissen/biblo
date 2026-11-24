@@ -44,7 +44,7 @@ default.
 | --- | --- |
 | `biblo libraries [town]` | find your library's id |
 | `biblo auth login` / `status` / `logout` / `token` | your session |
-| `biblo search QUERY` | `--ebook`, `--audiobook`, `--podcast`, `--language dan`, `--by title`, `-f subjects=krimi`, `--catalogue all` |
+| `biblo search QUERY` | `--ebook`, `--audiobook`, `--podcast`, `--magazine`, `--language dan`, `--by title`, `-f subjects=krimi`, `--catalogue all` |
 | `biblo work WORK_ID` | description, availability and the records (editions) to borrow or reserve; `--catalogue all` lists printed books and CDs too |
 | `biblo borrow RECORD_ID` | borrow an e-book, audiobook or podcast |
 | `biblo loans` / `biblo renew [--all]` | your loans |
@@ -75,7 +75,7 @@ Exit codes: 0 ok, 1 error, 2 bad usage, 4 not logged in.
 from biblo import Biblo, FileTokenStorage
 
 with Biblo("763000", storage=FileTokenStorage("session.json")) as biblo:
-    result = biblo.catalog.search("harry potter", material_types_specific="e-bog")
+    result = biblo.catalog.search("harry potter", material="ebook")
     print(result.hitcount)
     work = biblo.catalog.work(result.works[0].id)
     ebook = next(r for r in work.variations if r.material_type.display == "e-bog")

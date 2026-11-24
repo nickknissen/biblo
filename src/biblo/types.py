@@ -9,6 +9,10 @@ SearchBy = Literal["all", "subject", "creator", "title"]
 
 SampleFormat = Literal["epub", "mp3"]
 
+Material = Literal["ebook", "audiobook", "podcast", "magazine"]
+"""A format to search for with `material=`: e-books, online audiobooks, podcasts or online
+magazines. biblo sends the catalogue's own facet value for it (e.g. "lydbog (online)")."""
+
 Catalogue = Literal["digital", "children", "all"]
 """Which catalogue catalogue and content calls see; each is what one of the apps shows.
 

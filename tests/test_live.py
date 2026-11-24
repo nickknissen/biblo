@@ -7,9 +7,13 @@ contradicts its spec: fix it in spec/patches.json, or refresh the spec with
 
 from __future__ import annotations
 
+from typing import cast, get_args
+
 import pytest
 
 from biblo import AsyncBiblo
+from biblo._base import MATERIAL_FACETS
+from biblo.types import Material
 
 pytestmark = pytest.mark.live
 
@@ -38,6 +42,18 @@ async def test_all_catalogues_find_more_than_the_digital_one(live: AsyncBiblo) -
         digital = await live.catalog.search("harry potter", limit=1)
         everything = await live.catalog.search("harry potter", limit=1, catalogue="all")
         assert everything.hitcount > digital.hitcount
+
+
+@pytest.mark.parametrize("material", get_args(Material))
+async def test_each_material_finds_only_that_material(live: AsyncBiblo, material: str) -> None:
+    # A renamed facet value on DDF's side would find nothing, or ignore the filter.
+    facet = MATERIAL_FACETS[cast(Material, material)]
+    async with live:
+        result = await live.catalog.search("", material=cast(Material, material), limit=10)
+    assert result.hitcount > 0
+    assert result.works
+    for work in result.works:
+        assert facet in [t.display for t in work.material_types], work.title
 
 
 async def test_libraries_and_content(live: AsyncBiblo) -> None:

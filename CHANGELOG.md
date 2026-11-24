@@ -8,6 +8,13 @@ All notable changes to this project. The format follows
 
 ### Added
 
+- Filter searches by format without Biblo's Danish facet values: `catalog.search`,
+  `iter_search` and `facets` take `material="ebook" | "audiobook" | "podcast" | "magazine"`
+  (the new `biblo.Material` type), or a list of them to match any. It can be combined with
+  `material_types_specific=`, and both sets of values are sent. An unknown value raises the
+  new `UnknownMaterialError` (a `ValueError`) before anything is sent (#22).
+- `biblo search --magazine` finds only online magazines, next to `--ebook`, `--audiobook`
+  and `--podcast` (#22).
 - `biblo.LoginRequiredError`, one class to catch when the user has to log in (again). It is
   a base of `InvalidCredentialsError`, `NotLoggedInError` and `AuthenticationError` (a 401
   that persists after refreshing the session), which keep their other bases, so existing
