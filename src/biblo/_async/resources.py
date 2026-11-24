@@ -83,6 +83,16 @@ class AsyncLibraries(AsyncResource):
     async def branches(self, library_id: str | None = None) -> builtins.list[m.Branch]:
         return await self._client._get(list[m.Branch], f"{LIB}/branches", library_id=library_id)
 
+    async def branch_names(self, library_id: str | None = None) -> dict[str, str]:
+        """Each branch's name by its id, from one `branches()` request.
+
+        A physical reservation names its pickup branch only by id
+        (`reservation.physical.pickup_branch`); look it up here. A branch closed since is
+        missing, so fall back to the id: `names.get(branch_id, branch_id)`. Nothing is
+        cached; keep the dict if you need it again.
+        """
+        return {branch.id: branch.name for branch in await self.branches(library_id)}
+
     async def branch(self, branch_id: str, library_id: str | None = None) -> m.Branch:
         return await self._client._get(
             m.Branch, f"{LIB}/branches/{{branchId}}", {"branchId": branch_id}, library_id=library_id
@@ -478,7 +488,11 @@ class AsyncLoans(AsyncResource):
 
 class AsyncReservations(AsyncResource):
     async def list(self, library_id: str | None = None) -> builtins.list[m.ReservationItem]:
-        """Digital reservations, then physical ones."""
+        """Digital reservations, then physical ones.
+
+        A physical one's `physical.pickup_branch` is a branch id; `libraries.branch_names()`
+        has their names.
+        """
         return await _digital_and_physical(
             self._client, list[m.ReservationItem], f"{LIB}/account/reservations", library_id
         )

@@ -175,9 +175,16 @@ def reservations(library: LibraryOption = None, as_json: JsonOption = False) -> 
     """List your reservations."""
     with client(library) as biblo:
         found = biblo.reservations.list()
-    if as_json:
-        print_json(found)
-        return
+        if as_json:
+            print_json(found)
+            return
+        # Only a ready reservation shows its pickup branch. The reservations are the login
+        # library's, so its branches are the pickup branches.
+        names = {}
+        if any(
+            r.state == "READY_FOR_PICKUP" and r.physical and r.physical.pickup_branch for r in found
+        ):
+            names = biblo.libraries.branch_names(library_id=biblo.login_library_id())
     if not found:
         console.print("No reservations.")
         return
@@ -185,10 +192,12 @@ def reservations(library: LibraryOption = None, as_json: JsonOption = False) -> 
     for r in found:
         if r.state == "READY_FOR_PICKUP":
             status = "[green]ready[/green]"
+            if r.physical and r.physical.pickup_branch:
+                status += f" at {names.get(r.physical.pickup_branch, r.physical.pickup_branch)}"
             if r.claim:
                 status += f" until {day(r.claim.available_until)}"
             elif r.physical:
-                status += f" at {r.physical.pickup_branch} until {day(r.physical.expiry_date)}"
+                status += f" until {day(r.physical.expiry_date)}"
         elif r.physical and r.physical.number_in_queue is not None:
             status = f"number {r.physical.number_in_queue} in queue"
         else:

@@ -23,12 +23,18 @@ All notable changes to this project. The format follows
   (`$BIBLO_CONFIG_DIR/session.json`, else the platform's config folder), and
   `AsyncFileTokenStorage.default()` / `FileTokenStorage.default()` make a storage for it, so
   scripts and servers can reuse the CLI's login. Neither imports typer or click (#21).
+- `libraries.branch_names()` maps each branch id to its name, from one `branches()` request,
+  to show a physical reservation's `pickup_branch` (an id) by name. A branch missing from it,
+  such as one closed since, is best shown by its id: `names.get(branch_id, branch_id)` (#23).
 
 ### Changed
 
 - The CLI exits with code 4 and the "Log in with: biblo auth login" hint on a 401 that
   persists after refreshing the session, as it already did without a session. A refused
   pincode still exits with code 1 and "Login refused" (#20).
+- `biblo reservations` shows a ready physical reservation's pickup branch by name, or by id
+  if the library no longer lists the branch. It asks for the branches only when a listed
+  reservation is ready with a pickup branch; `--json` still gives the id (#23).
 
 ### Fixed
 
