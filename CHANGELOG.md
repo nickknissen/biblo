@@ -8,18 +8,40 @@ All notable changes to this project. The format follows
 
 ### Added
 
+- Filter searches by format without Biblo's Danish facet values: `catalog.search`,
+  `iter_search` and `facets` take `material="ebook" | "audiobook" | "podcast" | "magazine"`
+  (the new `biblo.Material` type), or a list of them to match any. It can be combined with
+  `material_types_specific=`, and both sets of values are sent. An unknown value raises the
+  new `UnknownMaterialError` (a `ValueError`) before anything is sent (#22).
+- `biblo search --magazine` finds only online magazines, next to `--ebook`, `--audiobook`
+  and `--podcast` (#22).
+- `biblo.LoginRequiredError`, one class to catch when the user has to log in (again). It is
+  a base of `InvalidCredentialsError`, `NotLoggedInError` and `AuthenticationError` (a 401
+  that persists after refreshing the session), which keep their other bases, so existing
+  `except` clauses catch what they did. `LoginFlowError` is not one (#20).
+- `biblo.default_session_path()` returns the session file `biblo auth login` saves to
+  (`$BIBLO_CONFIG_DIR/session.json`, else the platform's config folder), and
+  `AsyncFileTokenStorage.default()` / `FileTokenStorage.default()` make a storage for it, so
+  scripts and servers can reuse the CLI's login. Neither imports typer or click (#21).
 - `libraries.branch_names()` maps each branch id to its name, from one `branches()` request,
   to show a physical reservation's `pickup_branch` (an id) by name. A branch missing from it,
   such as one closed since, is best shown by its id: `names.get(branch_id, branch_id)` (#23).
 
 ### Changed
 
+- The CLI exits with code 4 and the "Log in with: biblo auth login" hint on a 401 that
+  persists after refreshing the session, as it already did without a session. A refused
+  pincode still exits with code 1 and "Login refused" (#20).
 - `biblo reservations` shows a ready physical reservation's pickup branch by name, or by id
   if the library no longer lists the branch. It asks for the branches only when a listed
   reservation is ready with a pickup branch; `--json` still gives the id (#23).
 
 ### Fixed
 
+- Clients sharing a session, e.g. the CLI and a long-running server, no longer log each other
+  out. Before refreshing, a client re-reads its storage and uses tokens another client saved
+  there; if the API refuses its refresh token, it takes newer tokens from storage and retries
+  instead of saving an empty session over them (#21).
 - `biblo renew` judges each loan by whether the API's answer lists it, as the apps do, instead
   of by guessed `renewalStatus` values. A renewed loan shows its new due date (and any
   `renewalStatus` as-is); a requested loan left out of the answer gets a "not renewed"

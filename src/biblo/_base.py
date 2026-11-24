@@ -3,14 +3,17 @@
 from __future__ import annotations
 
 import html
+import os
 import re
+import sys
 import uuid
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from functools import cache
 from importlib.metadata import PackageNotFoundError, version
-from typing import Any, get_args
+from pathlib import Path
+from typing import Any, cast, get_args
 from urllib.parse import parse_qs, quote, urlencode, urlparse
 
 import httpx
@@ -33,9 +36,10 @@ from .exceptions import (
     LoginFlowError,
     ResponseValidationError,
     UnknownCatalogueError,
+    UnknownMaterialError,
     api_error,
 )
-from .types import Catalogue
+from .types import Catalogue, Material
 
 try:
     VERSION = version("biblo")
@@ -88,6 +92,29 @@ class Tokens:
 
     def __repr__(self) -> str:  # keep tokens out of logs and tracebacks
         return f"Tokens(expires_at={self.expires_at.isoformat()})"
+
+
+CONFIG_DIR_ENV = "BIBLO_CONFIG_DIR"
+
+
+def default_session_path() -> Path:
+    """The session file `biblo auth login` saves to: `$BIBLO_CONFIG_DIR/session.json`, else
+    `session.json` in the platform's config folder for biblo.
+
+    The folder is the one `click.get_app_dir("biblo")` gives (the CLI's), worked out here so
+    the library needs neither typer nor click: `%APPDATA%\\biblo` (else `~\\biblo`) on
+    Windows, `~/Library/Application Support/biblo` on macOS, and `$XDG_CONFIG_HOME/biblo`
+    (else `~/.config/biblo`) elsewhere.
+    """
+    if override := os.environ.get(CONFIG_DIR_ENV):
+        return Path(override) / "session.json"
+    if sys.platform.startswith("win"):
+        folder = os.environ.get("APPDATA", os.path.expanduser("~"))
+    elif sys.platform == "darwin":
+        folder = os.path.expanduser("~/Library/Application Support")
+    else:
+        folder = os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
+    return Path(folder, "biblo", "session.json")
 
 
 def _new_installation_id() -> str:
@@ -164,6 +191,30 @@ def catalogue_app_type(catalogue: Catalogue) -> str:
         raise UnknownCatalogueError(
             f"Unknown catalogue {catalogue!r}: use one of {choices}"
         ) from None
+
+
+MATERIAL_FACETS: dict[Material, str] = {
+    "ebook": "e-bog",
+    "audiobook": "lydbog (online)",
+    "podcast": "podcast",
+    "magazine": "tidsskrift (online)",
+}
+"""Each `types.Material` and the catalogue's `materialTypesSpecific` facet value for it."""
+
+
+def material_facets(material: Material | Iterable[Material] | None) -> list[str]:
+    """The facet values for one material or several. Raises UnknownMaterialError for a value
+    that isn't a `types.Material` (a caller without type checking)."""
+    if material is None:
+        return []
+    # Checked at runtime: a caller without type checking can pass anything.
+    wanted = cast(list[str], [material] if isinstance(material, str) else list(material))
+    if unknown := [value for value in wanted if value not in MATERIAL_FACETS]:
+        choices = ", ".join(get_args(Material))
+        raise UnknownMaterialError(
+            f"Unknown material {', '.join(map(repr, unknown))}: use one of {choices}"
+        )
+    return [MATERIAL_FACETS[cast(Material, value)] for value in wanted]
 
 
 def _accepted_app_types(method: str, path: str) -> tuple[str, ...] | None:

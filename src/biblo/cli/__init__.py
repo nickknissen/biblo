@@ -12,8 +12,8 @@ from ..exceptions import (
     BibloConnectionError,
     BibloError,
     InvalidCredentialsError,
+    LoginRequiredError,
     NoLibraryError,
-    NotLoggedInError,
 )
 from . import account, api, auth, catalog, libraries
 from ._output import err
@@ -76,12 +76,12 @@ def main(argv: list[str] | None = None) -> None:
     """Run the CLI; always ends with SystemExit carrying the exit status."""
     try:
         app(args=argv, prog_name="biblo", standalone_mode=True)
-    except NotLoggedInError as e:
-        err.print(f"[red]{e}.[/red] Log in with: [bold]biblo auth login[/bold]")
-        sys.exit(EXIT_NOT_LOGGED_IN)
-    except InvalidCredentialsError as e:
+    except InvalidCredentialsError as e:  # before its base, LoginRequiredError
         err.print(f"[red]Login refused:[/red] {e}")
         sys.exit(EXIT_ERROR)
+    except LoginRequiredError as e:  # no session, a failed refresh, or a 401 after one
+        err.print(f"[red]{e}.[/red] Log in with: [bold]biblo auth login[/bold]")
+        sys.exit(EXIT_NOT_LOGGED_IN)
     except UsageError as e:
         err.print(f"[red]{e}[/red]")
         sys.exit(EXIT_USAGE)

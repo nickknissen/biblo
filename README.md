@@ -44,7 +44,7 @@ default.
 | --- | --- |
 | `biblo libraries [town]` | find your library's id |
 | `biblo auth login` / `status` / `logout` / `token` | your session |
-| `biblo search QUERY` | `--ebook`, `--audiobook`, `--podcast`, `--language dan`, `--by title`, `-f subjects=krimi`, `--catalogue all` |
+| `biblo search QUERY` | `--ebook`, `--audiobook`, `--podcast`, `--magazine`, `--language dan`, `--by title`, `-f subjects=krimi`, `--catalogue all` |
 | `biblo work WORK_ID` | description, availability and the records (editions) to borrow or reserve; `--catalogue all` lists printed books and CDs too |
 | `biblo borrow RECORD_ID` | borrow an e-book, audiobook or podcast |
 | `biblo loans` / `biblo renew [--all]` | your loans |
@@ -75,7 +75,7 @@ Exit codes: 0 ok, 1 error, 2 bad usage, 4 not logged in.
 from biblo import Biblo, FileTokenStorage
 
 with Biblo("763000", storage=FileTokenStorage("session.json")) as biblo:
-    result = biblo.catalog.search("harry potter", material_types_specific="e-bog")
+    result = biblo.catalog.search("harry potter", material="ebook")
     print(result.hitcount)
     work = biblo.catalog.work(result.works[0].id)
     ebook = next(r for r in work.variations if r.material_type.display == "e-bog")
@@ -130,7 +130,22 @@ digital edition under `"digital"` that it leaves out under `"all"`.
 **Sessions.** Give the client a `storage` and it saves the tokens after login and every
 refresh: `FileTokenStorage`, `MemoryTokenStorage`, or your own `TokenStorage`
 (`AsyncTokenStorage` for `AsyncBiblo`) with `load()` and `save()`. Access tokens are
-refreshed before they expire and once more if the API answers 401.
+refreshed before they expire and once more if the API answers 401. Before refreshing, the
+client looks in its storage again and uses tokens another process saved there, so several
+processes can share one session.
+
+**Reuse the CLI's login.** Log in once with `biblo auth login` and point your code at the
+same session file; `biblo.default_session_path()` says where it is:
+
+```python
+from biblo import AsyncBiblo, AsyncFileTokenStorage
+
+async with AsyncBiblo(storage=AsyncFileTokenStorage.default()) as biblo:
+    for loan in await biblo.loans.list():
+        print(loan.record.title, loan.due_date)
+```
+
+`FileTokenStorage.default()` does the same for `Biblo`. Neither needs the `cli` extra.
 
 **Home Assistant and other frameworks.** Pass your own `httpx` client with `http_client=`
 (the client then leaves closing it to you) and a `AsyncTokenStorage` backed by the
@@ -146,6 +161,9 @@ mobile browser's `User-Agent`.
 login, `NotLoggedInError` when a session is missing or can no longer be refreshed,
 `BibloConnectionError`, and `APIError` subclasses by status (`NotFoundError`,
 `ConflictError`, `RateLimitError`, ...) carrying the API's `code`, `type` and `message`.
+To ask the user for a new login, catch `biblo.LoginRequiredError`: the one base of a refused
+login, a missing or expired session, and a 401 the API keeps answering after a refresh. A
+`LoginFlowError` (login.bib.dk changed) is not one, as logging in again won't fix it.
 
 ## How it works
 
