@@ -15,6 +15,7 @@ from biblo import (
     BibloConnectionError,
     BibloError,
     InvalidCredentialsError,
+    LoginBlockedError,
     LoginError,
     LoginFlowError,
     LoginRequiredError,
@@ -65,12 +66,76 @@ async def test_login_leaves_no_login_bib_dk_cookies_in_a_shared_client(fake: Fak
     await http.aclose()
 
 
-async def test_wrong_pincode_is_invalid_credentials_with_the_pages_message(
-    biblo: AsyncBiblo,
+async def test_a_refusal_without_a_code_has_the_pages_message(
+    biblo: AsyncBiblo, fake: FakeBiblo
 ) -> None:
-    with pytest.raises(InvalidCredentialsError, match="Forkert lånernummer"):
+    fake.login_error = fake.login_retries = None
+    with pytest.raises(InvalidCredentialsError, match="Forkert lånernummer") as caught:
         await biblo.login(USER, "9999")
+    assert caught.value.code is None
+    assert caught.value.retries_left is None
     assert not await biblo.is_logged_in()
+
+
+async def test_a_wrong_pincode_says_how_many_tries_are_left(
+    biblo: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    fake.login_retries = 2
+    with pytest.raises(InvalidCredentialsError) as caught:
+        await biblo.login(USER, "9999")
+    assert caught.value.code == "bonfd"
+    assert caught.value.retries_left == 2
+    assert "2 tries left" in str(caught.value)
+
+
+@pytest.mark.parametrize("code", ["bonfd", "bonui"])
+async def test_without_retries_the_message_does_not_count_tries(
+    biblo: AsyncBiblo, fake: FakeBiblo, code: str
+) -> None:
+    fake.login_error, fake.login_retries = code, None
+    with pytest.raises(InvalidCredentialsError) as caught:
+        await biblo.login(USER, "9999")
+    assert caught.value.code == code
+    assert caught.value.retries_left is None
+    assert "left" not in str(caught.value)
+    assert "9999" not in str(caught.value) and USER not in str(caught.value)
+
+
+async def test_outside_the_municipality_says_so(biblo: AsyncBiblo, fake: FakeBiblo) -> None:
+    fake.login_error = "bnimu"
+    with pytest.raises(InvalidCredentialsError, match="municipality") as caught:
+        await biblo.login(USER, "9999")
+    assert caught.value.code == "bnimu"
+
+
+@pytest.mark.parametrize(
+    ("page_text", "minutes"),
+    [
+        ("Login blokeret i 15 minutter.", 15),
+        ("Login blokeret i 1 minut.", 1),
+        ("Prøv igen senere.", None),
+    ],
+)
+async def test_a_blocked_login_says_how_long_to_wait(
+    biblo: AsyncBiblo, fake: FakeBiblo, page_text: str, minutes: int | None
+) -> None:
+    fake.login_blocked = page_text
+    with pytest.raises(LoginBlockedError) as caught:
+        await biblo.login(USER, "9999")
+    assert caught.value.minutes == minutes
+    assert isinstance(caught.value, LoginError)
+    assert not isinstance(caught.value, LoginRequiredError)
+    if minutes is not None:
+        assert f"{minutes} minute" in str(caught.value)
+
+
+@pytest.mark.parametrize("code", ["sevua", "zzzz"])
+async def test_a_service_or_unknown_code_is_a_login_flow_error(
+    biblo: AsyncBiblo, fake: FakeBiblo, code: str
+) -> None:
+    fake.login_error = code
+    with pytest.raises(LoginFlowError, match=code):
+        await biblo.login(USER, "9999")
 
 
 async def test_a_changed_login_page_is_a_login_flow_error(

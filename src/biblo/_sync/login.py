@@ -12,9 +12,15 @@ from urllib.parse import urljoin, urlsplit
 
 import httpx
 
-from .._base import authorize_url, code_from_redirect, login_form_action, login_page_error
+from .._base import (
+    authorize_url,
+    blocked_login_error,
+    code_from_redirect,
+    login_form_action,
+    refused_login_error,
+)
 from .._constants import BROWSER_USER_AGENT, LOGIN_BASE_URL, LOGIN_MAX_REDIRECTS, REDIRECT_URI
-from ..exceptions import InvalidCredentialsError, LoginFlowError
+from ..exceptions import LoginFlowError
 
 
 def password_login_code(http: httpx.Client, user_id: str, pincode: str, library_id: str) -> str:
@@ -44,10 +50,10 @@ def password_login_code(http: httpx.Client, user_id: str, pincode: str, library_
 
     if isinstance(result, str):
         return code_from_redirect(result)
+    if result.status_code == 429:  # blocked after too many failed logins
+        raise blocked_login_error(result.text)
     if login_form_action(result.text) is not None:
-        raise InvalidCredentialsError(
-            login_page_error(result.text) or "login.bib.dk refused the card number/CPR or pincode"
-        )
+        raise refused_login_error(str(result.url), result.text)
     raise LoginFlowError(f"login.bib.dk did not send the browser back to the app ({result.url})")
 
 

@@ -33,6 +33,8 @@ from ._constants import (
 from .exceptions import (
     AppTypeNotAcceptedError,
     InvalidCredentialsError,
+    LoginBlockedError,
+    LoginError,
     LoginFlowError,
     ResponseValidationError,
     UnknownCatalogueError,
@@ -353,6 +355,58 @@ def login_form_action(page: str) -> str | None:
         return None
     action = re.search(r'action="([^"]+)"', form.group(0))
     return html.unescape(action.group(1)) if action else None
+
+
+_REFUSED_LOGIN_MESSAGES = {
+    "bonfd": "login.bib.dk refused the card number/CPR or pincode",  # borrower not found
+    "bonui": "login.bib.dk refused the card number/CPR or pincode",  # ... nor a user id
+    "bnimu": (  # borrower not in municipality
+        "The library says you don't live in its municipality; "
+        "log in at your own municipality's library"
+    ),
+}
+
+
+def refused_login_error(url: str, page: str) -> LoginError:
+    """The error for login.bib.dk's form shown again after a refused login.
+
+    login.bib.dk (DBC's hejmdal) redirects back to its form with `error=<code>` and, while
+    tries are left, `retries=<n>`. Its other codes (e.g. "sevua", service unavailable) are
+    no fault of the user's, so they are a LoginFlowError."""
+    query = parse_qs(urlparse(url).query)
+    code = query.get("error", [None])[0]
+    retries = query.get("retries", [""])[0]
+    retries_left = int(retries) if retries.isdigit() else None
+    if code is None:
+        message = login_page_error(page) or _REFUSED_LOGIN_MESSAGES["bonfd"]
+    elif code in _REFUSED_LOGIN_MESSAGES:
+        message = _REFUSED_LOGIN_MESSAGES[code]
+    else:
+        detail = login_page_error(page)
+        return LoginFlowError(
+            f"login.bib.dk could not check the login (error {code})"
+            + (f": {detail}" if detail else "")
+        )
+    if retries_left is not None:
+        message += f" ({retries_left} {'try' if retries_left == 1 else 'tries'} left)"
+    return InvalidCredentialsError(message, code=code, retries_left=retries_left)
+
+
+def blocked_login_error(page: str) -> LoginBlockedError:
+    """The error for login.bib.dk's 429 page after too many failed logins.
+
+    hejmdal's page says "Login blokeret i N minutter." (or "... 1 minut.")."""
+    found = re.search(r"blokeret i (\d+) minut", page)
+    minutes = int(found.group(1)) if found else None
+    wait = (
+        f"wait {minutes} minute{'' if minutes == 1 else 's'}"
+        if minutes is not None
+        else "wait a while"
+    )
+    return LoginBlockedError(
+        f"login.bib.dk blocks logins after too many failed ones; {wait} and try again",
+        minutes=minutes,
+    )
 
 
 def login_page_error(page: str) -> str | None:
