@@ -16,7 +16,7 @@ from .._base import (
     blocked_login_error,
     code_from_redirect,
     login_form_action,
-    refused_login_error,
+    returned_login_form_error,
 )
 from .._constants import BROWSER_USER_AGENT, LOGIN_BASE_URL, LOGIN_MAX_REDIRECTS, REDIRECT_URI
 from ..exceptions import LoginFlowError
@@ -54,8 +54,9 @@ async def password_login_code(
     if result.status_code == 429:  # blocked after too many failed logins
         raise blocked_login_error(result.text)
     if login_form_action(result.text) is not None:
-        raise refused_login_error(str(result.url), result.text)
-    raise LoginFlowError(f"login.bib.dk did not send the browser back to the app ({result.url})")
+        raise returned_login_form_error(str(result.url), result.text)
+    where = result.url.copy_with(query=None)  # login.bib.dk's URLs carry a session token
+    raise LoginFlowError(f"login.bib.dk did not send the browser back to the app ({where})")
 
 
 async def _get(http: httpx.AsyncClient, url: str) -> httpx.Response:

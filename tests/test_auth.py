@@ -129,7 +129,25 @@ async def test_a_blocked_login_says_how_long_to_wait(
         assert f"{minutes} minute" in str(caught.value)
 
 
-@pytest.mark.parametrize("code", ["sevua", "zzzz"])
+async def test_an_unexpected_page_does_not_show_its_urls_token(
+    biblo: AsyncBiblo, fake: FakeBiblo
+) -> None:
+    original = fake._login
+
+    def lost(request: httpx.Request) -> httpx.Response:
+        if request.method == "POST":
+            return httpx.Response(302, headers={"location": "/somewhere?token=secret-token"})
+        if request.url.path == "/somewhere":
+            return httpx.Response(200, text="<html>Hmm</html>")
+        return original(request)
+
+    fake._login = lost  # type: ignore[method-assign]
+    with pytest.raises(LoginFlowError, match="/somewhere") as caught:
+        await biblo.login(USER, PIN)
+    assert "secret-token" not in str(caught.value)
+
+
+@pytest.mark.parametrize("code", ["sevua", "bcnsl", "zzzz"])
 async def test_a_service_or_unknown_code_is_a_login_flow_error(
     biblo: AsyncBiblo, fake: FakeBiblo, code: str
 ) -> None:

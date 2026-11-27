@@ -27,6 +27,8 @@ All notable changes to this project. The format follows
   browser back to the app"), as if login.bib.dk had changed (#37).
 - login.bib.dk's service errors (e.g. `sevua`, the library's patron check is down) raise
   `LoginFlowError` with the code, not `InvalidCredentialsError` (#37).
+- A `LoginFlowError` for an unexpected page no longer includes the page's query string,
+  which can hold login.bib.dk's session token (#37).
 
 ## [0.3.0] - 2026-11-24
 

@@ -357,9 +357,10 @@ def login_form_action(page: str) -> str | None:
     return html.unescape(action.group(1)) if action else None
 
 
-_REFUSED_LOGIN_MESSAGES = {
-    "bonfd": "login.bib.dk refused the card number/CPR or pincode",  # borrower not found
-    "bonui": "login.bib.dk refused the card number/CPR or pincode",  # ... nor a user id
+_WRONG_CREDENTIALS = "wrong card number/CPR or pincode"
+_REFUSED_LOGIN_MESSAGES = {  # the codes that are the user's to fix; others: LoginFlowError
+    "bonfd": _WRONG_CREDENTIALS,  # borrower not found
+    "bonui": _WRONG_CREDENTIALS,  # ... and the input didn't look like a user id
     "bnimu": (  # borrower not in municipality
         "The library says you don't live in its municipality; "
         "log in at your own municipality's library"
@@ -367,18 +368,19 @@ _REFUSED_LOGIN_MESSAGES = {
 }
 
 
-def refused_login_error(url: str, page: str) -> LoginError:
-    """The error for login.bib.dk's form shown again after a refused login.
+def returned_login_form_error(url: str, page: str) -> LoginError:
+    """The error for login.bib.dk's form shown again after submitting it.
 
     login.bib.dk (DBC's hejmdal) redirects back to its form with `error=<code>` and, while
-    tries are left, `retries=<n>`. Its other codes (e.g. "sevua", service unavailable) are
-    no fault of the user's, so they are a LoginFlowError."""
+    tries are left, `retries=<n>`. A wrong card number/pincode or municipality is an
+    InvalidCredentialsError. Its other codes (e.g. "sevua", service unavailable, or "bcnsl",
+    the library can't check the municipality) are no fault of the user's: LoginFlowError."""
     query = parse_qs(urlparse(url).query)
     code = query.get("error", [None])[0]
     retries = query.get("retries", [""])[0]
     retries_left = int(retries) if retries.isdigit() else None
     if code is None:
-        message = login_page_error(page) or _REFUSED_LOGIN_MESSAGES["bonfd"]
+        message = login_page_error(page) or _WRONG_CREDENTIALS
     elif code in _REFUSED_LOGIN_MESSAGES:
         message = _REFUSED_LOGIN_MESSAGES[code]
     else:
