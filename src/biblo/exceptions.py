@@ -5,6 +5,7 @@ BibloError
 ├── LoginRequiredError          the user has to log in (again); a base of each *
 ├── LoginError                  logging in did not work
 │   ├── InvalidCredentialsError *   wrong card number/CPR or pincode
+│   ├── LoginBlockedError           too many failed logins; wait before trying again
 │   └── LoginFlowError              login.bib.dk answered unexpectedly
 ├── NoLibraryError              no library given (also a ValueError)
 ├── UnknownCatalogueError       catalogue= not a types.Catalogue (also a ValueError)
@@ -46,7 +47,29 @@ class LoginError(BibloError):
 
 
 class InvalidCredentialsError(LoginError, LoginRequiredError):
-    """login.bib.dk refused the card number/CPR or pincode."""
+    """login.bib.dk refused the card number/CPR or pincode.
+
+    `code` is login.bib.dk's reason when it gave one, e.g. "bonfd" (wrong card number/CPR or
+    pincode) or "bnimu" (the patron doesn't live in the library's municipality).
+    `retries_left` is how many tries are left before login.bib.dk blocks logins for a while,
+    when it said."""
+
+    def __init__(
+        self, message: str, *, code: str | None = None, retries_left: int | None = None
+    ) -> None:
+        super().__init__(message)
+        self.code = code
+        self.retries_left = retries_left
+
+
+class LoginBlockedError(LoginError):
+    """login.bib.dk blocks logins for a while after too many failed ones, counted per user
+    and per IP address. `minutes` is how long, when it said. Not a LoginRequiredError: trying
+    again right away doesn't help."""
+
+    def __init__(self, message: str, *, minutes: int | None = None) -> None:
+        super().__init__(message)
+        self.minutes = minutes
 
 
 class LoginFlowError(LoginError):

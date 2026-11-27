@@ -126,6 +126,12 @@ class FakeBiblo:
     quotas: dict[str, Any] = field(default_factory=lambda: fixture("account_quotas")["data"])
     fees: list[dict[str, Any]] = field(default_factory=lambda: fixture("account_fees")["data"])
     renewal_status: list[str] = field(default_factory=lambda: list(INVENTED_RENEWAL_STATUS))
+    # How login.bib.dk (hejmdal) refuses a wrong card number/pincode: a redirect back to its
+    # form with `error=<code>&retries=<n>`, each left out when None; or, when `login_blocked`
+    # holds the page's text, hejmdal's 429 "Blocked" page.
+    login_error: str | None = "bonfd"
+    login_retries: int | None = 4
+    login_blocked: str | None = None
 
     @property
     def access_token(self) -> str:
@@ -155,22 +161,35 @@ class FakeBiblo:
             assert request.url.params["redirect_uri"] == "biblo://"
             return httpx.Response(302, headers={"location": "/login"})
         if path == "/login" and request.method == "GET":
-            return httpx.Response(200, text=(FIXTURES / "login_page.html").read_text())
-        if path.startswith("/login/identityProviderCallback/borchk/") and request.method == "POST":
-            form = parse_qs(request.content.decode())
-            ok = form.get("loginBibDkUserId") == [USER] and form.get("pincode") == [PIN]
-            if not ok or form.get("agency") != [LIBRARY]:
-                page = (FIXTURES / "login_page.html").read_text()
+            page = (FIXTURES / "login_page.html").read_text()
+            if "returnurl" in request.url.params:  # sent back after a refused login
                 page = page.replace(
                     "<body",
                     '<body><div class="error-message">Forkert lånernummer eller pinkode</div',
                     1,
                 )
-                return httpx.Response(200, text=page)
+            return httpx.Response(200, text=page)
+        if path.startswith("/login/identityProviderCallback/borchk/") and request.method == "POST":
+            form = parse_qs(request.content.decode())
+            ok = form.get("loginBibDkUserId") == [USER] and form.get("pincode") == [PIN]
+            if not ok or form.get("agency") != [LIBRARY]:
+                return self._refused_login()
             return httpx.Response(302, headers={"location": "/oauth/authorize/continue"})
         if path == "/oauth/authorize/continue":
             return httpx.Response(302, headers={"location": "biblo://?code=the-code&state="})
         return httpx.Response(404)
+
+    def _refused_login(self) -> httpx.Response:
+        """Like hejmdal's identityProviderValidationFailed and blockClientUntilTime."""
+        if self.login_blocked is not None:
+            page = f"<html><body><p class='error'>{self.login_blocked}</p></body></html>"
+            return httpx.Response(429, text=page)
+        location = f"/login?token=smaug-token&returnurl=biblo%3A%2F%2F&agency={LIBRARY}"
+        if self.login_error is not None:
+            location += f"&error={self.login_error}&presel={LIBRARY}"
+        if self.login_retries is not None:
+            location += f"&retries={self.login_retries}"
+        return httpx.Response(302, headers={"location": location})
 
     # ------------------------------------------------------------------------ API
 

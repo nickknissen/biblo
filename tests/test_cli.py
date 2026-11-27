@@ -166,6 +166,18 @@ def test_wrong_pincode(run: Run, monkeypatch: pytest.MonkeyPatch) -> None:
     code, _, err = run("auth", "login", "-l", LIBRARY, "--user", USER)
     assert code == 1
     assert "Login refused" in err
+    assert "4 tries left" in err
+
+
+def test_a_blocked_login_says_how_long_to_wait(
+    run: Run, fake: FakeBiblo, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake.login_blocked = "Login blokeret i 15 minutter."
+    monkeypatch.setenv("BIBLO_PIN", "0000")
+    code, _, err = run("auth", "login", "-l", LIBRARY, "--user", USER)
+    assert code == 1
+    assert "wait 15 minutes" in err
+    assert "biblo auth login" not in err
 
 
 def test_a_failed_refresh_exits_with_4_and_the_login_hint(

@@ -6,6 +6,30 @@ All notable changes to this project. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- A refused login tells why, from login.bib.dk's error code instead of its page's text:
+  `InvalidCredentialsError` has `code` (e.g. `"bonfd"`, wrong card number/CPR or pincode;
+  `"bnimu"`, not living in the library's municipality) and `retries_left`, and
+  `biblo auth login` shows how many tries are left (#37).
+- `biblo.LoginBlockedError` (a `LoginError`, not a `LoginRequiredError`) when login.bib.dk
+  blocks logins after too many failed ones, with the `minutes` to wait (#37).
+
+### Changed
+
+- The message of `InvalidCredentialsError` for a wrong card number/CPR or pincode is now
+  biblo's English one, not login.bib.dk's Danish page text; the page text is still used when
+  login.bib.dk gives no code (#37).
+
+### Fixed
+
+- A login blocked after too many failed ones raised `LoginFlowError` ("did not send the
+  browser back to the app"), as if login.bib.dk had changed (#37).
+- login.bib.dk's service errors (e.g. `sevua`, the library's patron check is down) raise
+  `LoginFlowError` with the code, not `InvalidCredentialsError` (#37).
+- A `LoginFlowError` for an unexpected page no longer includes the page's query string,
+  which can hold login.bib.dk's session token (#37).
+
 ## [0.3.0] - 2026-11-24
 
 ### Added
